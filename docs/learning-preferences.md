@@ -12,7 +12,7 @@ Flyway V5 adds `lesson_module_progress`, an action journal and a page-progress h
 
 IndexedDB version 3 adds module state and per-account guest-import receipts without dropping older stores. Guests persist their manual choice and page progress locally. Login still unions guest completions with account progress and seeds only missing account resume positions. Each actual guest completion update is imported once per account (mere revisits retain the previous completion receipt), preventing an already-acknowledged guest completion from undoing a later explicit reset. Guest incomplete status does not clear existing account completion; reset the signed-in account explicitly. Current-generation page completions remain monotonic until an explicit reset.
 
-The introduction waits until identity and progress restoration finish before deciding whether to appear. Local pending completion changes survive refreshes and are sent before their page checkpoints. Completion controls remain disabled while a change is pending; use **Sync checkpoints** on the account screen to retry after a connection failure. A reset from another device wins over stale checkpoints. Authentication and ownership come from the server session, never a client owner ID.
+The introduction waits until identity and progress restoration finish before deciding whether to appear. Manual completion and reset update the visible completion state only after the local IndexedDB transaction commits; their controls stay disabled during that write. This makes an immediate reload after the introduction disappears safe. A failed local save leaves the previous completion state intact and displays an error. Local pending completion changes survive refreshes and are sent before their page checkpoints. Completion controls remain disabled while a change is pending; use **Sync checkpoints** on the account screen to retry after a connection failure. A reset from another device wins over stale checkpoints. Authentication and ownership come from the server session, never a client owner ID.
 
 ## Registration
 
@@ -45,3 +45,5 @@ INTEGRATED=1 npm --prefix frontend run test:e2e
 ```
 
 Browser acceptance includes manual/normal completion, guest/account refresh and merge/reset/history, delayed authenticated restoration without an introductory flash, password confirmation/request shape, selected-only feedback/retry, system and explicit appearance, and desktop/mobile contrast checks. Original native/Wasm parity and account/experiment flows remain in the suite. See `verification-preferences.md` for actual run results and delivery status.
+
+For the timing-sensitive completion regression, diagnostics and reproduction commands, see [Foundations CI investigation](verification-foundations-ci.md).

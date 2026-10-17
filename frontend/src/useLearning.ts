@@ -14,6 +14,8 @@ export function useLearning(user: User) {
   const moduleRef = useRef(moduleProgress);
   moduleRef.current = moduleProgress;
   const chain = useRef(Promise.resolve());
+  const completionSave = useRef<string | undefined>(undefined);
+  const [savingOwner, setSavingOwner] = useState<string>();
   const owner = user.authenticated ? String(user.id) : "guest";
   const activeOwner = useRef(owner);
   activeOwner.current = owner;
@@ -278,7 +280,9 @@ export function useLearning(user: User) {
   async function setFoundationCompletion(complete: boolean) {
     const who = owner,
       old = moduleRef.current.foundations;
-    const previousPages = completed.foundations ?? [];
+    if (completionSave.current === who || old?.pending) return;
+    completionSave.current = who;
+    setSavingOwner(who);
     const generation = old?.generation ?? 0;
     const stamp = crypto.randomUUID();
     const row: ModuleProgress = {
@@ -293,9 +297,6 @@ export function useLearning(user: User) {
         ? { completed: complete, generation, actionId: stamp }
         : undefined,
     };
-    moduleRef.current = { ...moduleRef.current, foundations: row };
-    setModuleProgress(moduleRef.current);
-    if (!complete) setCompleted((old) => ({ ...old, foundations: [] }));
     const saved = lessonStorage.putModule(row);
     void saved.catch(() => {});
     chain.current = chain.current
@@ -309,23 +310,27 @@ export function useLearning(user: User) {
       });
     try {
       await saved;
+      // A hidden introduction or changed completion control must mean the local
+      // transaction committed, so an immediate reload cannot lose this choice.
+      if (activeOwner.current === who) {
+        moduleRef.current = { ...moduleRef.current, foundations: row };
+        setModuleProgress(moduleRef.current);
+        if (!complete) setCompleted((old) => ({ ...old, foundations: [] }));
+      }
     } catch (error) {
       if (activeOwner.current === who) {
-        setModuleProgress((current) => {
-          const next = { ...current };
-          if (old) next.foundations = old;
-          else delete next.foundations;
-          moduleRef.current = next;
-          return next;
-        });
-        setCompleted((current) => ({ ...current, foundations: previousPages }));
         setMessage(
           `Completion could not be saved on this device. ${(error as Error).message}`,
         );
       }
+    } finally {
+      if (completionSave.current === who) completionSave.current = undefined;
+      setSavingOwner((current) => (current === who ? undefined : current));
     }
   }
   return {
+    completionPending:
+      savingOwner === owner || !!moduleProgress.foundations?.pending,
     setFoundationCompletion,
     moduleProgress,
     completed,

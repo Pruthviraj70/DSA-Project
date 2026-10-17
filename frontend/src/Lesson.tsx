@@ -130,7 +130,7 @@ export function Lesson({
             Marking incomplete starts a new pass through the pages. Your quiz
             history is kept.{" "}
             {completionPending
-              ? "Your completion change is saved locally and waiting to synchronize."
+              ? "Your completion change is being saved or waiting to synchronize."
               : ""}
           </p>
           <button

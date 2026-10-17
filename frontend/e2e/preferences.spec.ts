@@ -6,6 +6,57 @@ const curriculum = JSON.parse(
 const foundation = curriculum.modules.find((m: any) => m.id === "foundations");
 const intro = (page: Page) =>
   page.getByRole("region", { name: "Foundations", exact: true });
+// Inspect committed records through the public browser storage API; works against
+// both Vite and the production bundle without importing source-only helpers.
+async function guestProgress(page: Page) {
+  return page.evaluate(async () => {
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open("dsa-learning-lab", 3);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    try {
+      const names = ["modules", "slides", "practice", "checkpoints"];
+      const tx = db.transaction(names, "readonly");
+      const rows = await Promise.all(
+        names.map(
+          (name) =>
+            new Promise<any[]>((resolve, reject) => {
+              const request = tx.objectStore(name).getAll();
+              request.onsuccess = () =>
+                resolve(
+                  request.result.filter(
+                    (row: any) =>
+                      row.owner === "guest" || row.key?.startsWith("guest:"),
+                  ),
+                );
+              request.onerror = () => reject(request.error);
+            }),
+        ),
+      );
+      return Object.fromEntries(names.map((name, i) => [name, rows[i]]));
+    } finally {
+      db.close();
+    }
+  });
+}
+async function expectManualOnly(
+  page: Page,
+  completed: boolean,
+  generation: number,
+) {
+  const saved = await guestProgress(page);
+  expect(saved.modules).toHaveLength(1);
+  expect(saved.modules[0]).toMatchObject({
+    moduleId: "foundations",
+    manualCompleted: completed,
+    generation,
+    pending: false,
+  });
+  expect(saved.slides.filter((row) => row.completed)).toEqual([]);
+  expect(saved.practice).toEqual([]);
+  expect(saved.checkpoints).toEqual([]);
+}
 async function home(page: Page) {
   await page
     .getByRole("link", { name: "DSA Learning Lab home", exact: true })
@@ -21,9 +72,17 @@ test("manual Foundations completion is persistent, reversible and never fabricat
     .getByRole("button", { name: "Mark completed", exact: true })
     .click();
   await expect(intro(page)).toHaveCount(0);
+  await expectManualOnly(page, true, 0);
+  expect((await guestProgress(page)).slides).toEqual([]);
   await page.reload();
   await expect(intro(page)).toHaveCount(0);
   await page.getByRole("link", { name: "Open Arrays", exact: true }).click();
+  await expect(
+    page.getByRole("heading", {
+      name: "An array is a row of indexed slots",
+      exact: true,
+    }),
+  ).toBeVisible();
   await expect(
     page.getByRole("complementary", { name: "Recommended prerequisites" }),
   ).toHaveCount(0);
@@ -32,20 +91,99 @@ test("manual Foundations completion is persistent, reversible and never fabricat
   await expect(
     page.getByText("0 / 13 pages complete", { exact: true }),
   ).toBeVisible();
+  const completion = page.getByRole("region", {
+    name: "Foundations completion",
+    exact: true,
+  });
   await expect(
-    page.getByText("Foundations completed.", { exact: false }),
-  ).toBeVisible();
+    completion.getByRole("button", { name: "Mark incomplete", exact: true }),
+  ).toBeEnabled();
+  await expectManualOnly(page, true, 0);
   await page
     .getByRole("button", { name: "Mark incomplete", exact: true })
     .click();
+  await expect(
+    completion.getByRole("button", { name: "Mark completed", exact: true }),
+  ).toBeEnabled();
+  await expectManualOnly(page, false, 1);
   await home(page);
   await expect(intro(page)).toBeVisible();
   await page.reload();
   await expect(intro(page)).toBeVisible();
+  await expectManualOnly(page, false, 1);
   await page.getByRole("link", { name: "Foundations →", exact: true }).click();
   await page.getByRole("button", { name: "Next →", exact: true }).click();
   await home(page);
   await expect(intro(page)).toBeVisible();
+});
+
+test("Foundations completion and reset wait for the local transaction to commit", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const state = { hold: true, started: false };
+    (window as any).foundationWrite = state;
+    const put = IDBObjectStore.prototype.put;
+    IDBObjectStore.prototype.put = function (value, ...args) {
+      const request = put.call(this, value, ...args);
+      if (this.name === "modules" && value.moduleId === "foundations") {
+        state.started = true;
+        const store = this;
+        // A controllable transaction gate reproduces slow storage without sleeps.
+        function keepOpen() {
+          if (state.hold)
+            store.get("__transaction_gate__").onsuccess = keepOpen;
+        }
+        keepOpen();
+      }
+      return request;
+    };
+  });
+  await page.goto("/");
+  const mark = intro(page).getByRole("button", {
+    name: "Mark completed",
+    exact: true,
+  });
+  await mark.click();
+  await page.waitForFunction(() => (window as any).foundationWrite.started);
+  await expect(intro(page)).toBeVisible();
+  await expect(mark).toBeDisabled();
+  await page.evaluate(() => {
+    (window as any).foundationWrite.hold = false;
+  });
+  await expect(intro(page)).toHaveCount(0);
+  await expectManualOnly(page, true, 0);
+  await page.reload();
+  await page.getByRole("link", { name: "Foundations →", exact: true }).click();
+  const completion = page.getByRole("region", {
+    name: "Foundations completion",
+    exact: true,
+  });
+  const reset = completion.getByRole("button", {
+    name: "Mark incomplete",
+    exact: true,
+  });
+  await expect(reset).toBeEnabled();
+  await page.evaluate(() => {
+    (window as any).foundationWrite = Object.assign(
+      (window as any).foundationWrite,
+      { hold: true, started: false },
+    );
+  });
+  await reset.click();
+  await page.waitForFunction(() => (window as any).foundationWrite.started);
+  await expect(reset).toBeDisabled();
+  await page.evaluate(() => {
+    (window as any).foundationWrite.hold = false;
+  });
+  await expect(
+    completion.getByRole("button", { name: "Mark completed", exact: true }),
+  ).toBeEnabled();
+  await expectManualOnly(page, false, 1);
+  await home(page);
+  await page.reload();
+  await expect(intro(page)).toBeVisible();
+  await expectManualOnly(page, false, 1);
 });
 
 test("normal Foundations completion requires every page and quiz participation; reset starts a new pass", async ({
@@ -255,6 +393,10 @@ test("authenticated Foundations completion merges once, resets safely and surviv
     .toBe(true);
   const attempts = await (await page.request.get("/api/attempts")).json();
   expect(attempts.total).toBe(0);
+  const progress = await (
+    await page.request.get("/api/learning/progress")
+  ).json();
+  expect(progress.items).toEqual([]);
   await home(page);
   await expect(intro(page)).toHaveCount(0);
   await page.reload();

@@ -202,7 +202,7 @@ export default function App() {
             completed={learning.completed}
             positions={learning.positions}
             ready={!!user && learning.ready}
-            completionPending={!!learning.moduleProgress.foundations?.pending}
+            completionPending={learning.completionPending}
             foundationComplete={learning.isComplete("foundations")}
             onComplete={() => void learning.setFoundationCompletion(true)}
           />
@@ -266,7 +266,7 @@ export default function App() {
             isComplete={learning.isComplete}
             onCheckpoint={learning.checkpoint}
             onFoundationCompletion={learning.setFoundationCompletion}
-            completionPending={!!learning.moduleProgress.foundations?.pending}
+            completionPending={learning.completionPending}
             authenticated={user.authenticated}
             owner={learning.owner}
             loaded={
