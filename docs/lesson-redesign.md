@@ -23,6 +23,6 @@ Acceptance: curriculum negative validation tests; executable multilingual exampl
 | Multilingual educational examples | Complete; 38 examples in five languages, alternatives and independent compilation/behavior checks |
 | Concepts and aligned quizzes | Complete; 71 concepts, prerequisite validation, 18 practice and 33 recorded questions, review links/retry policy |
 | Data compatibility and authenticated progress | Complete; additive migrations, stable checkpoints/resume, old data and ownership preserved |
-| Integrated verification | Native, content, example, unit, MySQL and development browser checks complete; final production bundle and delivery evidence in verification-update.md |
+| Integrated verification | Complete; native, content, example, unit, MySQL, 18 development and 13 production browser tests passed; delivery evidence in verification-update.md |
 
 No feature requirements are intentionally deferred. Native Windows/macOS execution and remote CI remain unobserved in this Linux environment. No publication or deployment is part of this update.
