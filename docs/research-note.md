@@ -1,0 +1,9 @@
+# Study proposal: prediction checkpoints versus passive animation
+
+Research question: Does asking learners to predict an execution event improve transfer to unseen problems compared with watching the same C-driven animation? This is a proposal, not evidence of an educational benefit.
+
+Randomly assign consenting learners (stratified by prior DSA experience) to passive playback or playback with predictions at preselected compare/write/visit/relax checkpoints. Keep inputs, explanations, source display, total study time, feedback content and final assessments equivalent. The comparison group sees feedback without answering a prediction. Avoid confounding extra time-on-task with the intervention.
+
+Primary outcome: independently graded transfer assessment on new inputs after study. Secondary outcomes: delayed retention, invariant explanations, misconception patterns, prediction calibration and usability. Pre-register the primary hypothesis, sample-size/power calculation, exclusions, scoring rubric and statistical model before recruiting. Report confidence intervals, missingness, attrition, baseline balance and all registered outcomes. Consider clustering by class and correcting for multiple comparisons. Use pilot data to refine feasibility rather than asserting efficacy from anecdotal feedback.
+
+Collect only consented pseudonymous study IDs, randomized condition, checkpoint IDs, responses and necessary timing. Do not equate animation duration with native execution performance or interpret browser event counters as learning outcomes. Keep research telemetry opt-in and distinct from normal progress/official attempts. The first release implements local prediction exercises but does not implement research enrollment, randomization, telemetry, or claim measured learning improvements.

@@ -1,0 +1,532 @@
+{
+  "foundations": [
+    {
+      "id": "foundations.structure",
+      "revision": 1,
+      "concepts": [
+        "foundations.dsa"
+      ],
+      "prompt": "Which description best distinguishes a data structure from an algorithm?",
+      "options": [
+        "An organization of information versus steps applied to information",
+        "A faster computer versus a slower computer",
+        "A programming language versus a memory address"
+      ],
+      "correctIndex": 0,
+      "explanation": "A structure organizes values and relationships. An algorithm describes steps for a task; both ideas are independent of a particular language."
+    },
+    {
+      "id": "foundations.size",
+      "revision": 1,
+      "concepts": [
+        "foundations.input-size"
+      ],
+      "prompt": "When n counts elements, what is the input size of [900, 2, 2, 8]?",
+      "options": [
+        "900",
+        "4",
+        "3"
+      ],
+      "correctIndex": 1,
+      "explanation": "There are four elements. Their magnitudes and whether some values repeat do not change this definition of n."
+    },
+    {
+      "id": "foundations.bound",
+      "revision": 1,
+      "concepts": [
+        "foundations.bounds",
+        "foundations.cases"
+      ],
+      "prompt": "Which statement about Big O and cases is correct?",
+      "options": [
+        "Big O always means worst case",
+        "Big Omega always means best case",
+        "An upper bound can describe a specified best-, average- or worst-case cost"
+      ],
+      "correctIndex": 2,
+      "explanation": "Cases select which inputs we consider. O is an upper growth bound on that selected cost function. These are separate ideas."
+    },
+    {
+      "id": "foundations.loops",
+      "revision": 1,
+      "concepts": [
+        "foundations.loops"
+      ],
+      "prompt": "Two independent loops each inspect n elements, one after the other. How does the total inspection count grow?",
+      "options": [
+        "Theta(n)",
+        "Theta(n squared)",
+        "Theta(1)"
+      ],
+      "correctIndex": 0,
+      "explanation": "The counts add: n+n=2n. The constant factor two does not change linear growth. Multiplication would apply to n-by-n nested repetition."
+    },
+    {
+      "id": "foundations.stack",
+      "revision": 1,
+      "concepts": [
+        "foundations.recursion",
+        "foundations.resources"
+      ],
+      "prompt": "Countdown(n) calls countdown(n−1) until zero, without guaranteed frame elimination. What is its auxiliary call-stack growth?",
+      "options": [
+        "O(1)",
+        "Theta(n)",
+        "Theta(n squared)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Up to n+1 unfinished calls can be active together. Each frame remembers a return point, so stack space grows linearly."
+    },
+    {
+      "id": "foundations.contract",
+      "revision": 1,
+      "concepts": [
+        "foundations.contracts"
+      ],
+      "prompt": "A largest-value algorithm has no defined output for empty input. What should its specification do?",
+      "options": [
+        "Pretend the largest value is always zero",
+        "State a nonempty precondition or define an explicit empty result",
+        "Ignore empty input because one successful example proves correctness"
+      ],
+      "correctIndex": 1,
+      "explanation": "Correctness is relative to a complete contract for allowed inputs. An empty sequence has no largest value; its behavior must be specified."
+    }
+  ],
+  "arrays": [
+    {
+      "id": "arrays.index",
+      "revision": 1,
+      "concepts": [
+        "arrays.model",
+        "arrays.access"
+      ],
+      "prompt": "For [7, 5, 7], what does reading zero-based index 1 return?",
+      "options": [
+        "7",
+        "5",
+        "1"
+      ],
+      "correctIndex": 1,
+      "explanation": "Index 1 is the second position, whose value is 5. An index names a slot; it is not the value stored there."
+    },
+    {
+      "id": "arrays.length",
+      "revision": 1,
+      "concepts": [
+        "arrays.capacity",
+        "arrays.boundaries"
+      ],
+      "prompt": "With length 3 and capacity 5, which action is valid?",
+      "options": [
+        "Read index 3",
+        "Insert at index 3, using a spare slot",
+        "Delete index 3"
+      ],
+      "correctIndex": 1,
+      "explanation": "The occupied indices are 0..2. Insertion permits index equal to length; reads and deletion require an existing element."
+    },
+    {
+      "id": "arrays.movement",
+      "revision": 1,
+      "concepts": [
+        "arrays.insert",
+        "arrays.delete"
+      ],
+      "prompt": "Why does in-place insertion shift elements from the end toward the insertion position?",
+      "options": [
+        "To preserve values before their old slots are overwritten",
+        "Because ascending values are required",
+        "To reduce every insertion to constant time"
+      ],
+      "correctIndex": 0,
+      "explanation": "Copying from right to left protects each old value until it has been moved. Beginning insertion may still require n shifts."
+    }
+  ],
+  "searching": [
+    {
+      "id": "searching.sorted",
+      "revision": 1,
+      "concepts": [
+        "searching.sorted"
+      ],
+      "prompt": "What permits binary search to discard half of the remaining interval?",
+      "options": [
+        "The target is positive",
+        "Ascending order under the same comparison",
+        "The input contains no duplicates"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ordering makes one side impossible after the midpoint comparison. Duplicates and negative values are allowed by this search."
+    },
+    {
+      "id": "searching.shrink",
+      "revision": 1,
+      "concepts": [
+        "searching.binary"
+      ],
+      "prompt": "After the middle value is smaller than the target in inclusive-bound binary search, which update makes progress?",
+      "options": [
+        "lo = mid",
+        "lo = mid + 1",
+        "hi = mid + 1"
+      ],
+      "correctIndex": 1,
+      "explanation": "The middle slot was already checked and is too small. Excluding it and all smaller positions leaves the possible interval."
+    },
+    {
+      "id": "searching.duplicates",
+      "revision": 1,
+      "concepts": [
+        "searching.results",
+        "searching.linear",
+        "searching.variants"
+      ],
+      "prompt": "Which duplicate policy is promised by the default examples?",
+      "options": [
+        "Both searches always return the final match",
+        "Linear search returns the first match; binary search may return any match",
+        "Both return every matching index"
+      ],
+      "correctIndex": 1,
+      "explanation": "Linear search stops at the first equal value in its left-to-right scan. The default binary search returns the first equal midpoint it encounters."
+    }
+  ],
+  "sorting": [
+    {
+      "id": "sorting.preserve",
+      "revision": 1,
+      "concepts": [
+        "sorting.contract"
+      ],
+      "prompt": "Is [1, 2] a correct ascending sort of [2, 1, 2]?",
+      "options": [
+        "Yes, it is ordered",
+        "No, it loses a repeated value",
+        "Only if the sort is stable"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sorting must preserve the input’s multiplicities as well as order. The output needs two occurrences of 2."
+    },
+    {
+      "id": "sorting.stable",
+      "revision": 1,
+      "concepts": [
+        "sorting.insertion",
+        "sorting.contract"
+      ],
+      "prompt": "Which insertion-sort rule preserves equal-key order?",
+      "options": [
+        "Shift only strictly larger prefix values",
+        "Shift every equal value too",
+        "Always put a key at index zero"
+      ],
+      "correctIndex": 0,
+      "explanation": "Existing equal values remain before the remembered key when only strictly larger values are shifted."
+    },
+    {
+      "id": "sorting.merge",
+      "revision": 1,
+      "concepts": [
+        "sorting.merge"
+      ],
+      "prompt": "Why does the demonstrated merge sort require linear auxiliary storage?",
+      "options": [
+        "It saves merged values in a buffer",
+        "It performs only one comparison",
+        "Every sort must use a linked list"
+      ],
+      "correctIndex": 0,
+      "explanation": "The temporary merging buffer can hold values proportional to n. Its storage is separate from the input array."
+    },
+    {
+      "id": "sorting.pivot",
+      "revision": 1,
+      "concepts": [
+        "sorting.quick"
+      ],
+      "prompt": "What can happen with a final-element quicksort pivot on already sorted input?",
+      "options": [
+        "Repeated highly unbalanced partitions and quadratic time",
+        "Guaranteed balanced partitions",
+        "Automatic stability"
+      ],
+      "correctIndex": 0,
+      "explanation": "A consistently extreme pivot can leave a subproblem of size n−1. The repeated scans then add to a quadratic total."
+    }
+  ],
+  "linked-list": [
+    {
+      "id": "linked-list.head",
+      "revision": 1,
+      "concepts": [
+        "list.model",
+        "list.delete"
+      ],
+      "prompt": "Deleting the only node should leave which head?",
+      "options": [
+        "A link to the removed node",
+        "Null",
+        "A newly inserted zero-valued node"
+      ],
+      "correctIndex": 1,
+      "explanation": "After removing the only element there is no first data node. Null represents the empty chain."
+    },
+    {
+      "id": "linked-list.links",
+      "revision": 1,
+      "concepts": [
+        "list.links",
+        "list.insert"
+      ],
+      "prompt": "What should a new node link to before its predecessor is redirected to it?",
+      "options": [
+        "The old successor",
+        "An unrelated node with the same value",
+        "Always itself"
+      ],
+      "correctIndex": 0,
+      "explanation": "Saving the old successor in new.next preserves the remaining chain before changing predecessor.next."
+    },
+    {
+      "id": "linked-list.cost",
+      "revision": 1,
+      "concepts": [
+        "list.search",
+        "list.traversal"
+      ],
+      "prompt": "Why is searching by value generally linear in a singly linked list?",
+      "options": [
+        "Nodes can be followed and compared one at a time",
+        "All nodes are required to be adjacent in memory",
+        "A value directly specifies its node index"
+      ],
+      "correctIndex": 0,
+      "explanation": "The structure supplies next links, not a direct map from arbitrary values to nodes. A missing target can require inspecting every node."
+    }
+  ],
+  "stack": [
+    {
+      "id": "stack.order",
+      "revision": 1,
+      "concepts": [
+        "stack.lifo",
+        "stack.pop"
+      ],
+      "prompt": "Push 3, then 8; pop once. Which value is removed?",
+      "options": [
+        "3",
+        "8",
+        "Neither, because pop only reads"
+      ],
+      "correctIndex": 1,
+      "explanation": "The most recently pushed value is at the top and leaves first: last in, first out."
+    },
+    {
+      "id": "stack.peek",
+      "revision": 1,
+      "concepts": [
+        "stack.peek"
+      ],
+      "prompt": "Which operation leaves a nonempty stack’s length unchanged?",
+      "options": [
+        "Peek",
+        "Pop",
+        "Push"
+      ],
+      "correctIndex": 0,
+      "explanation": "Peek reads the top without removing it. Pop reduces length; a successful push increases it."
+    },
+    {
+      "id": "stack.empty",
+      "revision": 1,
+      "concepts": [
+        "stack.pop"
+      ],
+      "prompt": "What is underflow?",
+      "options": [
+        "Attempting to remove from an empty stack",
+        "Pushing a duplicate value",
+        "Reaching a valid top index"
+      ],
+      "correctIndex": 0,
+      "explanation": "An empty stack has no value to remove. Use an explicit error or empty result, not an arbitrary stored-value marker."
+    }
+  ],
+  "queue": [
+    {
+      "id": "queue.order",
+      "revision": 1,
+      "concepts": [
+        "queue.fifo",
+        "queue.dequeue"
+      ],
+      "prompt": "Enqueue 3, then 8; dequeue once. Which value leaves?",
+      "options": [
+        "8",
+        "3",
+        "The larger value"
+      ],
+      "correctIndex": 1,
+      "explanation": "FIFO removes the oldest arrival, 3, regardless of numeric order."
+    },
+    {
+      "id": "queue.cost",
+      "revision": 1,
+      "concepts": [
+        "queue.representation",
+        "queue.dequeue"
+      ],
+      "prompt": "Why can dequeue cost O(n) in the compact array queue?",
+      "options": [
+        "The remaining values shift left",
+        "FIFO always requires sorting",
+        "Every queue must recurse"
+      ],
+      "correctIndex": 0,
+      "explanation": "Keeping the front at index zero requires moving later values. This is a representation cost, not a requirement of FIFO."
+    },
+    {
+      "id": "queue.circular",
+      "revision": 1,
+      "concepts": [
+        "queue.circular"
+      ],
+      "prompt": "Which circular-buffer change avoids shifting on dequeue?",
+      "options": [
+        "Advance the head index with wraparound",
+        "Overwrite the oldest value on every enqueue",
+        "Set size permanently to capacity"
+      ],
+      "correctIndex": 0,
+      "explanation": "Advancing head changes the logical front without moving remaining elements. Size still distinguishes full and empty states."
+    }
+  ],
+  "bst": [
+    {
+      "id": "bst.order",
+      "revision": 1,
+      "concepts": [
+        "bst.order"
+      ],
+      "prompt": "Which strict ordering rule does this BST use?",
+      "options": [
+        "All left descendants are smaller and all right descendants larger",
+        "Only direct children need any ordering",
+        "Equal values are always inserted on the left"
+      ],
+      "correctIndex": 0,
+      "explanation": "The rule applies to whole subtrees. This module ignores duplicate insertions."
+    },
+    {
+      "id": "bst.delete",
+      "revision": 1,
+      "concepts": [
+        "bst.delete-two"
+      ],
+      "prompt": "For a node with two children, where is its inorder successor?",
+      "options": [
+        "The largest node anywhere",
+        "The smallest node in its right subtree",
+        "Any node in its left subtree"
+      ],
+      "correctIndex": 1,
+      "explanation": "Following left links from the right child reaches the smallest right-subtree value, the next value in inorder."
+    },
+    {
+      "id": "bst.traversal",
+      "revision": 1,
+      "concepts": [
+        "bst.traversals"
+      ],
+      "prompt": "Which traversal lists this BST’s values in ascending order?",
+      "options": [
+        "Preorder",
+        "Postorder",
+        "Inorder"
+      ],
+      "correctIndex": 2,
+      "explanation": "Inorder visits the smaller subtree, then the node, then the larger subtree."
+    },
+    {
+      "id": "bst.height",
+      "revision": 1,
+      "concepts": [
+        "bst.height",
+        "bst.variants"
+      ],
+      "prompt": "What limits a search route’s cost in an unbalanced BST?",
+      "options": [
+        "Tree height, which may grow linearly",
+        "A guaranteed logarithmic height for every shape",
+        "The largest stored numeric value alone"
+      ],
+      "correctIndex": 0,
+      "explanation": "An unbalanced tree can become a chain. Search/insert/delete are O(h), and h may be proportional to n."
+    }
+  ],
+  "graph": [
+    {
+      "id": "graph.bfs",
+      "revision": 1,
+      "concepts": [
+        "graph.visited",
+        "graph.bfs"
+      ],
+      "prompt": "Why mark a vertex as visited when it is enqueued in BFS?",
+      "options": [
+        "To avoid multiple pending entries for the same vertex",
+        "To make negative weights positive",
+        "To sort labels numerically"
+      ],
+      "correctIndex": 0,
+      "explanation": "Two processed neighbors might discover the same vertex. Marking on enqueue prevents it from being queued again before processing."
+    },
+    {
+      "id": "graph.disconnected",
+      "revision": 1,
+      "concepts": [
+        "graph.visited"
+      ],
+      "prompt": "What can explain a vertex that was not visited from a chosen source?",
+      "options": [
+        "It may be unreachable along allowed edges",
+        "Every source traversal must include every graph vertex",
+        "Its label is too large to compare"
+      ],
+      "correctIndex": 0,
+      "explanation": "Disconnected components and directed edge orientation can make vertices unreachable from one source."
+    },
+    {
+      "id": "graph.negative",
+      "revision": 1,
+      "concepts": [
+        "graph.dijkstra",
+        "graph.restrictions"
+      ],
+      "prompt": "Which input must this Dijkstra lesson reject?",
+      "options": [
+        "An edge of weight zero",
+        "Any negative edge weight",
+        "An unreachable vertex"
+      ],
+      "correctIndex": 1,
+      "explanation": "The settled-distance guarantee requires nonnegative edges. Zero is allowed, and unreachable vertices keep infinity."
+    },
+    {
+      "id": "graph.cost",
+      "revision": 1,
+      "concepts": [
+        "graph.restrictions"
+      ],
+      "prompt": "A route with fewer edges must also have lower total weight. Is that guaranteed?",
+      "options": [
+        "Yes, for all weighted graphs",
+        "No; edge count and total weight are different costs",
+        "Yes, whenever a graph is directed"
+      ],
+      "correctIndex": 1,
+      "explanation": "BFS treats each edge as one step. Weighted shortest paths add actual edge costs, so fewer edges can still cost more."
+    }
+  ]
+}
