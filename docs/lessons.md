@@ -1,6 +1,6 @@
 # Lessons, examples and assessment coverage
 
-The catalog has nine teaching modules and fourteen runtime implementations. These are different registries: `content/curriculum.json` owns the course sequence; `content/modules.json` owns runtime IDs, input schemas and adapters. Stable slugs bridge them without renumbering C modules or invalidating experiments. Curriculum registry schema is version 2; runtime compatibility metadata stays internal.
+The catalog has fourteen teaching modules and twenty runtime families. These are different registries: `content/curriculum.json` owns the course sequence; `content/modules.json` owns runtime IDs, input schemas and adapters. Stable slugs bridge them without renumbering C modules or invalidating experiments. Curriculum registry schema is version 2; runtime compatibility metadata stays internal.
 
 ## Lesson contract
 
@@ -42,3 +42,5 @@ Opening pages saves resume positions. Next or explicit completion marks that tea
 Run content checks, example checks, native/Wasm parity, frontend units, backend/MySQL and integrated browser tests. Browser acceptance covers the tile catalog, all lesson pages/labels, logo routes, navigation/restoration, preferences/copy, practice/recorded quizzes/review, migration preservation and playback. Inspect new slides at desktop/mobile widths, check focus/reduced-motion behavior, and verify that animation emits no HTTP requests. Never label planned curriculum topics as functional.
 
 Foundations additionally supports explicit module completion and new-pass resets; generation-aware progress and merge receipts are documented in [learning preferences](learning-preferences.md). Keep manual status distinct from actual page completion and official scores when extending these controls.
+
+The five new lessons and their explicit prerequisite closure are documented in [next-modules.md](next-modules.md). The content validator also rejects missing examples/languages, invalid runtime operations and new operations without a teaching page. Runtime variants can use separate stable slides without duplicating home tiles. `related` links connect a teaching page to another lesson, such as Sorting to Heaps.

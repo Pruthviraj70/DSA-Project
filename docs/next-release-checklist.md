@@ -9,7 +9,7 @@ Baseline: origin/main `deb646d` (contains accepted learning-lab, preferences and
 - [x] Native correctness, limits, cleanup and deterministic replay.
 - [x] Five-language examples and aligned practice/recorded quizzes.
 - [x] Additive content migration, catalog, experiments and progress.
-- [ ] Native/Wasm/browser/frontend/MySQL verification and visual inspection.
+- [x] Native/Wasm/browser/frontend/MySQL verification and visual inspection.
 - [ ] Final documentation, commits and publication.
 
 ## Contracts
@@ -22,4 +22,8 @@ Prerequisites will be recorded against actual taught concepts: arrays/Foundation
 
 Vertical slice evidence: 2,170 legacy native cases plus 2,328 heap cases passed under ASan/UBSan; both Wasm builds and the actual browser heap playback test passed. Full curriculum/quizzes follow in the content milestone.
 
-Content/engine milestone: all 30 new operations have teaching-page bindings. Twelve content tests validate 14 lessons, 118 concepts and 91 questions. Native extension oracles cover 12,696 cases; 77 cross-target traces include empty, collision, overflow-bound and repeated-call cases. All 270 displayed examples compile and 80 new example executions pass in the five languages. MySQL grading/persistence and compatibility tests passed before final ordinal-only lesson refinements; final verification reruns are pending below.
+Content/engine milestone: all 32 new operations have teaching-page bindings. Twelve content tests validate 14 lessons, 120 concepts and 91 questions. Native extension oracles cover 12,968 cases; 79 cross-target traces include empty, collision, overflow-bound and repeated-call cases. All 270 displayed examples compile and 80 new example executions pass in the five languages. MySQL grading/persistence and compatibility tests passed before final ordinal-only lesson refinements; final verification reruns are pending below.
+
+Final verification record: docs/verification-next-modules.md. Legacy migration fixture now seeds and closes before app startup; no product persistence assertion was removed. Rich visual layout regressions and all existing preferences flows are retained.
+
+Release verification complete: 45 integrated development browser checks and 39 production checks passed without skips; the legacy upgrade fixture also passed five focused production runs. Final observed results and resolved failures are in verification-next-modules.md. Publication remains the final delivery step.

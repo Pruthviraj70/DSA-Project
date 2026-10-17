@@ -8,7 +8,7 @@ The application is a browser client plus Java service and MySQL. Supported devel
 2. Clone the repository; use the existing checkout in a cloud task, without creating another worktree.
 3. Copy `.env.example` to `.env` and replace the two database password placeholders with different local passwords. The file is ignored. No account or database password is needed in the browser.
 4. From the repository root, run `docker compose up --build -d`. Browse port 8088 on your local machine. Nginx serves the frontend and proxies `/api` to Spring Boot; MySQL is health-gated and Flyway migrates/seeds it before the backend starts serving.
-5. Verify readiness with `curl --fail http://127.0.0.1:8088/api/modules` (PowerShell: `Invoke-RestMethod http://127.0.0.1:8088/api/modules`). Expect total 14. Open the Arrays module and step to observe C state changes; sign up for account persistence.
+5. Verify readiness with `curl --fail http://127.0.0.1:8088/api/modules` (PowerShell: `Invoke-RestMethod http://127.0.0.1:8088/api/modules`). Expect total 20. Open the Arrays module and step to observe C state changes; sign up for account persistence.
 6. Logs: `docker compose logs backend` or `docker compose logs frontend`. Stop processes with `docker compose down`. Named-volume data persists. Removing the volume is destructive; do so only deliberately for a disposable database.
 
 The full container build compiles the actual C source in the Emscripten stage, installs frontend dependencies, type-checks/builds Vite, packages Java using the wrapper, and runs only the JRE/Nginx runtime images. Tests run separately, because MySQL integration tests require a Docker daemon. Java and Node are not required on the host for this path.
@@ -95,7 +95,7 @@ cd frontend && npx playwright install --with-deps chromium && cd ..
 INTEGRATED=1 npm --prefix frontend run test:e2e # backend + dev MySQL must be running
 ```
 
-Default browser runs skip only the explicitly gated authenticated integration flow when `INTEGRATED` is unset. Release acceptance uses `INTEGRATED=1`, with no skips. If the Playwright browser CDN is blocked but a compatible Chromium is already installed, set `CHROMIUM_PATH=/path/to/chromium`. The tests load actual Wasm and compare every event for 35 operations to native traces, check bounds/cancellation/reset, and exercise the UI. No mock JS engine substitutes for C.
+Default browser runs skip only the explicitly gated authenticated integration flow when `INTEGRATED` is unset. Release acceptance uses `INTEGRATED=1`, with no skips. If the Playwright browser CDN is blocked but a compatible Chromium is already installed, set `CHROMIUM_PATH=/path/to/chromium`. The tests load actual Wasm and compare every event for 79 operation/edge-case traces to native traces, check bounds/cancellation/reset, and exercise the UI. No mock JS engine substitutes for C.
 
 `BASE_URL=http://127.0.0.1:8088 INTEGRATED=1 npm --prefix frontend run test:e2e -- e2e/learning.spec.ts e2e/slice.spec.ts e2e/authenticated.spec.ts` exercises the production Nginx/Compose bundle. The development harness tests run against Vite because they import the development client class; the production UI tests still execute actual Wasm workers.
 
@@ -110,6 +110,8 @@ For a read-only home directory, use writable task paths for `npm --cache`, `MAVE
 
 ## Updating an existing installation
 
-Back up MySQL before upgrading. Keep the existing `.env` and named MySQL volume; do not use `docker compose down -v`. Rebuild/restart with `docker compose up --build -d`; Flyway applies new migrations (including V5 module progress) automatically without resetting data. Accounts, roles, historical attempts, percentage activity and saved experiments are retained. Newly authored pages begin unread. IndexedDB upgrades automatically without clearing guest data. A browser refresh loads the new UI; saved 1.0.0 experiments remain usable. See database.md for grouping and merge rules.
+Back up MySQL before upgrading. Keep the existing `.env` and named MySQL volume; do not use `docker compose down -v`. Rebuild/restart with `docker compose up --build -d`; Flyway applies new migrations (including V5 module progress and V6 module content) automatically without resetting data. Accounts, roles, historical attempts, percentage activity and saved experiments are retained. Newly authored pages begin unread. IndexedDB upgrades automatically without clearing guest data. A browser refresh loads the new UI; saved 1.0.0 and 1.1.0 experiments remain usable. See database.md for grouping and merge rules.
 
 For host development, stop a running JAR before replacing it, or run an immutable copy outside `backend/target`: Maven repackaging can invalidate classes lazily loaded by a process reading a replaced JAR. Rebuild Wasm after C changes. Example-language tests require `g++` as well as the C compiler and an actual JDK with `javac`; set `JAVA_HOME` to that JDK. Container-based MySQL tests preserve the development volume by creating separate disposable databases.
+
+New educational examples: run `JAVA_HOME=/path/to/jdk21 python3 scripts/test-next-examples.py` in addition to `scripts/test-examples.py`. CI validates both. Use `e2e/next-modules.spec.ts` in the production browser command as well. Wasm build produces legacy and next-module assets; only the selected family loads at runtime.

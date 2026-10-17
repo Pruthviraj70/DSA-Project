@@ -9,7 +9,7 @@ class ContentValidation(unittest.TestCase):
         self.b=[json.loads((ROOT/f'content/{f}').read_text()) for f in ['practice.json','assessments.private.json']]
     def rejects(self):
         with self.assertRaises(ValueError):v.validate(self.c,self.b)
-    def test_complete_curriculum(self):self.assertEqual(v.validate(self.c,self.b),(14,118,91))
+    def test_complete_curriculum(self):self.assertEqual(v.validate(self.c,self.b),(14,120,91))
     def test_missing_example_is_rejected(self):
         runtime=json.loads((ROOT/'content/modules.json').read_text());examples=json.loads((ROOT/'content/examples.json').read_text())
         self.c['modules'][0]['slides'][0]['exampleId']='absent'

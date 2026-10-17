@@ -2,7 +2,7 @@
 
 An interactive learning platform with a tile-based topic catalog, slide lessons, visual experiments, prediction exercises and quizzes. Start with Foundations, then explore data structures and algorithms at your own pace. Guests keep their place locally; accounts synchronize page progress and experiments and record server-graded quizzes.
 
-The fourteen learning modules contain **145 stable pages**, **118 concepts**, **54 example implementations in five languages**, and separate practice and recorded question banks. C, C++, Java, Python and JavaScript selections change the educational example only. The underlying C17/WebAssembly worker remains responsible for every algorithm visualization.
+The fourteen learning modules contain **147 stable pages**, **120 concepts**, **54 example implementations in five languages**, and separate practice and recorded question banks. C, C++, Java, Python and JavaScript selections change the educational example only. The underlying C17/WebAssembly worker remains responsible for every algorithm visualization.
 
 ## Run
 

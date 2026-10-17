@@ -77,7 +77,7 @@ class ReleaseIntegrationTest {
   void realMysqlMigrationsAndSeeds() {
     assertEquals(20, jdbc.queryForObject("SELECT COUNT(*) FROM algorithms", Integer.class));
     assertEquals(72, jdbc.queryForObject("SELECT COUNT(*) FROM question_revisions", Integer.class));
-    assertEquals(145, jdbc.queryForObject("SELECT COUNT(*) FROM lesson_slides", Integer.class));
+    assertEquals(147, jdbc.queryForObject("SELECT COUNT(*) FROM lesson_slides", Integer.class));
     assertEquals(
         58, jdbc.queryForObject("SELECT COUNT(*) FROM curriculum_questions", Integer.class));
     assertEquals(

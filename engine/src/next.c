@@ -58,7 +58,7 @@ static int next_start(void) {
     x->build = e.n / 2 - 1;
     x->heap_pos = -1;
   } else if (e.module == HASH_CHAIN || e.module == HASH_PROBE) {
-    if (e.n % 2 || e.op < 0 || e.op > 5 || e.index < -100000 ||
+    if (e.n % 2 || e.op < 0 || e.op > 6 || e.index < -100000 ||
         e.index > 100000)
       return fail("Use key,value pairs and a valid table operation");
     x->capacity = 8;
@@ -315,12 +315,12 @@ static const char *hash_step(void) {
           return complete();
         if (e.op == 4)
           return hash_grow();
-        if (e.op == 5)
+        if (e.op == 5 || e.op == 6)
           x->action = 3;
-      } else if (e.op == 5 && x->source == 1) {
+      } else if ((e.op == 5 || e.op == 6) && x->source == 1) {
         x->source = 2;
-        x->action = 1;
-        x->key = e.index;
+        x->action = e.op==6?2:1;
+        x->key = e.op==6?e.arg:e.index;
       } else
         return complete();
       e.found = -1;

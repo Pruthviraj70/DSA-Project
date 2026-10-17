@@ -178,13 +178,13 @@ int main(void) {
             keys[unique++] = key;
           values[j] = val;
         }
-        for (int op = 0; op <= 5; op++) {
+        for (int op = 0; op <= 6; op++) {
           int key = unique ? keys[trial % unique] : -8,
               val = unique ? keys[(trial + 1) % unique] : 16;
           begin(m, op, n * 2, key, val, pairs);
           finish();
           int expected = unique - (op == 3 || op == 5 ? !!unique : 0) +
-                         (op == 2 && !unique ? 1 : 0);
+                         ((op == 2 || op == 6) && !unique ? 1 : 0);
           assert(e.next.size == expected);
           if (op == 1 && unique) {
             assert(e.found > 0);

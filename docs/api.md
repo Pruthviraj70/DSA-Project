@@ -1,6 +1,6 @@
 # REST API v1
 
-Base `/api`. JSON requests reject unknown fields. Paginated private lists and the runtime catalog use `page` (zero-based) and `size` (1..100); page is bounded at 100000. The public runtime catalog has 14 implementations, returning the latest registered version once per implementation. The bounded lesson catalog contains nine teaching modules. Passwords and correctness flags are never included in content or user responses.
+Base `/api`. JSON requests reject unknown fields. Paginated private lists and the runtime catalog use `page` (zero-based) and `size` (1..100); page is bounded at 100000. The public runtime catalog has 20 runtime families, returning the latest registered version once per implementation. The bounded lesson catalog contains fourteen teaching modules. Passwords and correctness flags are never included in content or user responses.
 
 Authentication uses an HttpOnly SameSite=Lax session cookie, not browser-stored bearer tokens. Fetch `GET /auth/csrf`; use the returned `headerName` and `token` on each mutation, including registration/login/logout. The frontend obtains a fresh token before mutations. The backend does not grant cross-origin CORS access. Development uses Vite's `/api` proxy; Compose uses Nginx. Set `COOKIE_SECURE=true` behind HTTPS. Production operators should terminate TLS, rate-limit authentication at the ingress, use secret management and backups. This release does not provide email verification, password recovery, or OAuth.
 
@@ -13,7 +13,7 @@ Authentication uses an HttpOnly SameSite=Lax session cookie, not browser-stored 
 | POST /auth/logout | session + CSRF | 204, invalidate session |
 | GET /modules | public | paginated module/lesson/version/complexity content |
 | GET /modules/{slug}/questions | public | current aligned question revisions/options/concept IDs; no answers or explanations |
-| GET /lessons | public | bounded catalog of nine lesson IDs/titles/slide counts |
+| GET /lessons | public | bounded catalog of fourteen lesson IDs/titles/slide counts |
 | GET /learning/progress | session | own paginated `{moduleId,slideId,completed,updatedAt}` rows |
 | GET /learning/modules | session | own bounded manual module state and current progress generation |
 | POST /learning/modules/foundations/completion | session + CSRF | `{completed,generation,actionId}`; manual completion or new-pass reset, UUID idempotency key; 409 on conflicting generation |

@@ -1,6 +1,6 @@
 # Hashing, heaps, recursion and array techniques
 
-Baseline: `main` at `deb646d` contains the accepted first release and the ad342e9 Foundations persistence fix. `feature/dsa-next-modules` extends it without resetting storage. There are now 14 catalog modules, 145 stable lesson pages, 118 concepts, 54 complete examples in five languages, and 91 public-practice/private-recorded questions. The existing Foundations, account, theme and quiz behavior remains shared.
+Baseline: `main` at `deb646d` contains the accepted first release and the ad342e9 Foundations persistence fix. `feature/dsa-next-modules` extends it without resetting storage. There are now 14 catalog modules, 147 stable lesson pages, 120 concepts, 54 complete examples in five languages, and 91 public-practice/private-recorded questions. The existing Foundations, account, theme and quiz behavior remains shared.
 
 ## Learning sequence
 
@@ -20,7 +20,7 @@ IDs 1–14 and all old operations retain their meanings. New IDs and operations:
 
 | ID / registry ID | Operations (zero-based) | Parameter meaning |
 | --- | --- | --- |
-| 15 / hash-chain; 16 / hash-probe | 0 build; 1 lookup; 2 upsert; 3 delete; 4 rehash; 5 delete then lookup | `values` alternates key,value (≤16 pairs); `arg` is the operation key; `index` is the upsert value or second lookup key |
+| 15 / hash-chain; 16 / hash-probe | 0 build; 1 lookup; 2 upsert; 3 delete; 4 rehash; 5 delete then lookup; 6 delete then reinsert | `values` alternates key,value (≤16 pairs); `arg` is the operation key; `index` is the upsert value or second lookup key |
 | 17 / heaps | 0 min build; 1 max build; 2 min insert; 3 min extract; 4 min peek; 5 max insert; 6 max extract; 7 max peek; 8 heap sort | every run builds the input first; `arg` is inserted value; extent excludes the sorted suffix |
 | 18 / recursion | 0 factorial; 1 prefix sum; 2 binary search; 3 naive Fibonacci | `arg` is n/target; sum uses the supplied array length; factorial 0..12, Fibonacci 0..10 |
 | 19 / two-pointers | 0 sorted pair sum; 1 reversal; 2 sorted unique prefix | `arg` is pair target; unique returns a logical prefix length without clearing physical suffix |

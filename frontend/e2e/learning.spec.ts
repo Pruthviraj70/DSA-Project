@@ -160,7 +160,7 @@ test("every lesson page renders without learner-visible infrastructure or releas
     for (const slide of module.slides) {
       await page.goto(`/#/lesson/${module.id}/${slide.id}`);
       await expect(
-        page.getByRole("heading", { name: slide.title, exact: true }),
+        page.getByRole("heading", { name: slide.title, exact: true, level: 1 }),
       ).toBeVisible();
       await expect(page.locator("body")).not.toContainText(
         /\bengine\b|webassembly|\bwasm\b|powered by C|C17|\bv\d+\.\d+|loc=/i,
@@ -208,47 +208,65 @@ for (const viewport of [
 test("IndexedDB upgrade keeps earlier experiments and activity without completing new pages", async ({
   page,
 }) => {
-  await page.addInitScript(() => {
-    if (sessionStorage.getItem("legacy-seeded")) return;
-    sessionStorage.setItem("legacy-seeded", "yes");
-    const r = indexedDB.open("dsa-learning-lab", 1);
-    r.onupgradeneeded = () => {
-      r.result.createObjectStore("checkpoints", { keyPath: "key" });
-      r.result.createObjectStore("experiments", { keyPath: "id" });
-    };
-    r.onsuccess = () => {
-      const tx = r.result.transaction(
-        ["checkpoints", "experiments"],
-        "readwrite",
-      );
-      tx.objectStore("checkpoints").put({
-        key: "guest:arrays",
-        owner: "guest",
-        moduleId: "arrays",
-        completion: 100,
-      });
-      tx.objectStore("experiments").put({
-        id: "legacy-array",
-        owner: "guest",
-        title: "Earlier array experiment",
-        moduleId: "arrays",
-        engineVersion: "1.0.0",
-        input: {
-          module: 1,
-          op: 3,
-          values: [8, 2],
-          index: 1,
-          arg: 5,
-          directed: false,
-          edges: [],
-          weight: 1,
-        },
-        configuration: { speed: 100 },
-        createdAt: new Date().toISOString(),
-      });
-      tx.oncomplete = () => r.result.close();
-    };
-  });
+  // Seed an earlier installation completely before the application can request
+  // its upgrade. An async init script races the app and holds its v1 connection.
+  await page.route("**/__legacy_seed__", (route) =>
+    route.fulfill({
+      contentType: "text/html",
+      body: "<!doctype html><title>Storage fixture</title>",
+    }),
+  );
+  await page.goto("/__legacy_seed__");
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve, reject) => {
+        const r = indexedDB.open("dsa-learning-lab", 1);
+        r.onerror = () => reject(r.error);
+        r.onblocked = () => reject(Error("Legacy fixture is blocked"));
+        r.onupgradeneeded = () => {
+          r.result.createObjectStore("checkpoints", { keyPath: "key" });
+          r.result.createObjectStore("experiments", { keyPath: "id" });
+        };
+        r.onsuccess = () => {
+          const tx = r.result.transaction(
+            ["checkpoints", "experiments"],
+            "readwrite",
+          );
+          tx.objectStore("checkpoints").put({
+            key: "guest:arrays",
+            owner: "guest",
+            moduleId: "arrays",
+            completion: 100,
+          });
+          tx.objectStore("experiments").put({
+            id: "legacy-array",
+            owner: "guest",
+            title: "Earlier array experiment",
+            moduleId: "arrays",
+            engineVersion: "1.0.0",
+            input: {
+              module: 1,
+              op: 3,
+              values: [8, 2],
+              index: 1,
+              arg: 5,
+              directed: false,
+              edges: [],
+              weight: 1,
+            },
+            configuration: { speed: 100 },
+            createdAt: new Date().toISOString(),
+          });
+          tx.onerror = () => reject(tx.error);
+          tx.onabort = () => reject(tx.error);
+          tx.oncomplete = () => {
+            r.result.close();
+            resolve();
+          };
+        };
+      }),
+  );
+  await page.unroute("**/__legacy_seed__");
   await page.goto("/#/progress");
   await expect(
     page.getByText("0 / 12 pages complete", { exact: true }),

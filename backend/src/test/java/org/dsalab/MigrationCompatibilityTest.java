@@ -96,7 +96,7 @@ class MigrationCompatibilityTest {
             entry.getValue(),
             jdbc.queryForObject("SELECT COUNT(*) FROM " + entry.getKey(), Integer.class),
             entry.getKey());
-      assertEquals(145, counts.get("lesson_slides"));
+      assertEquals(147, counts.get("lesson_slides"));
       assertEquals(48, counts.get("algorithm_versions"));
     }
   }

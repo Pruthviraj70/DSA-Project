@@ -472,6 +472,14 @@
     {
       "id": "heaps.peek-max",
       "title": "Inspect maximum priority"
+    },
+    {
+      "id": "hash-tables.chain-reinsert",
+      "title": "Reinsert after unlinking"
+    },
+    {
+      "id": "hash-tables.probe-reinsert",
+      "title": "Reuse a tombstone after searching for duplicates"
     }
   ],
   "modules": [
@@ -2353,6 +2361,58 @@
           "exampleId": "hash-chain"
         },
         {
+          "id": "chain-reinsert",
+          "title": "Reinsert after unlinking",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.chain-reinsert"
+          ],
+          "paragraphs": [
+            "This compound run deletes key 8, then inserts key 8 with the new value. The entry count first falls and then recovers. A probing insertion remembers a tombstone but continues checking the rest of the sequence for an existing equal key before reusing that slot. Chaining creates a new entry linked at the bucket head. A deleted entry ID is retired; the new entry receives a new conceptual identity."
+          ],
+          "runtime": {
+            "moduleId": "hash-chain",
+            "op": 6,
+            "arg": 8,
+            "index": 99,
+            "values": [
+              0,
+              10,
+              8,
+              20,
+              16,
+              30
+            ]
+          },
+          "exampleId": "hash-chain"
+        },
+        {
+          "id": "probe-reinsert",
+          "title": "Reuse a tombstone after searching for duplicates",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.probe-reinsert"
+          ],
+          "paragraphs": [
+            "This compound run deletes key 8, then inserts key 8 with the new value. The entry count first falls and then recovers. A probing insertion remembers a tombstone but continues checking the rest of the sequence for an existing equal key before reusing that slot. Chaining creates a new entry linked at the bucket head. A deleted entry ID is retired; the new entry receives a new conceptual identity."
+          ],
+          "runtime": {
+            "moduleId": "hash-probe",
+            "op": 6,
+            "arg": 8,
+            "index": 99,
+            "values": [
+              0,
+              10,
+              8,
+              20,
+              16,
+              30
+            ]
+          },
+          "exampleId": "hash-probe"
+        },
+        {
           "id": "faq",
           "title": "FAQs and common pitfalls",
           "kind": "faq",
@@ -2795,7 +2855,7 @@
           ],
           "paragraphs": [
             "For factorial and Fibonacci, n decreases toward 0 or 1. For array sum, the prefix length decreases. For binary search, the candidate interval becomes strictly shorter. A function that calls itself with the same argument never makes this progress.",
-            "Prevent invalid inputs before starting. Do not demonstrate an actual infinite call chain: browser playback must remain cancellable. These examples use bounded resumable frames, at most 34 active frames and fewer than 4096 events. Reset discards the current call state."
+            "Invalid inputs are rejected before starting. Do not attempt an infinite call chain: these worked examples use small input limits so you can follow every call and return. Reset starts again with the original input and an empty call stack."
           ]
         },
         {

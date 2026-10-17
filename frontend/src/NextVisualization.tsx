@@ -62,6 +62,7 @@ export function NextVisualization({
         </p>
         <div
           className="hash-buckets"
+          tabIndex={0}
           role="img"
           aria-label={
             module === 15
@@ -141,11 +142,17 @@ export function NextVisualization({
         )}
         <p>
           Active depth: {x.frames.length}. Total calls so far: {x.calls.length}.
-          Latest returned value: {x.result}.
+          Latest returned value:{" "}
+          {x.calls.some((call) => call.returned) ? x.result : "none yet"}.
         </p>
         <details open>
           <summary>Call tree (parent → child)</summary>
-          <div className="call-tree" aria-label="Recursion tree">
+          <div
+            className="call-tree"
+            aria-label="Recursion tree"
+            role="region"
+            tabIndex={0}
+          >
             <CallTree calls={x.calls} />
           </div>
         </details>
@@ -155,6 +162,8 @@ export function NextVisualization({
     return (
       <div
         className="next-visual sequence-scroll"
+        tabIndex={0}
+        role="region"
         aria-label={
           module === 19 ? "Two pointer state" : "Sliding window state"
         }
@@ -173,14 +182,7 @@ export function NextVisualization({
             const inside = module === 20 && i >= x.left && i < x.right;
             const valid = module === 19 && i < x.logical;
             return (
-              <g
-                key={i}
-                opacity={
-                  module === 19 && x.logical < event.data.length && !valid
-                    ? 0.55
-                    : 1
-                }
-              >
+              <g key={i} data-result-prefix={valid}>
                 <rect
                   x={30 + i * size}
                   y={55}
@@ -191,7 +193,11 @@ export function NextVisualization({
                       ? "var(--viz-active)"
                       : "var(--viz-node)"
                   }
-                  stroke="var(--viz-edge)"
+                  stroke={
+                    module === 19 && valid ? "var(--accent)" : "var(--viz-edge)"
+                  }
+                  strokeWidth={module === 19 && valid ? 3 : 1}
+                  strokeDasharray={module === 19 && !valid ? "4 3" : undefined}
                 />
                 <text
                   x={30 + (i + 0.5) * size}
@@ -236,6 +242,13 @@ export function NextVisualization({
             : `Left ${x.left}, right/read ${x.right}; pair sum ${x.sum}; valid prefix length ${x.logical}.`}
         </p>
         <p>
+          {module === 19 && x.operation === 0 && event.done && (
+            <>
+              {event.found >= 0
+                ? `Pair found at distinct indices ${event.found} and ${x.best}. `
+                : "No pair of distinct indices reaches the target. "}
+            </>
+          )}
           {module === 20
             ? "Everything outside the current contiguous window is excluded from its sum."
             : "Pair sum: discard only indices proved unable to complete a pair. Reversal: values outside the pointers are in final positions. Deduplication: only the marked prefix is output."}
@@ -243,7 +256,12 @@ export function NextVisualization({
       </div>
     );
   return (
-    <div className="next-visual sequence-scroll" aria-label="Heap state">
+    <div
+      className="next-visual sequence-scroll"
+      tabIndex={0}
+      role="region"
+      aria-label="Heap state"
+    >
       <svg
         role="img"
         aria-label="Heap array and complete binary tree"
@@ -322,8 +340,14 @@ export function NextVisualization({
         })}
       </svg>
       <p>
-        Heap extent: {x.extent}. Sorted suffix is outside the tree. Result:{" "}
-        {x.result}.
+        Heap extent: {x.extent}.{" "}
+        {x.operation === 8
+          ? "The sorted suffix is outside the tree."
+          : "The tree corresponds to the active array prefix."}{" "}
+        {(x.operation === -1 ||
+          ([4, 7].includes(x.operation) && event.done)) && (
+          <>Selected root value: {x.result}.</>
+        )}
       </p>
     </div>
   );

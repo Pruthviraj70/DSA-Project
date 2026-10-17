@@ -1599,3 +1599,18 @@ svg {
   background: var(--surface-green);
   color: var(--text);
 }
+/* Rich multi-part states need normal flow; centering an overflowing flex child
+   makes its first rows unreachable in the legacy fixed-height SVG viewport. */
+.visualization:has(.next-visual) {
+  display: block;
+  max-height: none;
+  min-height: 0;
+  padding: 12px;
+}
+.next-visual .call-frames {
+  display: block;
+}
+.hash-buckets {
+  max-height: 560px;
+  overflow-y: auto;
+}

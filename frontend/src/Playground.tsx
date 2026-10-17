@@ -56,7 +56,7 @@ export function Playground({
   const needsIndex =
     (m === 1 && [1, 2, 3, 4].includes(input.op)) ||
     (m === 7 && [0, 1].includes(input.op)) ||
-    ([15, 16].includes(m) && [2, 5].includes(input.op)) ||
+    ([15, 16].includes(m) && [2, 5, 6].includes(input.op)) ||
     (m === 20 && input.op === 0);
   const needsValue =
     (m === 1 && [2, 3].includes(input.op)) ||
@@ -64,8 +64,8 @@ export function Playground({
     (m === 7 && [0, 2].includes(input.op)) ||
     ([8, 9].includes(m) && input.op === 0) ||
     (m === 10 && input.op < 3) ||
-    (m === 17 && [2, 5].includes(input.op)) ||
-    ([15, 16].includes(m) && [1, 2, 3, 5].includes(input.op)) ||
+    (m === 17 && [2, 5, 6].includes(input.op)) ||
+    ([15, 16].includes(m) && [1, 2, 3, 5, 6].includes(input.op)) ||
     (m === 18 && input.op !== 1) ||
     (m === 19 && input.op === 0) ||
     (m === 20 && input.op === 1);
@@ -100,18 +100,22 @@ export function Playground({
         }}
         className="input-controls"
       >
-        <label>
-          {[15, 16].includes(m)
-            ? "Key, value pairs (alternating integers)"
-            : m >= 11 && m <= 14
-              ? "Vertex labels"
-              : "Input values"}
-          <input
-            aria-label="Input values"
-            value={raw}
-            onChange={(e) => setRaw(e.target.value)}
-          />
-        </label>
+        {!(m === 18 && [0, 3].includes(input.op)) && (
+          <>
+            <label>
+              {[15, 16].includes(m)
+                ? "Key, value pairs (alternating integers)"
+                : m >= 11 && m <= 14
+                  ? "Vertex labels"
+                  : "Input values"}
+              <input
+                aria-label="Input values"
+                value={raw}
+                onChange={(e) => setRaw(e.target.value)}
+              />
+            </label>
+          </>
+        )}
         <div className="inline">
           {needsIndex && (
             <label>
@@ -167,23 +171,50 @@ export function Playground({
         </div>
       </form>
       <div className="examples">
-        <button
-          onClick={() => {
-            setRaw("");
-            setInput({ ...input, values: [], edges: [] });
-          }}
-        >
-          Empty input
-        </button>
-        <button
-          onClick={() => {
-            const values = m >= 11 && m <= 14 ? [1, 2, 3, 4] : [2, 2, 2, 2];
-            setRaw(values.join(", "));
-            setInput({ ...input, values, edges: [] });
-          }}
-        >
-          {m >= 11 && m <= 14 ? "Disconnected graph" : "Duplicate values"}
-        </button>
+        {m === 18 && [0, 3].includes(input.op) && (
+          <>
+            <button onClick={() => setInput({ ...input, arg: 0 })}>
+              Base case n=0
+            </button>
+            <button
+              onClick={() =>
+                setInput({ ...input, arg: input.op === 0 ? 12 : 10 })
+              }
+            >
+              Maximum safe n
+            </button>
+          </>
+        )}
+
+        {!(m === 18 && [0, 3].includes(input.op)) && (
+          <>
+            <button
+              onClick={() => {
+                setRaw("");
+                setInput({ ...input, values: [], edges: [] });
+              }}
+            >
+              Empty input
+            </button>
+            <button
+              onClick={() => {
+                const values = [15, 16].includes(m)
+                  ? [-1, 10, 7, 20, 15, 30, 23, 40]
+                  : m >= 11 && m <= 14
+                    ? [1, 2, 3, 4]
+                    : [2, 2, 2, 2];
+                setRaw(values.join(", "));
+                setInput({ ...input, values, edges: [] });
+              }}
+            >
+              {[15, 16].includes(m)
+                ? "Collision-heavy pairs"
+                : m >= 11 && m <= 14
+                  ? "Disconnected graph"
+                  : "Duplicate values"}
+            </button>
+          </>
+        )}
         <button
           onClick={() => {
             setInput(seed);

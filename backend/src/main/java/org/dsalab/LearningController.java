@@ -194,7 +194,7 @@ public class LearningController {
           || !input.get(name).isIntegralNumber()
           || !input.get(name).canConvertToInt())
         throw new ApiException(400, "validation", "Engine parameters must be integers");
-    int[] operations = {0, 6, 1, 1, 1, 1, 1, 4, 3, 3, 6, 5, 1, 1, 1, 6, 6, 9, 4, 3, 2};
+    int[] operations = {0, 6, 1, 1, 1, 1, 1, 4, 3, 3, 6, 5, 1, 1, 1, 7, 7, 9, 4, 3, 2};
     if (module < 1
         || module >= operations.length
         || input.get("module").asInt() != module

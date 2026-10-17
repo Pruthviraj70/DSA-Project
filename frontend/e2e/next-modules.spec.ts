@@ -166,6 +166,13 @@ for (const theme of ["light", "dark"] as const)
             () => document.documentElement.scrollWidth <= innerWidth + 1,
           ),
         ).toBe(true);
+        expect(
+          await page.locator(".next-visual").evaluate((el) => {
+            const content = el.getBoundingClientRect(),
+              viewport = el.closest(".visualization")!.getBoundingClientRect();
+            return content.top >= viewport.top && content.left >= viewport.left;
+          }),
+        ).toBe(true);
         const colors = await page.locator(".next-visual").evaluate((el) => {
           const s = getComputedStyle(el);
           return [s.color, s.backgroundColor];
@@ -320,4 +327,71 @@ test("accounts synchronize all new lessons and restore server experiments and gr
     fresh.getByRole("img", { name: "Heap array and complete binary tree" }),
   ).toBeVisible();
   await context.close();
+});
+
+test("theme changes every new visualization palette without resetting the displayed step", async ({
+  page,
+}) => {
+  for (const [route, selector] of [
+    ["hash-tables/tombstones", ".hash-bucket"],
+    ["heaps/insert", ".next-visual rect"],
+    ["recursion/branching", ".call-frames li"],
+    ["two-pointers/unique", ".next-visual rect"],
+    ["sliding-window/variable", ".next-visual rect"],
+  ]) {
+    await page.goto(`/#/lesson/${route}`);
+    await expect(
+      page.getByRole("button", { name: "Step forward", exact: true }),
+    ).toBeEnabled();
+    await page
+      .getByRole("button", { name: "Step forward", exact: true })
+      .click();
+    await expect(page.locator(selector).first()).toBeVisible();
+    const surface = page.locator(selector).first();
+    const color = () =>
+      surface.evaluate((node) =>
+        node instanceof SVGElement
+          ? getComputedStyle(node).fill
+          : getComputedStyle(node).backgroundColor,
+      );
+    const before = await color(),
+      state = await page.locator(".next-visual").innerText();
+    await page.getByRole("button", { name: "Dark mode", exact: true }).click();
+    await expect.poll(color).not.toBe(before);
+    await expect(page.locator(".next-visual")).toHaveText(state, {
+      useInnerText: true,
+    });
+  }
+});
+
+test("recursive stack order and valid-prefix marking stay explicit", async ({
+  page,
+}) => {
+  await page.goto("/#/lesson/recursion/factorial");
+  for (let i = 0; i < 3; i++)
+    await page
+      .getByRole("button", { name: "Step forward", exact: true })
+      .click();
+  const frames = page.locator(".call-frames li");
+  await expect(frames).toHaveCount(3);
+  expect(
+    await frames.nth(0).evaluate((el) => el.getBoundingClientRect().top),
+  ).toBeLessThan(
+    await frames.nth(2).evaluate((el) => el.getBoundingClientRect().top),
+  );
+  await expect(frames.nth(2)).toHaveClass("active-frame");
+  await page.goto("/#/lesson/two-pointers/unique");
+  await page.getByLabel("Playback speed").press("Home");
+  await page.getByRole("button", { name: "Play", exact: true }).click();
+  await expect(
+    page.getByRole("status").filter({ hasText: "Complete" }).first(),
+  ).toBeVisible();
+  await expect(page.locator('[data-result-prefix="true"]')).toHaveCount(3);
+  await expect(page.locator('[data-result-prefix="false"] rect')).toHaveCount(
+    2,
+  );
+  for (const rect of await page
+    .locator('[data-result-prefix="false"] rect')
+    .all())
+    await expect(rect).toHaveAttribute("stroke-dasharray", "4 3");
 });
