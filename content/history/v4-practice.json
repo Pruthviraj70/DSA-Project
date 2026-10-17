@@ -1,0 +1,292 @@
+{
+  "foundations": [
+    {
+      "id": "practice.foundations.count",
+      "revision": 1,
+      "concepts": [
+        "foundations.counts",
+        "foundations.input-size"
+      ],
+      "prompt": "A scan reads each of 6 elements once. How many inspections occur?",
+      "options": [
+        "1",
+        "6",
+        "36"
+      ],
+      "correctIndex": 1,
+      "explanation": "One inspection per element gives six inspections. Input size counts elements here."
+    },
+    {
+      "id": "practice.foundations.frames",
+      "revision": 1,
+      "concepts": [
+        "foundations.recursion"
+      ],
+      "prompt": "Countdown(2) waits for countdown(1), which waits for countdown(0). How many frames can be active together?",
+      "options": [
+        "1",
+        "2",
+        "3"
+      ],
+      "correctIndex": 2,
+      "explanation": "The calls for 2, 1 and 0 are all active before returns begin."
+    }
+  ],
+  "arrays": [
+    {
+      "id": "practice.arrays.value",
+      "revision": 1,
+      "concepts": [
+        "arrays.model"
+      ],
+      "prompt": "In [9, 4, 9], what is the value at index 0?",
+      "options": [
+        "0",
+        "9",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "The first slot has index zero and stores value 9."
+    },
+    {
+      "id": "practice.arrays.last",
+      "revision": 1,
+      "concepts": [
+        "arrays.boundaries"
+      ],
+      "prompt": "A sequence has length 4. What is its final occupied zero-based index?",
+      "options": [
+        "3",
+        "4",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "Occupied indices are 0, 1, 2 and 3. Index 4 is only a possible insertion position."
+    }
+  ],
+  "searching": [
+    {
+      "id": "practice.searching.missing",
+      "revision": 1,
+      "concepts": [
+        "searching.linear",
+        "searching.results"
+      ],
+      "prompt": "Linear search checks [2, 5] for 9. What result means no match in these examples?",
+      "options": [
+        "0",
+        "−1",
+        "2"
+      ],
+      "correctIndex": 1,
+      "explanation": "No value equals 9. The reserved no-match result is −1; zero would name the first slot."
+    },
+    {
+      "id": "practice.searching.interval",
+      "revision": 1,
+      "concepts": [
+        "searching.binary"
+      ],
+      "prompt": "Binary search has lo=3 and hi=2. What should it do?",
+      "options": [
+        "Stop: the possible interval is empty",
+        "Read index 3 anyway",
+        "Restart forever"
+      ],
+      "correctIndex": 0,
+      "explanation": "An inclusive interval is empty when lo > hi."
+    }
+  ],
+  "sorting": [
+    {
+      "id": "practice.sorting.prefix",
+      "revision": 1,
+      "concepts": [
+        "sorting.insertion"
+      ],
+      "prompt": "In insertion sort, which part is kept ordered before processing the next key?",
+      "options": [
+        "The already processed prefix",
+        "Only the last slot",
+        "No part"
+      ],
+      "correctIndex": 0,
+      "explanation": "The sorted-prefix invariant explains where the next key should be inserted."
+    },
+    {
+      "id": "practice.sorting.tie",
+      "revision": 1,
+      "concepts": [
+        "sorting.merge"
+      ],
+      "prompt": "When merging equal front values, which choice preserves the left run’s earlier order?",
+      "options": [
+        "Choose the left value first",
+        "Always choose the right value first",
+        "Discard one duplicate"
+      ],
+      "correctIndex": 0,
+      "explanation": "Choosing left on equality keeps equal-key order and preserves both values."
+    }
+  ],
+  "linked-list": [
+    {
+      "id": "practice.linked-list.empty",
+      "revision": 1,
+      "concepts": [
+        "list.model"
+      ],
+      "prompt": "What represents an empty singly linked list?",
+      "options": [
+        "A null head",
+        "A required zero-valued data node",
+        "A link from every node to itself"
+      ],
+      "correctIndex": 0,
+      "explanation": "No first data node means the head is null."
+    },
+    {
+      "id": "practice.linked-list.walk",
+      "revision": 1,
+      "concepts": [
+        "list.traversal"
+      ],
+      "prompt": "How does a forward traversal reach the following node?",
+      "options": [
+        "Follow next",
+        "Add one to the stored value",
+        "Assume a neighboring memory address"
+      ],
+      "correctIndex": 0,
+      "explanation": "The next link defines the relationship; node values and physical adjacency do not."
+    }
+  ],
+  "stack": [
+    {
+      "id": "practice.stack.sequence",
+      "revision": 1,
+      "concepts": [
+        "stack.lifo"
+      ],
+      "prompt": "Push A then B, then pop. What remains?",
+      "options": [
+        "A",
+        "B",
+        "A and B"
+      ],
+      "correctIndex": 0,
+      "explanation": "B was most recent, so it is removed first."
+    },
+    {
+      "id": "practice.stack.peek",
+      "revision": 1,
+      "concepts": [
+        "stack.peek"
+      ],
+      "prompt": "Two peeks with no intervening mutation should return what?",
+      "options": [
+        "The same top value",
+        "Two removed values",
+        "The bottom then the top"
+      ],
+      "correctIndex": 0,
+      "explanation": "Peek does not change the stack."
+    }
+  ],
+  "queue": [
+    {
+      "id": "practice.queue.sequence",
+      "revision": 1,
+      "concepts": [
+        "queue.fifo"
+      ],
+      "prompt": "Enqueue A then B, then dequeue. What remains?",
+      "options": [
+        "A",
+        "B",
+        "Nothing"
+      ],
+      "correctIndex": 1,
+      "explanation": "A arrived first and leaves first, so B remains."
+    },
+    {
+      "id": "practice.queue.empty",
+      "revision": 1,
+      "concepts": [
+        "queue.dequeue"
+      ],
+      "prompt": "Can an empty queue return a real removed value?",
+      "options": [
+        "No: report an empty/underflow result",
+        "Yes: always return zero",
+        "Yes: reuse an old physical slot"
+      ],
+      "correctIndex": 0,
+      "explanation": "Only logical elements belong to the queue; stale storage is not a valid arrival."
+    }
+  ],
+  "bst": [
+    {
+      "id": "practice.bst.duplicate",
+      "revision": 1,
+      "concepts": [
+        "bst.order"
+      ],
+      "prompt": "Insert a value that is already present in this BST. What happens?",
+      "options": [
+        "The duplicate insertion is ignored",
+        "It is always put at the root",
+        "The entire tree is erased"
+      ],
+      "correctIndex": 0,
+      "explanation": "This module has a strict ordering policy and ignores duplicates."
+    },
+    {
+      "id": "practice.bst.leaf",
+      "revision": 1,
+      "concepts": [
+        "bst.delete"
+      ],
+      "prompt": "A leaf is removed. Which link needs repair?",
+      "options": [
+        "The link entering that leaf",
+        "Every link in the tree",
+        "Only a local variable with no effect on the tree"
+      ],
+      "correctIndex": 0,
+      "explanation": "Update the parent child link, or the root if it was the only node."
+    }
+  ],
+  "graph": [
+    {
+      "id": "practice.graph.zero",
+      "revision": 1,
+      "concepts": [
+        "graph.representation"
+      ],
+      "prompt": "Does a present zero-weight edge mean there is no connection?",
+      "options": [
+        "No, presence and weight are distinct",
+        "Yes, zero always means absent",
+        "Only in directed graphs"
+      ],
+      "correctIndex": 0,
+      "explanation": "An edge can exist with a zero cost. The representation tracks presence separately."
+    },
+    {
+      "id": "practice.graph.depth",
+      "revision": 1,
+      "concepts": [
+        "graph.dfs"
+      ],
+      "prompt": "When does DFS return to an earlier vertex on its active path?",
+      "options": [
+        "After exhausting unvisited outgoing neighbors",
+        "After every numeric label increases",
+        "Only after sorting vertices"
+      ],
+      "correctIndex": 0,
+      "explanation": "Backtracking occurs when the current branch has no unvisited neighbor to follow."
+    }
+  ]
+}

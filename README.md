@@ -2,7 +2,7 @@
 
 An interactive learning platform with a tile-based topic catalog, slide lessons, visual experiments, prediction exercises and quizzes. Start with Foundations, then explore data structures and algorithms at your own pace. Guests keep their place locally; accounts synchronize page progress and experiments and record server-graded quizzes.
 
-The nine learning modules contain **87 stable pages**, **71 concepts**, **38 example implementations in five languages**, and separate practice and recorded question banks. C, C++, Java, Python and JavaScript selections change the educational example only. The underlying C17/WebAssembly worker remains responsible for every algorithm visualization.
+The fourteen learning modules contain **145 stable pages**, **118 concepts**, **54 example implementations in five languages**, and separate practice and recorded question banks. C, C++, Java, Python and JavaScript selections change the educational example only. The underlying C17/WebAssembly worker remains responsible for every algorithm visualization.
 
 ## Run
 
@@ -37,8 +37,8 @@ Foundations appears above two responsive catalog columns; no persistent navigati
 | Section | Lessons |
 |---|---|
 | Start here | Foundations: correctness, pseudocode, memory, input size, counts, time/space, asymptotic bounds, cases, growth, loops and recursion |
-| Data Structures | Arrays, Singly linked list, Stack, Queue, Binary search tree, Graphs |
-| Algorithms | Searching (linear/binary), Sorting (insertion/merge/quicksort and comparison) |
+| Data Structures | Arrays, Singly linked list, Stack, Queue, Binary search tree, Graphs, Hash Tables, Heaps and Priority Queues |
+| Algorithms | Searching (linear/binary), Sorting (insertion/merge/quicksort and comparison, linked heap sort), Recursion, Two Pointers, Sliding Window |
 
 Foundations is a recorded recommended prerequisite. Exploration is open; unmet prerequisites and the knowledge assumed by quizzes are shown explicitly. See [lesson and content authoring](docs/lessons.md).
 
@@ -63,6 +63,12 @@ Foundations is a recorded recommended prerequisite. Exploration is open; unmet p
 
 Inputs are bounded at **32** sequence values / **16** graph vertices. Graph IDs are unique integers 1..31; self-loops are allowed; setting a parallel edge replaces its weight. Undirected edges are symmetric. Conceptual links/IDs are distinct from browser memory addresses. Every released module uses the C engine; advanced topics appear only in the [curriculum roadmap](docs/roadmap.md).
 
+## New learning modules
+
+Hash Tables demonstrates separate chaining, normalized negative keys, bounded linear probing, tombstones and incremental rehash. Heaps links array/tree states for min/max operations, bottom-up build and heap sort. Recursion traces factorial, sum, binary search and bounded naive Fibonacci with active frames and a call tree. Two Pointers teaches sorted pair sum, reversal and unique-prefix compaction; Sliding Window contrasts fixed signed windows with a nonnegative variable-window proof.
+
+New executable assets load only when these modules are opened. Existing accounts, experiments, question history and progress survive additive V6 migration. See [module contracts and curriculum](docs/next-modules.md) and [observed verification](docs/verification-next-modules.md). Hash inputs allow 16 key/value pairs; recursion and window limits are explained before Run. Choosing a code-example language still changes only the educational example.
+
 ## Learning preferences
 
 The home Foundations introduction can be marked completed or hidden by finishing all its pages. A permanent Foundations link remains; its module page can mark it incomplete and start a new progress pass while retaining quiz history. Guests save locally and accounts synchronize the choice. Registration requires matching password fields and a minimum of five characters, with the existing maximum safeguards. Graded quizzes retain options and identify only selected wrong answers with a subtle red tint and an Incorrect label.
@@ -84,7 +90,7 @@ IndexedDB upgrades preserve earlier experiments and checkpoints. Login unions ex
 - **frontend/** — React 19.3.1, TypeScript 5.9.3, Vite 8.3.4, SVG, IndexedDB, Wasm worker and bounded snapshot playback.
 - **engine/** — C17 state machines, all algorithm mutations, typed event emission, native correctness/sanitizer tests. Browser glue stays in the worker.
 - **backend/** — Spring Boot 3.5.16 on Java 21, Maven wrapper, BCrypt/session/CSRF authentication, Spring Data JPA, explicit transactional SQL, Flyway/MySQL.
-- **content/** — runtime registry for 14 implementations; curriculum registry for nine lessons; tested example libraries; separate public practice and private recorded questions.
+- **content/** — runtime registry for 20 runtime families; curriculum registry for fourteen lessons; tested example libraries; separate public practice and private recorded questions.
 - **scripts/** — native/Wasm builds, internal source diagnostics, native replay fixtures, content validation and example checks.
 - **docs/** — architecture, contracts, database/coursework, setup, extension guide, roadmap and research proposal.
 - **.github/workflows/** — native, Wasm, frontend, backend/MySQL and browser verification.

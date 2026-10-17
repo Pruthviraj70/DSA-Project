@@ -833,5 +833,354 @@
     ],
     "time": "O(V²) matrix work",
     "space": "O(V) traversal storage beyond the graph; the matrix itself is O(V²)"
+  },
+  "heap-build": {
+    "id": "heap-build",
+    "title": "Bottom-up min/max heap construction",
+    "alternatives": [],
+    "preconditions": [
+      "Values are integers; logical length is in 0..32. maximum=false selects a min-heap; true selects a max-heap.",
+      "Mutation operations assume an existing heap; heap_build/heapBuild is included for explicit setup. C and Java use a capacity buffer plus logical length; vector/list/Array use their current length."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(1)",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\n\nbool better(int a, int b, bool maximum) { return maximum ? a > b : a < b; }\nvoid sift_down(int a[], int n, int root, bool maximum) {\n  while (2 * root + 1 < n) {\n    int child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum))\n      ++child;\n    if (!better(a[child], a[root], maximum))\n      break;\n    int tmp = a[root];\n    a[root] = a[child];\n    a[child] = tmp;\n    root = child;\n  }\n}\nvoid heap_build(int a[], int n, bool maximum) {\n  for (int i = n / 2 - 1; i >= 0; --i)\n    sift_down(a, n, i, maximum);\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\n\nbool better(int a, int b, bool maximum) { return maximum ? a > b : a < b; }\nvoid siftDown(std::vector<int> &a, int n, int root, bool maximum) {\n  while (2 * root + 1 < n) {\n    int child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum))\n      ++child;\n    if (!better(a[child], a[root], maximum))\n      break;\n    std::swap(a[root], a[child]);\n    root = child;\n  }\n}\nvoid heapBuild(std::vector<int> &a, bool maximum) {\n  for (int i = static_cast<int>(a.size()) / 2 - 1; i >= 0; --i)\n    siftDown(a, static_cast<int>(a.size()), i, maximum);\n}\n",
+      "Java": "public class Example {\n\n  static boolean better(int a, int b, boolean maximum) {\n    return maximum ? a > b : a < b;\n  }\n  static void siftDown(int[] a, int n, int root, boolean maximum) {\n    while (2 * root + 1 < n) {\n      int child = 2 * root + 1;\n      if (child + 1 < n && better(a[child + 1], a[child], maximum))\n        ++child;\n      if (!better(a[child], a[root], maximum))\n        break;\n      int tmp = a[root];\n      a[root] = a[child];\n      a[child] = tmp;\n      root = child;\n    }\n  }\n  static void heapBuild(int[] a, int n, boolean maximum) {\n    if (n < 0 || n > a.length)\n      throw new IllegalArgumentException(\"length\");\n    for (int i = n / 2 - 1; i >= 0; --i)\n      siftDown(a, n, i, maximum);\n  }\n}\n",
+      "Python": "def better(a, b, maximum):\n    return a > b if maximum else a < b\n\ndef sift_down(a, n, root, maximum):\n    while 2 * root + 1 < n:\n        child = 2 * root + 1\n        if child + 1 < n and better(a[child + 1], a[child], maximum):\n            child += 1\n        if not better(a[child], a[root], maximum):\n            break\n        a[root], a[child] = a[child], a[root]\n        root = child\n\ndef heap_build(a, maximum=False):\n    for i in range(len(a) // 2 - 1, -1, -1):\n        sift_down(a, len(a), i, maximum)\n",
+      "JavaScript": "\"use strict\";\n\nfunction better(a, b, maximum) {\n  return maximum ? a > b : a < b;\n}\nfunction siftDown(a, n, root, maximum) {\n  while (2 * root + 1 < n) {\n    let child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum)) ++child;\n    if (!better(a[child], a[root], maximum)) break;\n    [a[root], a[child]] = [a[child], a[root]];\n    root = child;\n  }\n}\nfunction heapBuild(a, maximum = false) {\n  for (let i = Math.floor(a.length / 2) - 1; i >= 0; --i)\n    siftDown(a, a.length, i, maximum);\n}\n"
+    }
+  },
+  "heap-insert": {
+    "id": "heap-insert",
+    "title": "Append and sift upward",
+    "alternatives": [],
+    "preconditions": [
+      "Values are integers; logical length is in 0..32. maximum=false selects a min-heap; true selects a max-heap.",
+      "Mutation operations assume an existing heap; heap_build/heapBuild is included for explicit setup. C and Java use a capacity buffer plus logical length; vector/list/Array use their current length."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution.",
+      "Equal priorities do not promise stable ordering. Strict comparisons choose the left child on ties.",
+      "Preparation is O(n) and is separate from the per-operation bound."
+    ],
+    "time": "O(log n) sift with reserved capacity; a dynamic collection can take O(n) when reallocating",
+    "space": "O(1) sifting state; growable collection reallocation may use O(n) storage",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\n\nbool better(int a, int b, bool maximum) { return maximum ? a > b : a < b; }\nvoid sift_down(int a[], int n, int root, bool maximum) {\n  while (2 * root + 1 < n) {\n    int child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum))\n      ++child;\n    if (!better(a[child], a[root], maximum))\n      break;\n    int tmp = a[root];\n    a[root] = a[child];\n    a[child] = tmp;\n    root = child;\n  }\n}\nvoid heap_build(int a[], int n, bool maximum) {\n  for (int i = n / 2 - 1; i >= 0; --i)\n    sift_down(a, n, i, maximum);\n}\nbool heap_insert(int a[], int *n, int capacity, int value, bool maximum) {\n  if (*n < 0 || *n >= capacity || *n >= 32)\n    return false;\n  int i = (*n)++;\n  a[i] = value;\n  while (i > 0) {\n    int p = (i - 1) / 2;\n    if (!better(a[i], a[p], maximum))\n      break;\n    int t = a[i];\n    a[i] = a[p];\n    a[p] = t;\n    i = p;\n  }\n  return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\n\nbool better(int a, int b, bool maximum) { return maximum ? a > b : a < b; }\nvoid siftDown(std::vector<int> &a, int n, int root, bool maximum) {\n  while (2 * root + 1 < n) {\n    int child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum))\n      ++child;\n    if (!better(a[child], a[root], maximum))\n      break;\n    std::swap(a[root], a[child]);\n    root = child;\n  }\n}\nvoid heapBuild(std::vector<int> &a, bool maximum) {\n  for (int i = static_cast<int>(a.size()) / 2 - 1; i >= 0; --i)\n    siftDown(a, static_cast<int>(a.size()), i, maximum);\n}\nvoid heapInsert(std::vector<int> &a, int value, bool maximum = false) {\n  if (a.size() >= 32)\n    throw std::length_error(\"capacity\");\n  a.push_back(value);\n  int i = static_cast<int>(a.size()) - 1;\n  while (i > 0) {\n    int p = (i - 1) / 2;\n    if (!better(a[i], a[p], maximum))\n      break;\n    std::swap(a[i], a[p]);\n    i = p;\n  }\n}\n",
+      "Java": "public class Example {\n\n  static boolean better(int a, int b, boolean maximum) {\n    return maximum ? a > b : a < b;\n  }\n  static void siftDown(int[] a, int n, int root, boolean maximum) {\n    while (2 * root + 1 < n) {\n      int child = 2 * root + 1;\n      if (child + 1 < n && better(a[child + 1], a[child], maximum))\n        ++child;\n      if (!better(a[child], a[root], maximum))\n        break;\n      int tmp = a[root];\n      a[root] = a[child];\n      a[child] = tmp;\n      root = child;\n    }\n  }\n  static void heapBuild(int[] a, int n, boolean maximum) {\n    if (n < 0 || n > a.length)\n      throw new IllegalArgumentException(\"length\");\n    for (int i = n / 2 - 1; i >= 0; --i)\n      siftDown(a, n, i, maximum);\n  }\n  static int heapInsert(int[] a, int n, int value, boolean maximum) {\n    if (n < 0 || n >= a.length || n >= 32)\n      throw new IllegalArgumentException(\"capacity\");\n    int i = n;\n    a[i] = value;\n    while (i > 0) {\n      int p = (i - 1) / 2;\n      if (!better(a[i], a[p], maximum))\n        break;\n      int t = a[i];\n      a[i] = a[p];\n      a[p] = t;\n      i = p;\n    }\n    return n + 1; // assign the returned logical length\n  }\n}\n",
+      "Python": "def better(a, b, maximum):\n    return a > b if maximum else a < b\n\ndef sift_down(a, n, root, maximum):\n    while 2 * root + 1 < n:\n        child = 2 * root + 1\n        if child + 1 < n and better(a[child + 1], a[child], maximum):\n            child += 1\n        if not better(a[child], a[root], maximum):\n            break\n        a[root], a[child] = a[child], a[root]\n        root = child\n\ndef heap_build(a, maximum=False):\n    for i in range(len(a) // 2 - 1, -1, -1):\n        sift_down(a, len(a), i, maximum)\n\ndef heap_insert(a, value, maximum=False):\n    if len(a) >= 32:\n        raise ValueError(\"capacity\")\n    a.append(value)\n    i = len(a) - 1\n    while i > 0:\n        parent = (i - 1) // 2\n        if not better(a[i], a[parent], maximum):\n            break\n        a[i], a[parent] = a[parent], a[i]\n        i = parent\n",
+      "JavaScript": "\"use strict\";\n\nfunction better(a, b, maximum) {\n  return maximum ? a > b : a < b;\n}\nfunction siftDown(a, n, root, maximum) {\n  while (2 * root + 1 < n) {\n    let child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum)) ++child;\n    if (!better(a[child], a[root], maximum)) break;\n    [a[root], a[child]] = [a[child], a[root]];\n    root = child;\n  }\n}\nfunction heapBuild(a, maximum = false) {\n  for (let i = Math.floor(a.length / 2) - 1; i >= 0; --i)\n    siftDown(a, a.length, i, maximum);\n}\nfunction heapInsert(a, value, maximum = false) {\n  if (a.length >= 32) throw new RangeError(\"capacity\");\n  a.push(value);\n  let i = a.length - 1;\n  while (i > 0) {\n    let p = Math.floor((i - 1) / 2);\n    if (!better(a[i], a[p], maximum)) break;\n    [a[i], a[p]] = [a[p], a[i]];\n    i = p;\n  }\n}\n"
+    }
+  },
+  "heap-extract": {
+    "id": "heap-extract",
+    "title": "Remove the highest-priority root",
+    "alternatives": [],
+    "preconditions": [
+      "Values are integers; logical length is in 0..32. maximum=false selects a min-heap; true selects a max-heap.",
+      "Mutation operations assume an existing heap; heap_build/heapBuild is included for explicit setup. C and Java use a capacity buffer plus logical length; vector/list/Array use their current length."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution.",
+      "Equal priorities do not promise stable ordering. Strict comparisons choose the left child on ties.",
+      "Preparation is O(n) and is separate from the per-operation bound."
+    ],
+    "time": "O(log n)",
+    "space": "O(1) auxiliary storage",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\n\nbool better(int a, int b, bool maximum) { return maximum ? a > b : a < b; }\nvoid sift_down(int a[], int n, int root, bool maximum) {\n  while (2 * root + 1 < n) {\n    int child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum))\n      ++child;\n    if (!better(a[child], a[root], maximum))\n      break;\n    int tmp = a[root];\n    a[root] = a[child];\n    a[child] = tmp;\n    root = child;\n  }\n}\nvoid heap_build(int a[], int n, bool maximum) {\n  for (int i = n / 2 - 1; i >= 0; --i)\n    sift_down(a, n, i, maximum);\n}\nbool heap_extract(int a[], int *n, bool maximum, int *removed) {\n  if (*n <= 0)\n    return false;\n  *removed = a[0];\n  a[0] = a[--*n];\n  sift_down(a, *n, 0, maximum);\n  return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\n\nbool better(int a, int b, bool maximum) { return maximum ? a > b : a < b; }\nvoid siftDown(std::vector<int> &a, int n, int root, bool maximum) {\n  while (2 * root + 1 < n) {\n    int child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum))\n      ++child;\n    if (!better(a[child], a[root], maximum))\n      break;\n    std::swap(a[root], a[child]);\n    root = child;\n  }\n}\nvoid heapBuild(std::vector<int> &a, bool maximum) {\n  for (int i = static_cast<int>(a.size()) / 2 - 1; i >= 0; --i)\n    siftDown(a, static_cast<int>(a.size()), i, maximum);\n}\nint heapExtract(std::vector<int> &a, bool maximum = false) {\n  if (a.empty())\n    throw std::underflow_error(\"empty heap\");\n  int result = a[0];\n  a[0] = a.back();\n  a.pop_back();\n  siftDown(a, static_cast<int>(a.size()), 0, maximum);\n  return result;\n}\n",
+      "Java": "public class Example {\n\n  static boolean better(int a, int b, boolean maximum) {\n    return maximum ? a > b : a < b;\n  }\n  static void siftDown(int[] a, int n, int root, boolean maximum) {\n    while (2 * root + 1 < n) {\n      int child = 2 * root + 1;\n      if (child + 1 < n && better(a[child + 1], a[child], maximum))\n        ++child;\n      if (!better(a[child], a[root], maximum))\n        break;\n      int tmp = a[root];\n      a[root] = a[child];\n      a[child] = tmp;\n      root = child;\n    }\n  }\n  static void heapBuild(int[] a, int n, boolean maximum) {\n    if (n < 0 || n > a.length)\n      throw new IllegalArgumentException(\"length\");\n    for (int i = n / 2 - 1; i >= 0; --i)\n      siftDown(a, n, i, maximum);\n  }\n  record Removal(int value, int length) {}\n  static Removal heapExtract(int[] a, int n, boolean maximum) {\n    if (n <= 0 || n > a.length)\n      throw new IllegalArgumentException(\"empty/length\");\n    int result = a[0];\n    a[0] = a[n - 1];\n    siftDown(a, n - 1, 0, maximum);\n    return new Removal(result, n - 1);\n  }\n}\n",
+      "Python": "def better(a, b, maximum):\n    return a > b if maximum else a < b\n\ndef sift_down(a, n, root, maximum):\n    while 2 * root + 1 < n:\n        child = 2 * root + 1\n        if child + 1 < n and better(a[child + 1], a[child], maximum):\n            child += 1\n        if not better(a[child], a[root], maximum):\n            break\n        a[root], a[child] = a[child], a[root]\n        root = child\n\ndef heap_build(a, maximum=False):\n    for i in range(len(a) // 2 - 1, -1, -1):\n        sift_down(a, len(a), i, maximum)\n\ndef heap_extract(a, maximum=False):\n    if not a:\n        raise ValueError(\"empty heap\")\n    result = a[0]\n    last = a.pop()\n    if a:\n        a[0] = last\n        sift_down(a, len(a), 0, maximum)\n    return result\n",
+      "JavaScript": "\"use strict\";\n\nfunction better(a, b, maximum) {\n  return maximum ? a > b : a < b;\n}\nfunction siftDown(a, n, root, maximum) {\n  while (2 * root + 1 < n) {\n    let child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum)) ++child;\n    if (!better(a[child], a[root], maximum)) break;\n    [a[root], a[child]] = [a[child], a[root]];\n    root = child;\n  }\n}\nfunction heapBuild(a, maximum = false) {\n  for (let i = Math.floor(a.length / 2) - 1; i >= 0; --i)\n    siftDown(a, a.length, i, maximum);\n}\nfunction heapExtract(a, maximum = false) {\n  if (!a.length) throw new RangeError(\"empty heap\");\n  const result = a[0],\n    last = a.pop();\n  if (a.length) {\n    a[0] = last;\n    siftDown(a, a.length, 0, maximum);\n  }\n  return result;\n}\n"
+    }
+  },
+  "heap-peek": {
+    "id": "heap-peek",
+    "title": "Inspect the root without removal",
+    "alternatives": [],
+    "preconditions": [
+      "Values are integers; logical length is in 0..32. maximum=false selects a min-heap; true selects a max-heap.",
+      "Mutation operations assume an existing heap; heap_build/heapBuild is included for explicit setup. C and Java use a capacity buffer plus logical length; vector/list/Array use their current length."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution.",
+      "Equal priorities do not promise stable ordering. Strict comparisons choose the left child on ties.",
+      "Preparation is O(n) and is separate from the per-operation bound."
+    ],
+    "time": "O(1)",
+    "space": "O(1) auxiliary storage",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\n\nbool better(int a, int b, bool maximum) { return maximum ? a > b : a < b; }\nvoid sift_down(int a[], int n, int root, bool maximum) {\n  while (2 * root + 1 < n) {\n    int child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum))\n      ++child;\n    if (!better(a[child], a[root], maximum))\n      break;\n    int tmp = a[root];\n    a[root] = a[child];\n    a[child] = tmp;\n    root = child;\n  }\n}\nvoid heap_build(int a[], int n, bool maximum) {\n  for (int i = n / 2 - 1; i >= 0; --i)\n    sift_down(a, n, i, maximum);\n}\nbool heap_peek(const int a[], int n, int *result) {\n  if (n <= 0)\n    return false;\n  *result = a[0];\n  return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\n\nbool better(int a, int b, bool maximum) { return maximum ? a > b : a < b; }\nvoid siftDown(std::vector<int> &a, int n, int root, bool maximum) {\n  while (2 * root + 1 < n) {\n    int child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum))\n      ++child;\n    if (!better(a[child], a[root], maximum))\n      break;\n    std::swap(a[root], a[child]);\n    root = child;\n  }\n}\nvoid heapBuild(std::vector<int> &a, bool maximum) {\n  for (int i = static_cast<int>(a.size()) / 2 - 1; i >= 0; --i)\n    siftDown(a, static_cast<int>(a.size()), i, maximum);\n}\nint heapPeek(const std::vector<int> &a) {\n  if (a.empty())\n    throw std::underflow_error(\"empty heap\");\n  return a[0];\n}\n",
+      "Java": "public class Example {\n\n  static boolean better(int a, int b, boolean maximum) {\n    return maximum ? a > b : a < b;\n  }\n  static void siftDown(int[] a, int n, int root, boolean maximum) {\n    while (2 * root + 1 < n) {\n      int child = 2 * root + 1;\n      if (child + 1 < n && better(a[child + 1], a[child], maximum))\n        ++child;\n      if (!better(a[child], a[root], maximum))\n        break;\n      int tmp = a[root];\n      a[root] = a[child];\n      a[child] = tmp;\n      root = child;\n    }\n  }\n  static void heapBuild(int[] a, int n, boolean maximum) {\n    if (n < 0 || n > a.length)\n      throw new IllegalArgumentException(\"length\");\n    for (int i = n / 2 - 1; i >= 0; --i)\n      siftDown(a, n, i, maximum);\n  }\n  static int heapPeek(int[] a, int n) {\n    if (n <= 0 || n > a.length)\n      throw new IllegalArgumentException(\"empty/length\");\n    return a[0];\n  }\n}\n",
+      "Python": "def better(a, b, maximum):\n    return a > b if maximum else a < b\n\ndef sift_down(a, n, root, maximum):\n    while 2 * root + 1 < n:\n        child = 2 * root + 1\n        if child + 1 < n and better(a[child + 1], a[child], maximum):\n            child += 1\n        if not better(a[child], a[root], maximum):\n            break\n        a[root], a[child] = a[child], a[root]\n        root = child\n\ndef heap_build(a, maximum=False):\n    for i in range(len(a) // 2 - 1, -1, -1):\n        sift_down(a, len(a), i, maximum)\n\ndef heap_peek(a):\n    if not a:\n        raise ValueError(\"empty heap\")\n    return a[0]\n",
+      "JavaScript": "\"use strict\";\n\nfunction better(a, b, maximum) {\n  return maximum ? a > b : a < b;\n}\nfunction siftDown(a, n, root, maximum) {\n  while (2 * root + 1 < n) {\n    let child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum)) ++child;\n    if (!better(a[child], a[root], maximum)) break;\n    [a[root], a[child]] = [a[child], a[root]];\n    root = child;\n  }\n}\nfunction heapBuild(a, maximum = false) {\n  for (let i = Math.floor(a.length / 2) - 1; i >= 0; --i)\n    siftDown(a, a.length, i, maximum);\n}\nfunction heapPeek(a) {\n  if (!a.length) throw new RangeError(\"empty heap\");\n  return a[0];\n}\n"
+    }
+  },
+  "heap-sort": {
+    "id": "heap-sort",
+    "title": "Ascending in-place heap sort",
+    "alternatives": [],
+    "preconditions": [
+      "Values are integers; logical length is in 0..32. maximum=false selects a min-heap; true selects a max-heap.",
+      "Mutation operations assume an existing heap; heap_build/heapBuild is included for explicit setup. C and Java use a capacity buffer plus logical length; vector/list/Array use their current length."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution.",
+      "Equal priorities do not promise stable ordering. Strict comparisons choose the left child on ties.",
+      "Preparation is O(n) and is separate from the per-operation bound."
+    ],
+    "time": "O(n log n)",
+    "space": "O(1) auxiliary storage",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\n\nbool better(int a, int b, bool maximum) { return maximum ? a > b : a < b; }\nvoid sift_down(int a[], int n, int root, bool maximum) {\n  while (2 * root + 1 < n) {\n    int child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum))\n      ++child;\n    if (!better(a[child], a[root], maximum))\n      break;\n    int tmp = a[root];\n    a[root] = a[child];\n    a[child] = tmp;\n    root = child;\n  }\n}\nvoid heap_build(int a[], int n, bool maximum) {\n  for (int i = n / 2 - 1; i >= 0; --i)\n    sift_down(a, n, i, maximum);\n}\nvoid heap_sort(int a[], int n) {\n  heap_build(a, n, true);\n  for (int end = n - 1; end > 0; --end) {\n    int t = a[0];\n    a[0] = a[end];\n    a[end] = t;\n    sift_down(a, end, 0, true);\n  }\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\n\nbool better(int a, int b, bool maximum) { return maximum ? a > b : a < b; }\nvoid siftDown(std::vector<int> &a, int n, int root, bool maximum) {\n  while (2 * root + 1 < n) {\n    int child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum))\n      ++child;\n    if (!better(a[child], a[root], maximum))\n      break;\n    std::swap(a[root], a[child]);\n    root = child;\n  }\n}\nvoid heapBuild(std::vector<int> &a, bool maximum) {\n  for (int i = static_cast<int>(a.size()) / 2 - 1; i >= 0; --i)\n    siftDown(a, static_cast<int>(a.size()), i, maximum);\n}\nvoid heapSort(std::vector<int> &a) {\n  heapBuild(a, true);\n  for (int end = static_cast<int>(a.size()) - 1; end > 0; --end) {\n    std::swap(a[0], a[end]);\n    siftDown(a, end, 0, true);\n  }\n}\n",
+      "Java": "public class Example {\n\n  static boolean better(int a, int b, boolean maximum) {\n    return maximum ? a > b : a < b;\n  }\n  static void siftDown(int[] a, int n, int root, boolean maximum) {\n    while (2 * root + 1 < n) {\n      int child = 2 * root + 1;\n      if (child + 1 < n && better(a[child + 1], a[child], maximum))\n        ++child;\n      if (!better(a[child], a[root], maximum))\n        break;\n      int tmp = a[root];\n      a[root] = a[child];\n      a[child] = tmp;\n      root = child;\n    }\n  }\n  static void heapBuild(int[] a, int n, boolean maximum) {\n    if (n < 0 || n > a.length)\n      throw new IllegalArgumentException(\"length\");\n    for (int i = n / 2 - 1; i >= 0; --i)\n      siftDown(a, n, i, maximum);\n  }\n  static void heapSort(int[] a) {\n    heapBuild(a, a.length, true);\n    for (int end = a.length - 1; end > 0; --end) {\n      int t = a[0];\n      a[0] = a[end];\n      a[end] = t;\n      siftDown(a, end, 0, true);\n    }\n  }\n}\n",
+      "Python": "def better(a, b, maximum):\n    return a > b if maximum else a < b\n\ndef sift_down(a, n, root, maximum):\n    while 2 * root + 1 < n:\n        child = 2 * root + 1\n        if child + 1 < n and better(a[child + 1], a[child], maximum):\n            child += 1\n        if not better(a[child], a[root], maximum):\n            break\n        a[root], a[child] = a[child], a[root]\n        root = child\n\ndef heap_build(a, maximum=False):\n    for i in range(len(a) // 2 - 1, -1, -1):\n        sift_down(a, len(a), i, maximum)\n\ndef heap_sort(a):\n    heap_build(a, True)\n    for end in range(len(a) - 1, 0, -1):\n        a[0], a[end] = a[end], a[0]\n        sift_down(a, end, 0, True)\n",
+      "JavaScript": "\"use strict\";\n\nfunction better(a, b, maximum) {\n  return maximum ? a > b : a < b;\n}\nfunction siftDown(a, n, root, maximum) {\n  while (2 * root + 1 < n) {\n    let child = 2 * root + 1;\n    if (child + 1 < n && better(a[child + 1], a[child], maximum)) ++child;\n    if (!better(a[child], a[root], maximum)) break;\n    [a[root], a[child]] = [a[child], a[root]];\n    root = child;\n  }\n}\nfunction heapBuild(a, maximum = false) {\n  for (let i = Math.floor(a.length / 2) - 1; i >= 0; --i)\n    siftDown(a, a.length, i, maximum);\n}\nfunction heapSort(a) {\n  heapBuild(a, true);\n  for (let end = a.length - 1; end > 0; --end) {\n    [a[0], a[end]] = [a[end], a[0]];\n    siftDown(a, end, 0, true);\n  }\n}\n"
+    }
+  },
+  "rec-factorial": {
+    "id": "rec-factorial",
+    "title": "Factorial with a safe finite contract",
+    "alternatives": [],
+    "preconditions": [
+      "Integer n in 0..12; 12! fits signed 32-bit range. Invalid n is rejected."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(n) call stack",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\nlong long factorial(int n) {\n  if (n < 0 || n > 12)\n    return -1;\n  if (n <= 1)\n    return 1;\n  return n * factorial(n - 1);\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\nlong long factorial(int n) {\n  if (n < 0 || n > 12)\n    throw std::out_of_range(\"n\");\n  if (n <= 1)\n    return 1;\n  return n * factorial(n - 1);\n}\n",
+      "Java": "public class Example {\n  static long factorial(int n) {\n    if (n < 0 || n > 12)\n      throw new IllegalArgumentException(\"n\");\n    if (n <= 1)\n      return 1;\n    return n * factorial(n - 1);\n  }\n}\n",
+      "Python": "def factorial(n):\n    if not 0 <= n <= 12:\n        raise ValueError(\"n\")\n    return 1 if n <= 1 else n * factorial(n - 1)\n",
+      "JavaScript": "\"use strict\";\nfunction factorial(n) {\n  if (!Number.isInteger(n) || n < 0 || n > 12) throw new RangeError(\"n\");\n  return n <= 1 ? 1 : n * factorial(n - 1);\n}\n"
+    }
+  },
+  "rec-sum": {
+    "id": "rec-sum",
+    "title": "Recursive sum of a prefix",
+    "alternatives": [],
+    "preconditions": [
+      "0≤n≤32 and n≤array length; |value|≤100000. The input is not modified."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(n) call stack",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\nlong long prefix_sum(const int a[], int n) {\n  if (n < 0 || n > 32)\n    return LLONG_MIN;\n  if (!n)\n    return 0;\n  return prefix_sum(a, n - 1) + a[n - 1];\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\nlong long prefixSum(const std::vector<int> &a, int n) {\n  if (n < 0 || n > 32 || n > static_cast<int>(a.size()))\n    throw std::out_of_range(\"n\");\n  return n ? prefixSum(a, n - 1) + a[n - 1] : 0;\n}\n",
+      "Java": "public class Example {\n  static long prefixSum(int[] a, int n) {\n    if (n < 0 || n > 32 || n > a.length)\n      throw new IllegalArgumentException(\"n\");\n    return n == 0 ? 0 : prefixSum(a, n - 1) + a[n - 1];\n  }\n}\n",
+      "Python": "def prefix_sum(a, n):\n    if not 0 <= n <= min(32, len(a)):\n        raise ValueError(\"n\")\n    return 0 if n == 0 else prefix_sum(a, n - 1) + a[n - 1]\n",
+      "JavaScript": "\"use strict\";\nfunction prefixSum(a, n) {\n  if (!Number.isInteger(n) || n < 0 || n > 32 || n > a.length)\n    throw new RangeError(\"n\");\n  return n === 0 ? 0 : prefixSum(a, n - 1) + a[n - 1];\n}\n"
+    }
+  },
+  "rec-binary": {
+    "id": "rec-binary",
+    "title": "Recursive inclusive binary search",
+    "alternatives": [],
+    "preconditions": [
+      "Input is sorted ascending and length≤32. Call with lo=0, hi=length-1. Bounds describe a valid subrange, including an empty crossed interval.",
+      "Returns any matching index or -1. The visualization checks sortedness; these functions assume it rather than adding a linear scan to each recursive call."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(log n) after prerequisite validation",
+    "space": "O(log n) call stack",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\nint recursive_search(const int a[], int lo, int hi, int target) {\n  if (lo > hi)\n    return -1;\n  int mid = lo + (hi - lo) / 2;\n  if (a[mid] == target)\n    return mid;\n  return a[mid] < target ? recursive_search(a, mid + 1, hi, target)\n                         : recursive_search(a, lo, mid - 1, target);\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\nint recursiveSearch(const std::vector<int> &a, int lo, int hi, int target) {\n  if (lo > hi)\n    return -1;\n  int mid = lo + (hi - lo) / 2;\n  if (a[mid] == target)\n    return mid;\n  return a[mid] < target ? recursiveSearch(a, mid + 1, hi, target)\n                         : recursiveSearch(a, lo, mid - 1, target);\n}\n",
+      "Java": "public class Example {\n  static int recursiveSearch(int[] a, int lo, int hi, int target) {\n    if (lo > hi)\n      return -1;\n    int mid = lo + (hi - lo) / 2;\n    if (a[mid] == target)\n      return mid;\n    return a[mid] < target ? recursiveSearch(a, mid + 1, hi, target)\n                           : recursiveSearch(a, lo, mid - 1, target);\n  }\n}\n",
+      "Python": "def recursive_search(a, lo, hi, target):\n    if lo > hi:\n        return -1\n    mid = lo + (hi - lo) // 2\n    if a[mid] == target:\n        return mid\n    if a[mid] < target:\n        return recursive_search(a, mid + 1, hi, target)\n    return recursive_search(a, lo, mid - 1, target)\n",
+      "JavaScript": "\"use strict\";\nfunction recursiveSearch(a, lo, hi, target) {\n  if (lo > hi) return -1;\n  const mid = lo + Math.floor((hi - lo) / 2);\n  if (a[mid] === target) return mid;\n  return a[mid] < target\n    ? recursiveSearch(a, mid + 1, hi, target)\n    : recursiveSearch(a, lo, mid - 1, target);\n}\n"
+    }
+  },
+  "rec-fibonacci": {
+    "id": "rec-fibonacci",
+    "title": "Branching Fibonacci without memoization",
+    "alternatives": [],
+    "preconditions": [
+      "Integer n in 0..10. Repeated subproblems are intentionally recomputed to illustrate total calls versus active depth."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(2^n) upper bound",
+    "space": "O(n) maximum call-stack depth",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\nlong long fibonacci(int n) {\n  if (n < 0 || n > 10)\n    return -1;\n  if (n <= 1)\n    return n;\n  long long first = fibonacci(n - 1);\n  long long second = fibonacci(n - 2);\n  return first + second;\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\nlong long fibonacci(int n) {\n  if (n < 0 || n > 10)\n    throw std::out_of_range(\"n\");\n  if (n <= 1)\n    return n;\n  auto first = fibonacci(n - 1);\n  auto second = fibonacci(n - 2);\n  return first + second;\n}\n",
+      "Java": "public class Example {\n  static long fibonacci(int n) {\n    if (n < 0 || n > 10)\n      throw new IllegalArgumentException(\"n\");\n    if (n <= 1)\n      return n;\n    long first = fibonacci(n - 1);\n    long second = fibonacci(n - 2);\n    return first + second;\n  }\n}\n",
+      "Python": "def fibonacci(n):\n    if not 0 <= n <= 10:\n        raise ValueError(\"n\")\n    if n <= 1:\n        return n\n    first = fibonacci(n - 1)\n    second = fibonacci(n - 2)\n    return first + second\n",
+      "JavaScript": "\"use strict\";\nfunction fibonacci(n) {\n  if (!Number.isInteger(n) || n < 0 || n > 10) throw new RangeError(\"n\");\n  if (n <= 1) return n;\n  const first = fibonacci(n - 1),\n    second = fibonacci(n - 2);\n  return first + second;\n}\n"
+    }
+  },
+  "two-pair": {
+    "id": "two-pair",
+    "title": "Opposite pointers for sorted pair sum",
+    "alternatives": [],
+    "preconditions": [
+      "Input is sorted ascending, length≤32 and |value|,|target|≤100000. Sortedness is a prerequisite, not silently repaired.",
+      "Two distinct indices are returned; no solution uses (-1,-1) or null/None. Cast before addition in fixed-width examples."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(1)",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\ntypedef struct {\n  int left, right;\n} Pair;\nPair pair_sum(const int a[], int n, int target) {\n  int l = 0, r = n - 1;\n  while (l < r) {\n    long long sum = (long long)a[l] + a[r];\n    if (sum == target)\n      return (Pair){l, r};\n    if (sum < target)\n      ++l;\n    else\n      --r;\n  }\n  return (Pair){-1, -1};\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\nstd::pair<int, int> pairSum(const std::vector<int> &a, int target) {\n  int l = 0, r = static_cast<int>(a.size()) - 1;\n  while (l < r) {\n    long long sum = static_cast<long long>(a[l]) + a[r];\n    if (sum == target)\n      return {l, r};\n    if (sum < target)\n      ++l;\n    else\n      --r;\n  }\n  return {-1, -1};\n}\n",
+      "Java": "public class Example {\n  record Pair(int left, int right) {}\n  static Pair pairSum(int[] a, int target) {\n    int l = 0, r = a.length - 1;\n    while (l < r) {\n      long sum = (long)a[l] + a[r];\n      if (sum == target)\n        return new Pair(l, r);\n      if (sum < target)\n        ++l;\n      else\n        --r;\n    }\n    return new Pair(-1, -1);\n  }\n}\n",
+      "Python": "def pair_sum(a, target):\n    left, right = 0, len(a) - 1\n    while left < right:\n        total = a[left] + a[right]\n        if total == target:\n            return left, right\n        if total < target:\n            left += 1\n        else:\n            right -= 1\n    return None\n",
+      "JavaScript": "\"use strict\";\nfunction pairSum(a, target) {\n  let left = 0,\n    right = a.length - 1;\n  while (left < right) {\n    const total = a[left] + a[right];\n    if (total === target) return [left, right];\n    if (total < target) ++left;\n    else --right;\n  }\n  return null;\n}\n"
+    }
+  },
+  "two-reverse": {
+    "id": "two-reverse",
+    "title": "Reverse by swapping endpoints",
+    "alternatives": [],
+    "preconditions": [
+      "Array length≤32; no sorting precondition. Mutates the original array."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(1)",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\nvoid reverse_values(int a[], int n) {\n  int l = 0, r = n - 1;\n  while (l < r) {\n    int t = a[l];\n    a[l++] = a[r];\n    a[r--] = t;\n  }\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\nvoid reverseValues(std::vector<int> &a) {\n  int l = 0, r = static_cast<int>(a.size()) - 1;\n  while (l < r)\n    std::swap(a[l++], a[r--]);\n}\n",
+      "Java": "public class Example {\n  static void reverseValues(int[] a) {\n    int l = 0, r = a.length - 1;\n    while (l < r) {\n      int t = a[l];\n      a[l++] = a[r];\n      a[r--] = t;\n    }\n  }\n}\n",
+      "Python": "def reverse_values(a):\n    left, right = 0, len(a) - 1\n    while left < right:\n        a[left], a[right] = a[right], a[left]\n        left += 1\n        right -= 1\n",
+      "JavaScript": "\"use strict\";\nfunction reverseValues(a) {\n  let l = 0,\n    r = a.length - 1;\n  while (l < r) {\n    [a[l], a[r]] = [a[r], a[l]];\n    ++l;\n    --r;\n  }\n}\n"
+    }
+  },
+  "two-unique": {
+    "id": "two-unique",
+    "title": "Compact a sorted distinct prefix",
+    "alternatives": [],
+    "preconditions": [
+      "Input is sorted ascending, length≤32. Returns logical output length; physical capacity and suffix contents remain unchanged."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(1)",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\nint unique_prefix(int a[], int n) {\n  if (!n)\n    return 0;\n  int write = 1;\n  for (int read = 1; read < n; ++read)\n    if (a[read] != a[write - 1])\n      a[write++] = a[read];\n  return write;\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\nint uniquePrefix(std::vector<int> &a) {\n  if (a.empty())\n    return 0;\n  int write = 1;\n  for (int read = 1; read < static_cast<int>(a.size()); ++read)\n    if (a[read] != a[write - 1])\n      a[write++] = a[read];\n  return write;\n}\n",
+      "Java": "public class Example {\n  static int uniquePrefix(int[] a) {\n    if (a.length == 0)\n      return 0;\n    int write = 1;\n    for (int read = 1; read < a.length; ++read)\n      if (a[read] != a[write - 1])\n        a[write++] = a[read];\n    return write;\n  }\n}\n",
+      "Python": "def unique_prefix(a):\n    if not a:\n        return 0\n    write = 1\n    for read in range(1, len(a)):\n        if a[read] != a[write - 1]:\n            a[write] = a[read]\n            write += 1\n    return write\n",
+      "JavaScript": "\"use strict\";\nfunction uniquePrefix(a) {\n  if (!a.length) return 0;\n  let write = 1;\n  for (let read = 1; read < a.length; ++read)\n    if (a[read] !== a[write - 1]) a[write++] = a[read];\n  return write;\n}\n"
+    }
+  },
+  "window-fixed": {
+    "id": "window-fixed",
+    "title": "Maximum sum of exactly k values",
+    "alternatives": [],
+    "preconditions": [
+      "1≤k≤n≤32; |value|≤100000, including negative values. Strict improvement retains the first best window.",
+      "C invalid input returns start=-1; other languages raise an argument/range error."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(1)",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\ntypedef struct {\n  long long sum;\n  int start;\n} Window;\nWindow fixed_window(const int a[], int n, int k) {\n  if (k < 1 || k > n || n > 32)\n    return (Window){0, -1};\n  long long sum = 0;\n  for (int i = 0; i < k; ++i)\n    sum += a[i];\n  Window best = {sum, 0};\n  for (int r = k; r < n; ++r) {\n    sum += (long long)a[r] - a[r - k];\n    if (sum > best.sum)\n      best = (Window){sum, r - k + 1};\n  }\n  return best;\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\nstd::pair<long long, int> fixedWindow(const std::vector<int> &a, int k) {\n  int n = static_cast<int>(a.size());\n  if (k < 1 || k > n || n > 32)\n    throw std::out_of_range(\"k\");\n  long long sum = 0;\n  for (int i = 0; i < k; ++i)\n    sum += a[i];\n  std::pair<long long, int> best{sum, 0};\n  for (int r = k; r < n; ++r) {\n    sum += static_cast<long long>(a[r]) - a[r - k];\n    if (sum > best.first)\n      best = {sum, r - k + 1};\n  }\n  return best;\n}\n",
+      "Java": "public class Example {\n  record Window(long sum, int start) {}\n  static Window fixedWindow(int[] a, int k) {\n    if (k < 1 || k > a.length || a.length > 32)\n      throw new IllegalArgumentException(\"k\");\n    long sum = 0;\n    for (int i = 0; i < k; ++i)\n      sum += a[i];\n    Window best = new Window(sum, 0);\n    for (int r = k; r < a.length; ++r) {\n      sum += (long)a[r] - a[r - k];\n      if (sum > best.sum())\n        best = new Window(sum, r - k + 1);\n    }\n    return best;\n  }\n}\n",
+      "Python": "def fixed_window(a, k):\n    if not 1 <= k <= len(a) <= 32:\n        raise ValueError(\"k\")\n    total = 0\n    for i in range(k):\n        total += a[i]\n    best, start = total, 0\n    for right in range(k, len(a)):\n        total += a[right] - a[right - k]\n        if total > best:\n            best, start = total, right - k + 1\n    return best, start\n",
+      "JavaScript": "\"use strict\";\nfunction fixedWindow(a, k) {\n  if (!Number.isInteger(k) || k < 1 || k > a.length || a.length > 32)\n    throw new RangeError(\"k\");\n  let sum = 0;\n  for (let i = 0; i < k; ++i) sum += a[i];\n  let best = sum,\n    start = 0;\n  for (let r = k; r < a.length; ++r) {\n    sum += a[r] - a[r - k];\n    if (sum > best) {\n      best = sum;\n      start = r - k + 1;\n    }\n  }\n  return [best, start];\n}\n"
+    }
+  },
+  "window-variable": {
+    "id": "window-variable",
+    "title": "Shortest nonnegative window reaching a target",
+    "alternatives": [],
+    "preconditions": [
+      "n≤32, 0≤value≤100000 and positive target≤100000. No solution is (length=0,start=-1).",
+      "Invalid negative inputs/targets are rejected. A 64-bit sum is used in fixed-width examples; lab bounds keep JavaScript Number additions exact."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(1)",
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdlib.h>\ntypedef struct {\n  int length, start;\n} Shortest;\nShortest minimum_window(const int a[], int n, int target) {\n  if (n < 0 || n > 32 || target <= 0)\n    return (Shortest){-1, -1};\n  for (int i = 0; i < n; ++i)\n    if (a[i] < 0 || a[i] > 100000)\n      return (Shortest){-1, -1};\n  Shortest best = {0, -1};\n  long long sum = 0;\n  int left = 0;\n  for (int right = 0; right < n; ++right) {\n    sum += a[right];\n    while (sum >= target) {\n      int length = right - left + 1;\n      if (!best.length || length < best.length)\n        best = (Shortest){length, left};\n      sum -= a[left++];\n    }\n  }\n  return best;\n}\n",
+      "C++": "#include <algorithm>\n#include <stdexcept>\n#include <utility>\n#include <vector>\nstd::pair<int, int> minimumWindow(const std::vector<int> &a, int target) {\n  if (a.size() > 32 || target <= 0)\n    throw std::out_of_range(\"input\");\n  for (int v : a)\n    if (v < 0 || v > 100000)\n      throw std::out_of_range(\"value\");\n  int left = 0, best = 0, start = -1;\n  long long sum = 0;\n  for (int right = 0; right < static_cast<int>(a.size()); ++right) {\n    sum += a[right];\n    while (sum >= target) {\n      int length = right - left + 1;\n      if (!best || length < best) {\n        best = length;\n        start = left;\n      }\n      sum -= a[left++];\n    }\n  }\n  return {best, start};\n}\n",
+      "Java": "public class Example {\n  record Shortest(int length, int start) {}\n  static Shortest minimumWindow(int[] a, int target) {\n    if (a.length > 32 || target <= 0)\n      throw new IllegalArgumentException(\"input\");\n    for (int v : a)\n      if (v < 0 || v > 100000)\n        throw new IllegalArgumentException(\"value\");\n    int left = 0, best = 0, start = -1;\n    long sum = 0;\n    for (int right = 0; right < a.length; ++right) {\n      sum += a[right];\n      while (sum >= target) {\n        int length = right - left + 1;\n        if (best == 0 || length < best) {\n          best = length;\n          start = left;\n        }\n        sum -= a[left++];\n      }\n    }\n    return new Shortest(best, start);\n  }\n}\n",
+      "Python": "def minimum_window(a, target):\n    if len(a) > 32 or target <= 0 or any(v < 0 or v > 100000 for v in a):\n        raise ValueError(\"nonnegative values and positive target required\")\n    left, total, best, start = 0, 0, 0, -1\n    for right, value in enumerate(a):\n        total += value\n        while total >= target:\n            length = right - left + 1\n            if best == 0 or length < best:\n                best, start = length, left\n            total -= a[left]\n            left += 1\n    return best, start\n",
+      "JavaScript": "\"use strict\";\nfunction minimumWindow(a, target) {\n  if (a.length > 32 || target <= 0 || a.some((v) => v < 0 || v > 100000))\n    throw new RangeError(\"input\");\n  let left = 0,\n    sum = 0,\n    best = 0,\n    start = -1;\n  for (let right = 0; right < a.length; ++right) {\n    sum += a[right];\n    while (sum >= target) {\n      const length = right - left + 1;\n      if (!best || length < best) {\n        best = length;\n        start = left;\n      }\n      sum -= a[left++];\n    }\n  }\n  return [best, start];\n}\n"
+    }
+  },
+  "hash-chain": {
+    "id": "hash-chain",
+    "title": "Complete integer map: separate chaining",
+    "alternatives": [
+      "hash-probe"
+    ],
+    "preconditions": [
+      "Integer keys and values in ±100000. Initialize an empty map first; these example maps hold up to 32 distinct keys, with capacity 8..64. The interactive input has at most 16 initial pairs plus one operation.",
+      "Duplicate insertion updates; missing lookup is distinct from a stored zero. Probing stops after at most capacity inspections."
+    ],
+    "notes": [
+      "Chaining C allocates nodes and requires map_free after successful map_init. C++ vectors own their entries; Java/Python/JavaScript use managed storage.",
+      "The C lookup returns a success boolean and writes an output parameter. Other examples use optional/null/None for missing integer values.",
+      "Rehashing recomputes buckets and removes tombstones. The live-load threshold is 0.75.",
+      "Chaining examples with collection buckets may shift a bucket list on deletion; the C linked representation unlinks nodes. Both traverse colliding keys, with linear worst-case bucket work."
+    ],
+    "time": "Expected O(1) under distribution/load assumptions; O(n) worst-case operation; rehash O(n+capacity)",
+    "space": "O(n+capacity) map storage; rehash temporarily holds old and new storage",
+    "codes": {
+      "C": "#include <stdbool.h>\n#include <stdlib.h>\ntypedef struct Entry {\n  int key, value;\n  struct Entry *next;\n} Entry;\ntypedef struct {\n  Entry **buckets;\n  int capacity, size;\n} HashTable;\nint bucket(int key, int capacity) {\n  int r = key % capacity;\n  return r < 0 ? r + capacity : r;\n}\nbool map_init(HashTable *t) {\n  t->capacity = 8;\n  t->size = 0;\n  t->buckets = calloc(8, sizeof(Entry *));\n  return t->buckets != NULL;\n}\nbool map_get(const HashTable *t, int key, int *value) {\n  for (Entry *e = t->buckets[bucket(key, t->capacity)]; e; e = e->next)\n    if (e->key == key) {\n      *value = e->value;\n      return true;\n    }\n  return false;\n}\nbool map_rehash(HashTable *t) {\n  if (t->capacity >= 64)\n    return false;\n  int capacity = 2 * t->capacity;\n  Entry **buckets = calloc((size_t)capacity, sizeof(Entry *));\n  if (!buckets)\n    return false;\n  for (int i = 0; i < t->capacity; i++) {\n    Entry *e = t->buckets[i];\n    while (e) {\n      Entry *next = e->next;\n      int b = bucket(e->key, capacity);\n      e->next = buckets[b];\n      buckets[b] = e;\n      e = next;\n    }\n  }\n  free(t->buckets);\n  t->buckets = buckets;\n  t->capacity = capacity;\n  return true;\n}\nbool map_put(HashTable *t, int key, int value) {\n  int b = bucket(key, t->capacity);\n  for (Entry *e = t->buckets[b]; e; e = e->next)\n    if (e->key == key) {\n      e->value = value;\n      return true;\n    }\n  if (t->size >= 32)\n    return false;\n  if ((t->size + 1) * 4 > t->capacity * 3) {\n    if (!map_rehash(t))\n      return false;\n    b = bucket(key, t->capacity);\n  }\n  Entry *e = malloc(sizeof *e);\n  if (!e)\n    return false;\n  *e = (Entry){key, value, t->buckets[b]};\n  t->buckets[b] = e;\n  t->size++;\n  return true;\n}\nbool map_delete(HashTable *t, int key) {\n  Entry **link = &t->buckets[bucket(key, t->capacity)];\n  while (*link) {\n    Entry *e = *link;\n    if (e->key == key) {\n      *link = e->next;\n      free(e);\n      t->size--;\n      return true;\n    }\n    link = &e->next;\n  }\n  return false;\n}\nvoid map_free(HashTable *t) {\n  for (int i = 0; i < t->capacity; i++) {\n    Entry *e = t->buckets[i];\n    while (e) {\n      Entry *next = e->next;\n      free(e);\n      e = next;\n    }\n  }\n  free(t->buckets);\n  *t = (HashTable){0};\n}\n/* Setup: HashTable t={0}; if(map_init(&t)) { ... map_free(&t); } */\n",
+      "C++": "#include <optional>\n#include <stdexcept>\n#include <utility>\n#include <vector>\nclass HashTable {\n  using Entry = std::pair<int, int>;\n  std::vector<std::vector<Entry>> buckets = std::vector<std::vector<Entry>>(8);\n  int count = 0;\n  int bucket(int key) const {\n    int c = static_cast<int>(buckets.size());\n    int r = key % c;\n    return r < 0 ? r + c : r;\n  }\n\npublic:\n  int size() const { return count; }\n  std::optional<int> get(int key) const {\n    for (const auto &e : buckets[bucket(key)])\n      if (e.first == key)\n        return e.second;\n    return std::nullopt;\n  }\n  void rehash() {\n    if (buckets.size() >= 64)\n      throw std::length_error(\"capacity\");\n    auto old = std::move(buckets);\n    buckets = std::vector<std::vector<Entry>>(old.size() * 2);\n    for (auto &chain : old)\n      for (auto &e : chain)\n        buckets[bucket(e.first)].push_back(e);\n  }\n  void put(int key, int value) {\n    for (auto &e : buckets[bucket(key)])\n      if (e.first == key) {\n        e.second = value;\n        return;\n      }\n    if (count >= 32)\n      throw std::length_error(\"entries\");\n    if ((count + 1) * 4 > static_cast<int>(buckets.size()) * 3)\n      rehash();\n    buckets[bucket(key)].push_back({key, value});\n    ++count;\n  }\n  bool erase(int key) {\n    auto &chain = buckets[bucket(key)];\n    for (auto i = chain.begin(); i != chain.end(); ++i)\n      if (i->first == key) {\n        chain.erase(i);\n        --count;\n        return true;\n      }\n    return false;\n  }\n};\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.List;\npublic class Example {\n  static class HashTable {\n    static class Entry {\n      int key, value;\n      Entry(int k, int v) {\n        key = k;\n        value = v;\n      }\n    }\n    List<List<Entry>> buckets;\n    int size = 0;\n    HashTable() { buckets = empty(8); }\n    static List<List<Entry>> empty(int n) {\n      List<List<Entry>> b = new ArrayList<>();\n      for (int i = 0; i < n; i++)\n        b.add(new ArrayList<>());\n      return b;\n    }\n    int bucket(int key) { return Math.floorMod(key, buckets.size()); }\n    Integer get(int key) {\n      for (Entry e : buckets.get(bucket(key)))\n        if (e.key == key)\n          return e.value;\n      return null;\n    }\n    void rehash() {\n      if (buckets.size() >= 64)\n        throw new IllegalStateException(\"capacity\");\n      List<List<Entry>> old = buckets;\n      buckets = empty(old.size() * 2);\n      for (List<Entry> chain : old)\n        for (Entry e : chain)\n          buckets.get(bucket(e.key)).add(e);\n    }\n    void put(int key, int value) {\n      for (Entry e : buckets.get(bucket(key)))\n        if (e.key == key) {\n          e.value = value;\n          return;\n        }\n      if (size >= 32)\n        throw new IllegalStateException(\"entries\");\n      if ((size + 1) * 4 > buckets.size() * 3)\n        rehash();\n      buckets.get(bucket(key)).add(new Entry(key, value));\n      size++;\n    }\n    boolean delete(int key) {\n      List<Entry> chain = buckets.get(bucket(key));\n      for (int i = 0; i < chain.size(); i++)\n        if (chain.get(i).key == key) {\n          chain.remove(i);\n          size--;\n          return true;\n        }\n      return false;\n    }\n  }\n}\n",
+      "Python": "class HashTable:\n    def __init__(self):\n        self.buckets = [[] for _ in range(8)]\n        self.size = 0\n\n    def get(self, key):\n        for entry in self.buckets[key % len(self.buckets)]:\n            if entry[0] == key:\n                return entry[1]\n        return None  # zero remains a valid stored value\n\n    def rehash(self):\n        if len(self.buckets) >= 64:\n            raise ValueError(\"capacity\")\n        old = self.buckets\n        self.buckets = [[] for _ in range(2 * len(old))]\n        for chain in old:\n            for entry in chain:\n                self.buckets[entry[0] % len(self.buckets)].append(entry)\n\n    def put(self, key, value):\n        for entry in self.buckets[key % len(self.buckets)]:\n            if entry[0] == key:\n                entry[1] = value\n                return\n        if self.size >= 32:\n            raise ValueError(\"entries\")\n        if (self.size + 1) * 4 > len(self.buckets) * 3:\n            self.rehash()\n        self.buckets[key % len(self.buckets)].append([key, value])\n        self.size += 1\n\n    def delete(self, key):\n        chain = self.buckets[key % len(self.buckets)]\n        for i, entry in enumerate(chain):\n            if entry[0] == key:\n                del chain[i]\n                self.size -= 1\n                return True\n        return False\n",
+      "JavaScript": "class HashTable {\n  constructor() {\n    this.buckets = Array.from({ length: 8 }, () => []);\n    this.size = 0;\n  }\n  bucket(key) {\n    const c = this.buckets.length;\n    return ((key % c) + c) % c;\n  }\n  get(key) {\n    for (const e of this.buckets[this.bucket(key)])\n      if (e.key === key) return e.value;\n    return null;\n  }\n  rehash() {\n    if (this.buckets.length >= 64) throw new RangeError(\"capacity\");\n    const old = this.buckets;\n    this.buckets = Array.from({ length: old.length * 2 }, () => []);\n    for (const chain of old)\n      for (const e of chain) this.buckets[this.bucket(e.key)].push(e);\n  }\n  put(key, value) {\n    for (const e of this.buckets[this.bucket(key)])\n      if (e.key === key) {\n        e.value = value;\n        return;\n      }\n    if (this.size >= 32) throw new RangeError(\"entries\");\n    if ((this.size + 1) * 4 > this.buckets.length * 3) this.rehash();\n    this.buckets[this.bucket(key)].push({ key, value });\n    this.size++;\n  }\n  delete(key) {\n    const chain = this.buckets[this.bucket(key)];\n    for (let i = 0; i < chain.length; i++)\n      if (chain[i].key === key) {\n        chain.splice(i, 1);\n        this.size--;\n        return true;\n      }\n    return false;\n  }\n}\n"
+    }
+  },
+  "hash-probe": {
+    "id": "hash-probe",
+    "title": "Complete integer map: linear probing",
+    "alternatives": [
+      "hash-chain"
+    ],
+    "preconditions": [
+      "Integer keys and values in ±100000. Initialize an empty map first; these example maps hold up to 32 distinct keys, with capacity 8..64. The interactive input has at most 16 initial pairs plus one operation.",
+      "Duplicate insertion updates; missing lookup is distinct from a stored zero. Probing stops after at most capacity inspections."
+    ],
+    "notes": [
+      "Chaining C allocates nodes and requires map_free after successful map_init. C++ vectors own their entries; Java/Python/JavaScript use managed storage.",
+      "The C lookup returns a success boolean and writes an output parameter. Other examples use optional/null/None for missing integer values.",
+      "Rehashing recomputes buckets and removes tombstones. The live-load threshold is 0.75.",
+      "Chaining examples with collection buckets may shift a bucket list on deletion; the C linked representation unlinks nodes. Both traverse colliding keys, with linear worst-case bucket work."
+    ],
+    "time": "Expected O(1) under distribution/load assumptions; O(n) worst-case operation; rehash O(n+capacity)",
+    "space": "O(n+capacity) map storage; rehash temporarily holds old and new storage",
+    "codes": {
+      "C": "#include <stdbool.h>\ntypedef struct {\n  int key, value, state;\n} Slot; /* 0=never used, 1=live, 2=tombstone */\ntypedef struct {\n  Slot slots[64];\n  int capacity, size;\n} HashTable;\nvoid map_init(HashTable *t) { *t = (HashTable){.capacity = 8}; }\nint bucket(int key, int c) {\n  int r = key % c;\n  return r < 0 ? r + c : r;\n}\nbool map_get(const HashTable *t, int key, int *value) {\n  int b = bucket(key, t->capacity);\n  for (int p = 0; p < t->capacity; p++) {\n    Slot s = t->slots[(b + p) % t->capacity];\n    if (!s.state)\n      return false;\n    if (s.state == 1 && s.key == key) {\n      *value = s.value;\n      return true;\n    }\n  }\n  return false;\n}\nbool map_rehash(HashTable *t) {\n  if (t->capacity >= 64)\n    return false;\n  HashTable old = *t;\n  *t = (HashTable){.capacity = old.capacity * 2, .size = old.size};\n  for (int i = 0; i < old.capacity; i++)\n    if (old.slots[i].state == 1) {\n      Slot s = old.slots[i];\n      int b = bucket(s.key, t->capacity);\n      for (int p = 0; p < t->capacity; p++) {\n        int at = (b + p) % t->capacity;\n        if (!t->slots[at].state) {\n          t->slots[at] = s;\n          break;\n        }\n      }\n    }\n  return true;\n}\nbool map_put(HashTable *t, int key, int value) {\n  int b = bucket(key, t->capacity), available = -1;\n  for (int p = 0; p < t->capacity; p++) {\n    int at = (b + p) % t->capacity;\n    Slot *s = &t->slots[at];\n    if (s->state == 1 && s->key == key) {\n      s->value = value;\n      return true;\n    }\n    if (s->state != 1 && available < 0)\n      available = at;\n    if (s->state == 0)\n      break;\n  }\n  if (t->size >= 32)\n    return false;\n  if ((t->size + 1) * 4 > t->capacity * 3) {\n    if (!map_rehash(t))\n      return false;\n    return map_put(t, key, value);\n  }\n  if (available < 0)\n    return false;\n  t->slots[available] = (Slot){key, value, 1};\n  t->size++;\n  return true;\n}\nbool map_delete(HashTable *t, int key) {\n  int b = bucket(key, t->capacity);\n  for (int p = 0; p < t->capacity; p++) {\n    Slot *s = &t->slots[(b + p) % t->capacity];\n    if (!s->state)\n      return false;\n    if (s->state == 1 && s->key == key) {\n      s->state = 2;\n      t->size--;\n      return true;\n    }\n  }\n  return false;\n}\n/* Setup: HashTable t; map_init(&t); fixed storage needs no allocation/cleanup.\n */\n",
+      "C++": "#include <optional>\n#include <stdexcept>\n#include <vector>\nclass HashTable {\n  struct Slot {\n    int key = 0, value = 0, state = 0;\n  };\n  std::vector<Slot> slots = std::vector<Slot>(8);\n  int count = 0;\n  int bucket(int key) const {\n    int c = static_cast<int>(slots.size());\n    int r = key % c;\n    return r < 0 ? r + c : r;\n  }\n\npublic:\n  int size() const { return count; }\n  std::optional<int> get(int key) const {\n    int b = bucket(key), c = static_cast<int>(slots.size());\n    for (int p = 0; p < c; p++) {\n      const auto &s = slots[(b + p) % c];\n      if (!s.state)\n        return std::nullopt;\n      if (s.state == 1 && s.key == key)\n        return s.value;\n    }\n    return std::nullopt;\n  }\n  void rehash() {\n    if (slots.size() >= 64)\n      throw std::length_error(\"capacity\");\n    auto old = slots;\n    slots = std::vector<Slot>(old.size() * 2);\n    count = 0;\n    for (auto &s : old)\n      if (s.state == 1)\n        put(s.key, s.value);\n  }\n  void put(int key, int value) {\n    int b = bucket(key), c = static_cast<int>(slots.size()), available = -1;\n    for (int p = 0; p < c; p++) {\n      int at = (b + p) % c;\n      auto &s = slots[at];\n      if (s.state == 1 && s.key == key) {\n        s.value = value;\n        return;\n      }\n      if (s.state != 1 && available < 0)\n        available = at;\n      if (!s.state)\n        break;\n    }\n    if (count >= 32)\n      throw std::length_error(\"entries\");\n    if ((count + 1) * 4 > c * 3) {\n      rehash();\n      put(key, value);\n      return;\n    }\n    if (available < 0)\n      throw std::length_error(\"full\");\n    slots[available] = {key, value, 1};\n    ++count;\n  }\n  bool erase(int key) {\n    int b = bucket(key), c = static_cast<int>(slots.size());\n    for (int p = 0; p < c; p++) {\n      auto &s = slots[(b + p) % c];\n      if (!s.state)\n        return false;\n      if (s.state == 1 && s.key == key) {\n        s.state = 2;\n        --count;\n        return true;\n      }\n    }\n    return false;\n  }\n};\n",
+      "Java": "public class Example {\n  static class HashTable {\n    static class Slot {\n      int key, value, state;\n      Slot(int k, int v, int s) {\n        key = k;\n        value = v;\n        state = s;\n      }\n    }\n    Slot[] slots = new Slot[8];\n    int size = 0;\n    int bucket(int key) { return Math.floorMod(key, slots.length); }\n    Integer get(int key) {\n      int b = bucket(key);\n      for (int p = 0; p < slots.length; p++) {\n        Slot s = slots[(b + p) % slots.length];\n        if (s == null)\n          return null;\n        if (s.state == 1 && s.key == key)\n          return s.value;\n      }\n      return null;\n    }\n    void rehash() {\n      if (slots.length >= 64)\n        throw new IllegalStateException(\"capacity\");\n      Slot[] old = slots;\n      slots = new Slot[old.length * 2];\n      size = 0;\n      for (Slot s : old)\n        if (s != null && s.state == 1)\n          put(s.key, s.value);\n    }\n    void put(int key, int value) {\n      int b = bucket(key), available = -1;\n      for (int p = 0; p < slots.length; p++) {\n        int at = (b + p) % slots.length;\n        Slot s = slots[at];\n        if (s != null && s.state == 1 && s.key == key) {\n          s.value = value;\n          return;\n        }\n        if ((s == null || s.state == 2) && available < 0)\n          available = at;\n        if (s == null)\n          break;\n      }\n      if (size >= 32)\n        throw new IllegalStateException(\"entries\");\n      if ((size + 1) * 4 > slots.length * 3) {\n        rehash();\n        put(key, value);\n        return;\n      }\n      if (available < 0)\n        throw new IllegalStateException(\"full\");\n      slots[available] = new Slot(key, value, 1);\n      size++;\n    }\n    boolean delete(int key) {\n      int b = bucket(key);\n      for (int p = 0; p < slots.length; p++) {\n        Slot s = slots[(b + p) % slots.length];\n        if (s == null)\n          return false;\n        if (s.state == 1 && s.key == key) {\n          s.state = 2;\n          size--;\n          return true;\n        }\n      }\n      return false;\n    }\n  }\n}\n",
+      "Python": "class HashTable:\n    TOMBSTONE = object()\n\n    def __init__(self):\n        self.slots = [None] * 8\n        self.size = 0\n\n    def get(self, key):\n        home = key % len(self.slots)\n        for probe in range(len(self.slots)):\n            entry = self.slots[(home + probe) % len(self.slots)]\n            if entry is None:\n                return None\n            if entry is not self.TOMBSTONE and entry[0] == key:\n                return entry[1]\n        return None\n\n    def rehash(self):\n        if len(self.slots) >= 64:\n            raise ValueError(\"capacity\")\n        old = self.slots\n        self.slots = [None] * (2 * len(old))\n        self.size = 0\n        for entry in old:\n            if entry is not None and entry is not self.TOMBSTONE:\n                self.put(*entry)\n\n    def put(self, key, value):\n        home, available = key % len(self.slots), -1\n        for probe in range(len(self.slots)):\n            at = (home + probe) % len(self.slots)\n            entry = self.slots[at]\n            if entry is not None and entry is not self.TOMBSTONE and entry[0] == key:\n                entry[1] = value\n                return\n            if (entry is None or entry is self.TOMBSTONE) and available < 0:\n                available = at\n            if entry is None:\n                break\n        if self.size >= 32:\n            raise ValueError(\"entries\")\n        if (self.size + 1) * 4 > len(self.slots) * 3:\n            self.rehash()\n            self.put(key, value)\n            return\n        if available < 0:\n            raise ValueError(\"full\")\n        self.slots[available] = [key, value]\n        self.size += 1\n\n    def delete(self, key):\n        home = key % len(self.slots)\n        for probe in range(len(self.slots)):\n            at = (home + probe) % len(self.slots)\n            entry = self.slots[at]\n            if entry is None:\n                return False\n            if entry is not self.TOMBSTONE and entry[0] == key:\n                self.slots[at] = self.TOMBSTONE\n                self.size -= 1\n                return True\n        return False\n",
+      "JavaScript": "class HashTable {\n  constructor() {\n    this.slots = Array(8).fill(null);\n    this.tombstone = Symbol(\"deleted\");\n    this.size = 0;\n  }\n  bucket(key) {\n    const c = this.slots.length;\n    return ((key % c) + c) % c;\n  }\n  get(key) {\n    const b = this.bucket(key),\n      c = this.slots.length;\n    for (let p = 0; p < c; p++) {\n      const e = this.slots[(b + p) % c];\n      if (e === null) return null;\n      if (e !== this.tombstone && e.key === key) return e.value;\n    }\n    return null;\n  }\n  rehash() {\n    if (this.slots.length >= 64) throw new RangeError(\"capacity\");\n    const old = this.slots;\n    this.slots = Array(old.length * 2).fill(null);\n    this.size = 0;\n    for (const e of old)\n      if (e !== null && e !== this.tombstone) this.put(e.key, e.value);\n  }\n  put(key, value) {\n    const b = this.bucket(key),\n      c = this.slots.length;\n    let available = -1;\n    for (let p = 0; p < c; p++) {\n      const at = (b + p) % c,\n        e = this.slots[at];\n      if (e !== null && e !== this.tombstone && e.key === key) {\n        e.value = value;\n        return;\n      }\n      if ((e === null || e === this.tombstone) && available < 0) available = at;\n      if (e === null) break;\n    }\n    if (this.size >= 32) throw new RangeError(\"entries\");\n    if ((this.size + 1) * 4 > c * 3) {\n      this.rehash();\n      this.put(key, value);\n      return;\n    }\n    if (available < 0) throw new RangeError(\"full\");\n    this.slots[available] = { key, value };\n    this.size++;\n  }\n  delete(key) {\n    const b = this.bucket(key),\n      c = this.slots.length;\n    for (let p = 0; p < c; p++) {\n      const at = (b + p) % c,\n        e = this.slots[at];\n      if (e === null) return false;\n      if (e !== this.tombstone && e.key === key) {\n        this.slots[at] = this.tombstone;\n        this.size--;\n        return true;\n      }\n    }\n    return false;\n  }\n}\n"
+    }
   }
 }

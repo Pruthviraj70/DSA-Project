@@ -7,7 +7,7 @@ for number, line in enumerate(source.splitlines(), 1):
     for loc in re.findall(r'@loc:([\w.-]+)', line):
         if loc in locations:
             raise ValueError(f'Duplicate source location {loc}')
-        matches = list(re.finditer(r'\bemit\([^;\n]*"' + re.escape(loc) + r'"', source))
+        matches = list(re.finditer(r'\bemit\([^;]*"' + re.escape(loc) + r'"', source))
         if loc == 'engine.ready':
             matches = list(re.finditer(r'e\.loc\s*=\s*"engine.ready"', source))
         if len(matches) != 1:

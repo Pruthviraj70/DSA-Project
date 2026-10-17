@@ -87,13 +87,17 @@ class MigrationCompatibilityTest {
         ScriptUtils.executeSqlScript(
             connection, new ClassPathResource("db/migration/V4__aligned_curriculum.sql"));
       }
+      try (var connection = source.getConnection()) {
+        ScriptUtils.executeSqlScript(
+            connection, new ClassPathResource("db/migration/V6__next_modules.sql"));
+      }
       for (var entry : counts.entrySet())
         assertEquals(
             entry.getValue(),
             jdbc.queryForObject("SELECT COUNT(*) FROM " + entry.getKey(), Integer.class),
             entry.getKey());
-      assertEquals(87, counts.get("lesson_slides"));
-      assertEquals(28, counts.get("algorithm_versions"));
+      assertEquals(145, counts.get("lesson_slides"));
+      assertEquals(48, counts.get("algorithm_versions"));
     }
   }
 }

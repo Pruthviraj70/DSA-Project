@@ -1502,3 +1502,100 @@ svg {
   display: block;
   margin-top: 18px;
 }
+.next-visual {
+  width: 100%;
+  overflow-wrap: anywhere;
+}
+.next-visual svg {
+  width: 100%;
+  height: auto;
+  max-height: 600px;
+}
+.call-frames {
+  padding-left: 26px;
+  max-height: 330px;
+  overflow: auto;
+}
+.call-frames li {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  padding: 8px;
+  margin: 4px 0;
+}
+.call-frames .active-frame {
+  border-color: var(--accent);
+  background: var(--surface-green);
+}
+.call-tree {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  max-height: 220px;
+  overflow: auto;
+}
+.call-tree span {
+  font-size: 12px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.hash-buckets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+.hash-bucket {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: var(--viz-node);
+  color: var(--viz-label);
+  border: 1px solid var(--viz-edge);
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 12px;
+  min-width: 0;
+}
+.hash-bucket span {
+  overflow-wrap: anywhere;
+}
+.bucket-active {
+  background: var(--viz-active);
+  border-width: 2px;
+}
+@media (max-width: 500px) {
+  .hash-buckets {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.sequence-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.call-tree {
+  display: block;
+  overflow: auto;
+  max-height: 320px;
+}
+.call-tree ul {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+  padding: 12px 0 0;
+  margin: 0;
+  align-items: flex-start;
+}
+.call-tree li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 115px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.call-tree span {
+  display: block;
+  max-width: 150px;
+  background: var(--surface-green);
+  color: var(--text);
+}

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 const fixtures = JSON.parse(
   readFileSync("../.build/engine-fixtures.json", "utf8"),
 );
-test("all 35 operations match native C traces through actual browser WebAssembly", async ({
+test("all released operations match native C traces through actual browser WebAssembly", async ({
   page,
 }) => {
   await page.goto("/");

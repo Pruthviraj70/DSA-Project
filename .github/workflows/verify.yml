@@ -42,8 +42,10 @@ jobs:
           python3 scripts/test-content.py
           python3 scripts/build-examples.py
           python3 scripts/build-curriculum-migration.py
-          git diff --exit-code -- content/examples.json backend/src/main/resources/db/migration/V4__aligned_curriculum.sql
+          python3 scripts/build-next-migration.py
+          git diff --exit-code -- content/examples.json backend/src/main/resources/db/migration/V4__aligned_curriculum.sql backend/src/main/resources/db/migration/V6__next_modules.sql
           python3 scripts/test-examples.py
+          python3 scripts/test-next-examples.py
       - name: Native correctness, sanitizers and replay fixtures
         run: |
           scripts/test-native.sh
@@ -103,7 +105,7 @@ jobs:
         run: |
           npm --prefix frontend ci
           cd frontend && npx playwright install --with-deps chromium && cd ..
-          BASE_URL=http://127.0.0.1:8088 INTEGRATED=1 npm --prefix frontend run test:e2e -- e2e/learning.spec.ts e2e/slice.spec.ts e2e/authenticated.spec.ts e2e/preferences.spec.ts
+          BASE_URL=http://127.0.0.1:8088 INTEGRATED=1 npm --prefix frontend run test:e2e -- e2e/learning.spec.ts e2e/slice.spec.ts e2e/authenticated.spec.ts e2e/preferences.spec.ts e2e/next-modules.spec.ts
       - name: Container diagnostics
         if: failure()
         run: docker compose logs

@@ -1,0 +1,1809 @@
+{
+  "registryVersion": 2,
+  "concepts": [
+    {
+      "id": "foundations.dsa",
+      "title": "foundations / dsa"
+    },
+    {
+      "id": "foundations.contracts",
+      "title": "foundations / contracts"
+    },
+    {
+      "id": "foundations.pseudocode",
+      "title": "foundations / pseudocode"
+    },
+    {
+      "id": "foundations.elements",
+      "title": "foundations / elements"
+    },
+    {
+      "id": "foundations.counts",
+      "title": "foundations / counts"
+    },
+    {
+      "id": "foundations.input-size",
+      "title": "foundations / input size"
+    },
+    {
+      "id": "foundations.resources",
+      "title": "foundations / resources"
+    },
+    {
+      "id": "foundations.bounds",
+      "title": "foundations / bounds"
+    },
+    {
+      "id": "foundations.growth",
+      "title": "foundations / growth"
+    },
+    {
+      "id": "foundations.cases",
+      "title": "foundations / cases"
+    },
+    {
+      "id": "foundations.loops",
+      "title": "foundations / loops"
+    },
+    {
+      "id": "foundations.recursion",
+      "title": "foundations / recursion"
+    },
+    {
+      "id": "arrays.model",
+      "title": "arrays / model"
+    },
+    {
+      "id": "arrays.addresses",
+      "title": "arrays / addresses"
+    },
+    {
+      "id": "arrays.capacity",
+      "title": "arrays / capacity"
+    },
+    {
+      "id": "arrays.access",
+      "title": "arrays / access"
+    },
+    {
+      "id": "arrays.update",
+      "title": "arrays / update"
+    },
+    {
+      "id": "arrays.traversal",
+      "title": "arrays / traversal"
+    },
+    {
+      "id": "arrays.insert",
+      "title": "arrays / insert"
+    },
+    {
+      "id": "arrays.delete",
+      "title": "arrays / delete"
+    },
+    {
+      "id": "arrays.alternatives",
+      "title": "arrays / alternatives"
+    },
+    {
+      "id": "arrays.boundaries",
+      "title": "arrays / boundaries"
+    },
+    {
+      "id": "searching.results",
+      "title": "searching / results"
+    },
+    {
+      "id": "searching.linear",
+      "title": "searching / linear"
+    },
+    {
+      "id": "searching.sorted",
+      "title": "searching / sorted"
+    },
+    {
+      "id": "searching.binary",
+      "title": "searching / binary"
+    },
+    {
+      "id": "searching.variants",
+      "title": "searching / variants"
+    },
+    {
+      "id": "sorting.contract",
+      "title": "sorting / contract"
+    },
+    {
+      "id": "sorting.insertion",
+      "title": "sorting / insertion"
+    },
+    {
+      "id": "sorting.merge",
+      "title": "sorting / merge"
+    },
+    {
+      "id": "sorting.quick",
+      "title": "sorting / quick"
+    },
+    {
+      "id": "sorting.variants",
+      "title": "sorting / variants"
+    },
+    {
+      "id": "sorting.comparison",
+      "title": "sorting / comparison"
+    },
+    {
+      "id": "list.model",
+      "title": "list / model"
+    },
+    {
+      "id": "list.links",
+      "title": "list / links"
+    },
+    {
+      "id": "list.insert",
+      "title": "list / insert"
+    },
+    {
+      "id": "list.delete",
+      "title": "list / delete"
+    },
+    {
+      "id": "list.search",
+      "title": "list / search"
+    },
+    {
+      "id": "list.traversal",
+      "title": "list / traversal"
+    },
+    {
+      "id": "list.variants",
+      "title": "list / variants"
+    },
+    {
+      "id": "stack.lifo",
+      "title": "stack / lifo"
+    },
+    {
+      "id": "stack.representation",
+      "title": "stack / representation"
+    },
+    {
+      "id": "stack.push",
+      "title": "stack / push"
+    },
+    {
+      "id": "stack.pop",
+      "title": "stack / pop"
+    },
+    {
+      "id": "stack.peek",
+      "title": "stack / peek"
+    },
+    {
+      "id": "queue.fifo",
+      "title": "queue / fifo"
+    },
+    {
+      "id": "queue.representation",
+      "title": "queue / representation"
+    },
+    {
+      "id": "queue.enqueue",
+      "title": "queue / enqueue"
+    },
+    {
+      "id": "queue.dequeue",
+      "title": "queue / dequeue"
+    },
+    {
+      "id": "queue.inspect",
+      "title": "queue / inspect"
+    },
+    {
+      "id": "queue.circular",
+      "title": "queue / circular"
+    },
+    {
+      "id": "bst.order",
+      "title": "bst / order"
+    },
+    {
+      "id": "bst.height",
+      "title": "bst / height"
+    },
+    {
+      "id": "bst.insert",
+      "title": "bst / insert"
+    },
+    {
+      "id": "bst.search",
+      "title": "bst / search"
+    },
+    {
+      "id": "bst.delete",
+      "title": "bst / delete"
+    },
+    {
+      "id": "bst.delete-one",
+      "title": "bst / delete one"
+    },
+    {
+      "id": "bst.delete-two",
+      "title": "bst / delete two"
+    },
+    {
+      "id": "bst.traversals",
+      "title": "bst / traversals"
+    },
+    {
+      "id": "bst.preorder",
+      "title": "bst / preorder"
+    },
+    {
+      "id": "bst.postorder",
+      "title": "bst / postorder"
+    },
+    {
+      "id": "bst.variants",
+      "title": "bst / variants"
+    },
+    {
+      "id": "graph.model",
+      "title": "graph / model"
+    },
+    {
+      "id": "graph.representation",
+      "title": "graph / representation"
+    },
+    {
+      "id": "graph.edit",
+      "title": "graph / edit"
+    },
+    {
+      "id": "graph.visited",
+      "title": "graph / visited"
+    },
+    {
+      "id": "graph.bfs",
+      "title": "graph / bfs"
+    },
+    {
+      "id": "graph.dfs",
+      "title": "graph / dfs"
+    },
+    {
+      "id": "graph.dijkstra",
+      "title": "graph / dijkstra"
+    },
+    {
+      "id": "graph.restrictions",
+      "title": "graph / restrictions"
+    },
+    {
+      "id": "arrays.create",
+      "title": "Create an initial sequence"
+    }
+  ],
+  "modules": [
+    {
+      "id": "foundations",
+      "title": "Foundations",
+      "category": "Foundations",
+      "icon": "compass",
+      "description": "Start with the ideas that make every structure and algorithm easier to understand.",
+      "prerequisites": [],
+      "slides": [
+        {
+          "id": "ideas",
+          "title": "Structures organize; algorithms act",
+          "kind": "intro",
+          "teaches": [
+            "foundations.dsa"
+          ],
+          "paragraphs": [
+            "A data structure is a way to organize values and the relationships between them. A shopping list keeps items in a sequence; a map connects places by roads. An algorithm is a finite set of clear steps for doing a task, such as finding a name or arranging numbers.",
+            "Neither idea depends on a programming language. We choose a structure and an algorithm together to make a particular task understandable and efficient."
+          ],
+          "bullets": [
+            "Structure: how information is arranged.",
+            "Algorithm: the steps applied to that information.",
+            "Correctness and cost both matter."
+          ]
+        },
+        {
+          "id": "contracts",
+          "title": "Inputs, outputs and correctness",
+          "kind": "explain",
+          "teaches": [
+            "foundations.contracts"
+          ],
+          "paragraphs": [
+            "An input is the information a task receives. An output is the result it promises. For “find the largest value,” [3, 8, 2] is an input and 8 is the output. The number 8 is not the input size: the size is three elements.",
+            "Correctness means meeting the promised result for every allowed input, not just one example. State preconditions (what must already be true) and define edge cases: an empty input has no largest value, so the task must explicitly return “none” or reject it."
+          ],
+          "bullets": [
+            "A precondition might be “the input is sorted.”",
+            "An invariant is a fact preserved while steps repeat.",
+            "Check empty, one-element, duplicate and missing-result cases."
+          ]
+        },
+        {
+          "id": "pseudocode",
+          "title": "Describe steps before choosing syntax",
+          "kind": "explain",
+          "teaches": [
+            "foundations.pseudocode"
+          ],
+          "paragraphs": [
+            "Pseudocode is a plain-language description of an algorithm. It uses ideas like “for each value” and “if” without requiring a particular language. To find a largest value: reject an empty sequence; remember the first value; inspect each remaining value; replace the remembered value when a larger one appears; return it.",
+            "After each inspected value, the remembered value is the largest in the inspected prefix. That invariant explains why the final answer is correct. A loop repeats a step; a condition chooses whether to perform an action."
+          ],
+          "bullets": [
+            "INPUT: a nonempty sequence",
+            "best ← first value",
+            "FOR each remaining value: IF value > best THEN best ← value",
+            "OUTPUT: best"
+          ]
+        },
+        {
+          "id": "elements",
+          "title": "Elements, indices, values and memory",
+          "kind": "explain",
+          "teaches": [
+            "foundations.elements"
+          ],
+          "paragraphs": [
+            "An element is one item in a collection. Its value is the data stored there. An index is its position: with zero-based indices, the first position is 0 and the last is n − 1. In [8, 3, 8], index 1 contains value 3; the value 8 occurs at two different positions.",
+            "Memory can be pictured as numbered storage locations. A fixed-size contiguous array reserves neighboring slots of equal size. Our addresses are illustrative, not browser addresses. Python lists and JavaScript arrays are language abstractions and should not be assumed to have this exact layout."
+          ],
+          "visual": "memory"
+        },
+        {
+          "id": "counts",
+          "title": "Count work as the input grows",
+          "kind": "explain",
+          "teaches": [
+            "foundations.counts",
+            "foundations.input-size"
+          ],
+          "paragraphs": [
+            "Choose a basic operation before counting: for a scan, count values inspected; for a sort, count comparisons or writes. Scanning n values once performs n inspections, even if the values themselves are large. The input size n describes how much information there is, not its largest numeric value.",
+            "The same operation count can animate at different speeds. Animation duration is not an algorithm’s time complexity. Different computers also take different times for the same count. Use counts to compare growth under the same definition of work."
+          ],
+          "visual": "counts"
+        },
+        {
+          "id": "resources",
+          "title": "Time and auxiliary space",
+          "kind": "explain",
+          "teaches": [
+            "foundations.resources"
+          ],
+          "paragraphs": [
+            "Time complexity describes how work grows with input size. Auxiliary space is extra temporary storage beyond the given input and required output. Reading one array slot needs a constant amount of extra storage; copying n elements into a temporary array needs space proportional to n.",
+            "Input storage, output storage and auxiliary storage are different categories. A recursive call stack is auxiliary storage too, even if the code never explicitly allocates an array. State which space convention you are using."
+          ],
+          "bullets": [
+            "O(1) auxiliary space: a fixed number of variables.",
+            "O(n) auxiliary space: one extra slot for each input element.",
+            "Counting operations does not count seconds."
+          ]
+        },
+        {
+          "id": "bounds",
+          "title": "Big O, Big Omega and Big Theta",
+          "kind": "explain",
+          "teaches": [
+            "foundations.bounds"
+          ],
+          "paragraphs": [
+            "Asymptotic notation describes growth for sufficiently large input sizes, allowing constant factors and a finite starting region to be ignored. Big O is an upper growth bound; Big Omega (Ω) is a lower growth bound; Big Theta (Θ) is a matching upper and lower growth bound.",
+            "For 3n + 2 steps, Θ(n) is a tight description: beyond small n, the count stays between constant multiples of n. O(n²) is also an upper bound, but a loose one. A bound is about a chosen cost function; it is not automatically a best-case or worst-case claim."
+          ],
+          "bullets": [
+            "Upper bound: the cost eventually grows no faster than a constant multiple.",
+            "Lower bound: the cost eventually grows at least as fast as a constant multiple.",
+            "Tight bound: both statements hold for the same growth rate."
+          ]
+        },
+        {
+          "id": "growth",
+          "title": "Common growth rates",
+          "kind": "explain",
+          "teaches": [
+            "foundations.growth"
+          ],
+          "paragraphs": [
+            "Constant work, O(1), does not grow with n, such as reading a known array index. Logarithmic work, O(log n), repeatedly halves a remaining range: 16 → 8 → 4 → 2 → 1 is four halvings. The base of a logarithm changes only a constant factor.",
+            "A complete scan is Θ(n). Dividing and merging across logarithmically many levels often gives Θ(n log n). Comparing every pair can be Θ(n²). Trying two choices at each of n positions creates 2ⁿ possibilities. Listing every ordering has n! possibilities (n × (n−1) × … × 1). These are growth patterns, not guarantees that a named algorithm always has that cost."
+          ],
+          "visual": "growth"
+        },
+        {
+          "id": "cases",
+          "title": "Cases and bounds answer different questions",
+          "kind": "explain",
+          "teaches": [
+            "foundations.cases"
+          ],
+          "paragraphs": [
+            "Best, average and worst cases describe which inputs of the same size we consider. Linear search has a best case when the target is first: one comparison. Its worst case is a missing target or a match at the end: n comparisons. An average-case claim needs a stated input distribution, such as equally likely matching positions.",
+            "Asymptotic bounds then describe the cost of the chosen case. The best-case cost above is Θ(1), and the worst-case cost is Θ(n). Big O does not mean “worst case,” and Big Omega does not mean “best case.” Either bound can describe a best-, average- or worst-case cost function."
+          ],
+          "bullets": [
+            "Case: which input situations are considered?",
+            "Bound: how does that situation’s cost grow?",
+            "Average is not automatically halfway between best and worst."
+          ]
+        },
+        {
+          "id": "loops",
+          "title": "Analyze loops by counting repetitions",
+          "kind": "explain",
+          "teaches": [
+            "foundations.loops"
+          ],
+          "paragraphs": [
+            "A loop visiting indices 0 through n−1 runs n times. Two such loops one after another run 2n times, which is Θ(n), not Θ(n²). A loop that repeatedly halves a positive counter runs about log₂ n times.",
+            "For nested loops, count the inner work for every outer iteration. If both independent loops run n times, there are n × n visits. If the inner loop runs i times on outer iteration i, add 0 + 1 + … + (n−1) = n(n−1)/2, still Θ(n²). Not every nested loop is quadratic; its limits decide."
+          ],
+          "visual": "counts"
+        },
+        {
+          "id": "recursion",
+          "title": "Recursion uses a call stack",
+          "kind": "explain",
+          "teaches": [
+            "foundations.recursion"
+          ],
+          "paragraphs": [
+            "A recursive function solves a task by calling itself on a smaller task. It needs a base case that stops and a rule that moves toward that base case. Countdown(n) returns immediately for n = 0; otherwise it calls countdown(n−1) and then returns.",
+            "For n = 4, calls 4, 3, 2, 1 and 0 can all be active at once. Each call remembers where to return. This simple countdown takes Θ(n) time and Θ(n) call-stack space; n + 1 frames still grow linearly. Do not assume a language removes these frames automatically."
+          ],
+          "exampleId": "countdown",
+          "visual": "call-stack"
+        },
+        {
+          "id": "faq",
+          "title": "Questions and common pitfalls",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "Does “O” stand for the worst case?",
+              "answer": "No. O is an upper growth bound on the cost function you chose. First say whether you mean a best-, average- or worst-case cost, then state its bound."
+            },
+            {
+              "question": "Is a larger value a larger input?",
+              "answer": "Not necessarily. Searching [1000] has one element; searching [1, 2, 3] has three. Here n is the number of elements. Some other tasks measure input size in bits or characters, so define it."
+            },
+            {
+              "question": "Are all nested loops O(n²)?",
+              "answer": "No. Count how often each loop runs. An outer loop of n repetitions with an inner loop of three repetitions takes 3n steps, or Θ(n)."
+            },
+            {
+              "question": "Does short recursive code use constant space?",
+              "answer": "No. Each unfinished call can require a frame. The maximum number of simultaneously active calls determines call-stack space."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    },
+    {
+      "id": "arrays",
+      "title": "Arrays",
+      "category": "Data Structures",
+      "icon": "array",
+      "description": "Understand indexed storage, shifting, length and capacity.",
+      "prerequisites": [
+        "foundations"
+      ],
+      "slides": [
+        {
+          "id": "basics",
+          "title": "An array is a row of indexed slots",
+          "kind": "intro",
+          "teaches": [
+            "arrays.model"
+          ],
+          "paragraphs": [
+            "An array keeps values in an ordered row. Each slot holds one element, and its index tells us which slot to use. Repeated values are allowed. The first element is at index 0; if there are n elements, the last is at index n−1.",
+            "Here we illustrate fixed-size contiguous storage: equal-size slots placed next to one another. Python lists and JavaScript arrays provide related sequence operations but do not promise this identical memory layout."
+          ],
+          "visual": "memory"
+        },
+        {
+          "id": "representation",
+          "title": "Addresses, length and capacity",
+          "kind": "explain",
+          "teaches": [
+            "arrays.addresses",
+            "arrays.capacity"
+          ],
+          "paragraphs": [
+            "For a contiguous array, address(i) = base_address + i × element_size. With illustrative base 1000 and four bytes per element, index 2 starts at 1008. These addresses are a teaching model, not actual browser memory.",
+            "Logical length is the number of occupied elements; capacity is the number of reserved slots. With length 3 and capacity 5, only indices 0, 1 and 2 are valid for reading. Inserting can use a spare slot, but a full fixed-capacity array must reject insertion or allocate a larger array."
+          ],
+          "visual": "memory"
+        },
+        {
+          "id": "create",
+          "title": "Create an initial sequence",
+          "kind": "operation",
+          "teaches": [
+            "arrays.create"
+          ],
+          "paragraphs": [
+            "Choose the initial occupied values in order. Creating [3, 1, 4] gives logical length three; creating an empty sequence gives length zero. A bounded representation also has a capacity, which limits later insertion.",
+            "Initialization stores each supplied value, so constructing n occupied elements takes Theta(n) work. Try a one-element or duplicate-heavy sequence before reading or changing individual positions."
+          ],
+          "runtime": {
+            "moduleId": "arrays",
+            "op": 0
+          },
+          "exampleId": "array-create"
+        },
+        {
+          "id": "access",
+          "title": "Access: read one known position",
+          "kind": "operation",
+          "teaches": [
+            "arrays.access"
+          ],
+          "paragraphs": [
+            "Reading index i returns the value stored there. Check 0 ≤ i < length before reading. Knowing a value is not the same as knowing its index: the value 4 could be absent or appear in several positions.",
+            "For contiguous storage, the address formula locates a slot directly, so valid indexed access takes O(1) time and O(1) auxiliary space. Searching for an unknown position is a different task."
+          ],
+          "exampleId": "array-access",
+          "runtime": {
+            "moduleId": "arrays",
+            "op": 1,
+            "index": 1
+          }
+        },
+        {
+          "id": "update",
+          "title": "Update: replace a value",
+          "kind": "operation",
+          "teaches": [
+            "arrays.update"
+          ],
+          "paragraphs": [
+            "An update changes the value at an existing index without changing the length or shifting other elements. Validate the index first. Updating index 1 in [3, 1, 4] to 9 gives [3, 9, 4].",
+            "One indexed write takes O(1) time and O(1) auxiliary space. The value being written can equal another element; duplicates do not change which index is updated."
+          ],
+          "exampleId": "array-update",
+          "runtime": {
+            "moduleId": "arrays",
+            "op": 2,
+            "index": 1,
+            "arg": 9
+          }
+        },
+        {
+          "id": "traversal",
+          "title": "Traversal: visit every element",
+          "kind": "operation",
+          "teaches": [
+            "arrays.traversal"
+          ],
+          "paragraphs": [
+            "Traversal visits the occupied positions, usually from index 0 up to length−1. A loop condition i < length avoids reading one position beyond the end. Empty input causes zero loop-body visits.",
+            "A complete traversal makes n visits, so its time is Θ(n) with O(1) auxiliary space if it only keeps a loop counter. The right panel walks through the values; no search target is required."
+          ],
+          "exampleId": "array-traverse",
+          "runtime": {
+            "moduleId": "arrays",
+            "op": 5
+          }
+        },
+        {
+          "id": "insert",
+          "title": "Insertion: open a slot by shifting",
+          "kind": "operation",
+          "teaches": [
+            "arrays.insert"
+          ],
+          "paragraphs": [
+            "To insert value x at index i, first ensure spare capacity and 0 ≤ i ≤ length. Shift elements from the end toward i so that a value is copied before its slot is overwritten. Then write x and increase length.",
+            "Inserting 9 at index 1 in [3, 1, 4] yields [3, 9, 1, 4]. Inserting at the end shifts zero elements; inserting at the beginning may shift n. Worst-case time is Θ(n), with O(1) auxiliary space in reserved storage."
+          ],
+          "exampleId": "array-insert",
+          "runtime": {
+            "moduleId": "arrays",
+            "op": 3,
+            "index": 1,
+            "arg": 9
+          }
+        },
+        {
+          "id": "delete",
+          "title": "Deletion: close the gap",
+          "kind": "operation",
+          "teaches": [
+            "arrays.delete"
+          ],
+          "paragraphs": [
+            "Deletion requires an existing index: 0 ≤ i < length. Preserve the removed value if it is needed, shift later elements left, and reduce length. The old last slot is no longer part of the logical sequence.",
+            "Deleting index 1 from [3, 1, 4] leaves [3, 4]. A missing index or an empty input must be handled before moving values. Worst-case time is Θ(n); deleting the last element needs no shifts."
+          ],
+          "exampleId": "array-delete",
+          "runtime": {
+            "moduleId": "arrays",
+            "op": 4,
+            "index": 1
+          }
+        },
+        {
+          "id": "capacity",
+          "title": "Capacity and important alternatives",
+          "kind": "explain",
+          "teaches": [
+            "arrays.alternatives"
+          ],
+          "paragraphs": [
+            "A spare physical slot is not yet a readable logical element. For length 3 and capacity 5, reading index 3 is invalid, while inserting at index 3 is valid. When length equals capacity, insertion needs an explicit policy.",
+            "The in-place example rejects a full array. The alternative allocates a new sequence of length n+1 and copies values around the new element: Θ(n) time and Θ(n) extra/output storage. Growable language collections can resize internally; this does not make every individual insertion O(1)."
+          ],
+          "exampleId": "array-insert",
+          "visual": "memory"
+        },
+        {
+          "id": "boundaries",
+          "title": "Boundary checks before movement",
+          "kind": "explain",
+          "teaches": [
+            "arrays.boundaries"
+          ],
+          "paragraphs": [
+            "For reading, updating or deleting, valid indices stop at n−1. For insertion, n is also valid because it appends after the last element. A negative index is invalid in these examples, even though some languages offer negative-index syntax.",
+            "Try the empty and one-element cases. Insertion into an empty sequence at 0 works when capacity is available. Access or deletion in an empty sequence must report an error. Do not confuse zero-based index 0 with an empty collection."
+          ],
+          "visual": "memory"
+        },
+        {
+          "id": "faq",
+          "title": "Questions and common pitfalls",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "Is index 3 the same as value 3?",
+              "answer": "No. An index identifies a position. The value stored there might be 3, another value, or no valid element if the index is outside the logical length."
+            },
+            {
+              "question": "Why does insertion shift from right to left?",
+              "answer": "Moving left to right would overwrite a value before it had been copied to its new slot. Starting at the right protects the remaining values."
+            },
+            {
+              "question": "Is index equal to length valid?",
+              "answer": "Only for insertion at the end. Access, update and deletion need an existing element, so they require index < length."
+            },
+            {
+              "question": "Why is capacity different from length?",
+              "answer": "Capacity counts reserved slots; length counts occupied elements. Unused capacity is not part of the readable sequence."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    },
+    {
+      "id": "searching",
+      "title": "Searching",
+      "category": "Algorithms",
+      "icon": "search",
+      "description": "Compare a complete scan with sorted-range halving.",
+      "prerequisites": [
+        "foundations",
+        "arrays"
+      ],
+      "slides": [
+        {
+          "id": "basics",
+          "title": "Find a value and define “not found”",
+          "kind": "intro",
+          "teaches": [
+            "searching.results"
+          ],
+          "paragraphs": [
+            "Searching asks whether a target occurs and, if so, where. A result must distinguish index 0 (a valid first match) from no match. Our sequence examples return −1 for no match.",
+            "Duplicates need a policy. Linear search below returns the first occurrence. The binary search example can return any matching occurrence. The target does not have to be positive or unique."
+          ]
+        },
+        {
+          "id": "linear",
+          "title": "Linear search: inspect in order",
+          "kind": "operation",
+          "teaches": [
+            "searching.linear"
+          ],
+          "paragraphs": [
+            "Inspect each element from left to right and compare it with the target. Before index i, all earlier values have been checked. Stop at the first equal value; if the scan ends, the target is absent.",
+            "This works on unsorted input. Best-case time is Θ(1); worst-case time is Θ(n), with O(1) auxiliary space. In an empty sequence the loop runs zero times and returns −1."
+          ],
+          "exampleId": "linear-search",
+          "runtime": {
+            "moduleId": "linear-search",
+            "op": 0,
+            "arg": 7
+          }
+        },
+        {
+          "id": "sorted",
+          "title": "Before binary search: establish ordering",
+          "kind": "explain",
+          "teaches": [
+            "searching.sorted"
+          ],
+          "paragraphs": [
+            "Binary search is justified only when the input is ordered using the same comparison as the search. Here it must be ascending. Comparing a middle value can then rule out all values on one side. Without ordering, that conclusion is invalid.",
+            "Sorting first has a cost, so binary search is not automatically the best choice for one search of unsorted data. The visualization rejects unsorted input rather than silently changing it."
+          ],
+          "visual": "memory"
+        },
+        {
+          "id": "binary",
+          "title": "Binary search: keep a possible interval",
+          "kind": "operation",
+          "teaches": [
+            "searching.binary"
+          ],
+          "paragraphs": [
+            "Maintain an inclusive interval [lo, hi]. Compare the middle slot. If it is smaller than the target, set lo = mid+1; if larger, set hi = mid−1. If equal, return mid. Each unsuccessful comparison removes the middle slot and half of the remaining range.",
+            "Stop when lo > hi. This ensures progress and handles missing targets and empty inputs. Worst-case time is Θ(log n); the iterative example uses O(1) auxiliary space."
+          ],
+          "exampleId": "binary-search",
+          "runtime": {
+            "moduleId": "binary-search",
+            "op": 0,
+            "arg": 7
+          }
+        },
+        {
+          "id": "variants",
+          "title": "Variants: recursion and duplicate boundaries",
+          "kind": "explain",
+          "teaches": [
+            "searching.variants"
+          ],
+          "paragraphs": [
+            "A recursive binary search expresses the same shrinking interval as smaller calls. It still requires sorted input, but uses O(log n) call-stack space in the worst case instead of the iterative version’s O(1) extra space.",
+            "To find the first duplicate, do not stop permanently at equality: remember that candidate and continue searching the left range. An “any match” result should not be presented as “first match.”"
+          ],
+          "exampleId": "binary-search"
+        },
+        {
+          "id": "faq",
+          "title": "Questions and common pitfalls",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "Why can’t binary search just try an unsorted input?",
+              "answer": "Discarding half of the input depends on ordering. A smaller middle value says nothing about the other side of an unsorted sequence."
+            },
+            {
+              "question": "Why use mid+1 and mid−1?",
+              "answer": "The middle value was already checked. Excluding it guarantees that the interval shrinks after an unsuccessful comparison."
+            },
+            {
+              "question": "Does binary search always return the first duplicate?",
+              "answer": "No. This version returns any equal middle slot. First-occurrence search needs a different boundary rule."
+            },
+            {
+              "question": "Is −1 a possible found index?",
+              "answer": "Not with our zero-based, nonnegative index convention. It is reserved as the no-match result."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    },
+    {
+      "id": "sorting",
+      "title": "Sorting",
+      "category": "Algorithms",
+      "icon": "sort",
+      "description": "Build sorted prefixes, merge runs and partition around pivots.",
+      "prerequisites": [
+        "foundations",
+        "arrays"
+      ],
+      "slides": [
+        {
+          "id": "basics",
+          "title": "Sorting and what must be preserved",
+          "kind": "intro",
+          "teaches": [
+            "sorting.contract"
+          ],
+          "paragraphs": [
+            "Sorting rearranges values into a chosen order. Ascending order means every value is no greater than the next. Correctness also requires preserving the input’s values and multiplicities: [2, 2, 1] must become [1, 2, 2], not [1, 2].",
+            "A stable sort preserves the original order of items with equal keys. With plain identical numbers this is invisible; imagine each number carries a name to see why stability can matter."
+          ]
+        },
+        {
+          "id": "insertion",
+          "title": "Insertion sort: grow a sorted prefix",
+          "kind": "operation",
+          "teaches": [
+            "sorting.insertion"
+          ],
+          "paragraphs": [
+            "Keep positions before i sorted. Remember the next key, shift only strictly larger prefix values right, and put the key into the resulting gap. Equal keys are not shifted past one another, so this version is stable.",
+            "An already sorted input needs a linear number of comparisons. Reverse order can need about n(n−1)/2 shifts: Θ(n²) time. Auxiliary space is O(1)."
+          ],
+          "exampleId": "insertion-sort",
+          "runtime": {
+            "moduleId": "insertion-sort",
+            "op": 0
+          }
+        },
+        {
+          "id": "merge",
+          "title": "Merge sort: combine sorted runs",
+          "kind": "operation",
+          "teaches": [
+            "sorting.merge"
+          ],
+          "paragraphs": [
+            "Merging takes two sorted runs and repeatedly chooses the smaller front value. Choosing the left run on ties preserves stability. Bottom-up merge sort begins with length-one runs and doubles the run width after each pass.",
+            "Each pass processes n elements and there are about log₂ n passes: Θ(n log n) time. A temporary buffer takes Θ(n) auxiliary space. Read events may fill the buffer before writes update the displayed sequence."
+          ],
+          "exampleId": "merge-sort",
+          "runtime": {
+            "moduleId": "merge-sort",
+            "op": 0
+          }
+        },
+        {
+          "id": "quick",
+          "title": "Quicksort: partition, then sort parts",
+          "kind": "operation",
+          "teaches": [
+            "sorting.quick"
+          ],
+          "paragraphs": [
+            "This partition uses the final element as pivot. During the scan, values before the boundary are ≤ pivot; checked values after it are > pivot. Swapping the pivot into its final slot separates two smaller sorting tasks.",
+            "Quicksort is not stable here. Balanced partitions give Θ(n log n) time, but sorted or all-equal input with a final-element pivot can give Θ(n²). Recursive examples can use Θ(n) stack space in the worst case; the visualization uses an explicit bounded range stack."
+          ],
+          "exampleId": "quick-sort",
+          "runtime": {
+            "moduleId": "quick-sort",
+            "op": 0
+          }
+        },
+        {
+          "id": "variants",
+          "title": "Choose variants by their guarantees",
+          "kind": "explain",
+          "teaches": [
+            "sorting.variants"
+          ],
+          "paragraphs": [
+            "Top-down merge sort recursively splits the input before merging; bottom-up merge sort doubles run widths. Both use a merging buffer and Θ(n log n) time. The alternative merge example includes the complete recursive setup.",
+            "For quicksort, pivot selection and three-way partitioning can reduce particular bad cases, but changing a pivot policy alone does not make stability automatic. Insertion sort can be useful for small or nearly sorted inputs. Avoid declaring a universal “fastest” sort without a workload and measurement."
+          ],
+          "exampleId": "merge-sort"
+        },
+        {
+          "id": "comparison",
+          "title": "Compare with identical input",
+          "kind": "comparison",
+          "teaches": [
+            "sorting.comparison"
+          ],
+          "paragraphs": [
+            "Run the same input through insertion, merge and quicksort. Compare the number and kinds of operations, not animation duration. A swap, a buffer read and a write represent different work, so report their counts separately.",
+            "Try sorted, reverse-sorted and duplicate-heavy inputs. These expose adaptivity, pivot imbalance and stable tie handling. Empty and one-element inputs are already sorted and still need a correct completion result."
+          ]
+        },
+        {
+          "id": "faq",
+          "title": "Questions and common pitfalls",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "Does sorted output alone prove correctness?",
+              "answer": "No. The output must also contain exactly the original values with the same multiplicities."
+            },
+            {
+              "question": "Why does insertion sort shift only larger values?",
+              "answer": "Shifting equal values past the remembered key would reverse some equal-key order. A strict greater-than comparison preserves stability."
+            },
+            {
+              "question": "Why can quicksort be quadratic?",
+              "answer": "A poor pivot can repeatedly leave a subproblem of size n−1. Adding those scans gives a quadratic total."
+            },
+            {
+              "question": "Is a faster animation a faster algorithm?",
+              "answer": "No. Playback pace is a presentation setting. Use well-defined operation counts or a controlled execution benchmark."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    },
+    {
+      "id": "linked-list",
+      "title": "Singly linked lists",
+      "category": "Data Structures",
+      "icon": "links",
+      "description": "Follow and change links without shifting a row of values.",
+      "prerequisites": [
+        "foundations",
+        "arrays"
+      ],
+      "slides": [
+        {
+          "id": "basics",
+          "title": "A sequence joined by links",
+          "kind": "intro",
+          "teaches": [
+            "list.model"
+          ],
+          "paragraphs": [
+            "A singly linked list consists of nodes. Each node stores a value and a next link to another node, or null at the end. The head identifies the first node; an empty list has a null head.",
+            "Links describe relationships, not neighboring array slots. The nodes need not be physically contiguous. Unlike an array, finding the node at index i normally requires following i links."
+          ]
+        },
+        {
+          "id": "representation",
+          "title": "Keep a route to every node",
+          "kind": "operation",
+          "teaches": [
+            "list.links"
+          ],
+          "paragraphs": [
+            "Traversal begins at the head and repeatedly follows next until null. To change the link entering a node, remember its predecessor. A singly linked node does not automatically know which node comes before it.",
+            "The diagrams show conceptual links, not browser addresses. Preserve reachability: overwriting the only link to a node can lose the remaining chain. Unlinking and freeing a removed node are separate responsibilities in languages with manual memory management."
+          ],
+          "exampleId": "list-traverse",
+          "runtime": {
+            "moduleId": "linked-list",
+            "op": 3
+          }
+        },
+        {
+          "id": "insert",
+          "title": "Insert without losing the successor",
+          "kind": "operation",
+          "teaches": [
+            "list.insert"
+          ],
+          "paragraphs": [
+            "Locate the predecessor of the insertion position. First point the new node to the old successor; then point the predecessor to the new node. At index 0, replace the head instead.",
+            "Finding the predecessor can take Θ(n) time; relinking after it is known takes O(1). Inserting at index 0 also works for an empty list. These examples use zero-based positions and allow insertion at length."
+          ],
+          "exampleId": "list-insert",
+          "runtime": {
+            "moduleId": "linked-list",
+            "op": 0,
+            "arg": 15,
+            "index": 1
+          }
+        },
+        {
+          "id": "delete",
+          "title": "Delete: repair the chain and head",
+          "kind": "operation",
+          "teaches": [
+            "list.delete"
+          ],
+          "paragraphs": [
+            "To delete an existing position, make its predecessor point to the removed node’s successor. Deleting the head updates the head itself. Removing the only node leaves an empty list.",
+            "Do not discard the removed node’s next link before repairing the chain. The C and C++ examples release removed nodes; the full snippet includes its node type. The indexed operation is O(n) to locate the node."
+          ],
+          "exampleId": "list-delete",
+          "runtime": {
+            "moduleId": "linked-list",
+            "op": 1,
+            "index": 1
+          }
+        },
+        {
+          "id": "search",
+          "title": "Search follows links",
+          "kind": "operation",
+          "teaches": [
+            "list.search"
+          ],
+          "paragraphs": [
+            "Compare each node value and follow next until a match or null. Duplicates are allowed and the first matching node is returned. A null result means no match; it is not a node containing value zero.",
+            "Worst-case time is Θ(n), with O(1) auxiliary space. Knowing a value does not reveal a node’s position or predecessor."
+          ],
+          "exampleId": "list-search",
+          "runtime": {
+            "moduleId": "linked-list",
+            "op": 2,
+            "arg": 20
+          }
+        },
+        {
+          "id": "traverse",
+          "title": "Traverse the whole chain",
+          "kind": "operation",
+          "teaches": [
+            "list.traversal"
+          ],
+          "paragraphs": [
+            "Visit a node before moving to its successor. The empty list produces zero visits. Following links costs Θ(n) for n nodes and needs only one current-node reference.",
+            "Unlike indexed arrays, repeatedly starting at the head to fetch each position can make an apparently simple loop quadratic. Keep the current link while traversing."
+          ],
+          "exampleId": "list-traverse",
+          "runtime": {
+            "moduleId": "linked-list",
+            "op": 3
+          }
+        },
+        {
+          "id": "variants",
+          "title": "Sentinels and tail references",
+          "kind": "explain",
+          "teaches": [
+            "list.variants"
+          ],
+          "paragraphs": [
+            "A sentinel is an extra dummy node before the first data node. It can make head insertion/deletion use the same predecessor rule as other positions, but it is not a data element and changes the representation.",
+            "A tail reference can make append O(1) when maintained correctly. It must be updated when the last node is removed. Our default examples use an explicit head and do not assume a tail or sentinel."
+          ]
+        },
+        {
+          "id": "faq",
+          "title": "Questions and common pitfalls",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "Why can changing next lose nodes?",
+              "answer": "If next is the only route to the remaining chain and you overwrite it before saving the successor, that route is lost."
+            },
+            {
+              "question": "When must the head change?",
+              "answer": "Insertion at index 0 and deletion of the first node change the head. Removing the only node sets it to null."
+            },
+            {
+              "question": "Is deleting a known value always constant time?",
+              "answer": "No. This singly linked list must find both the target and its predecessor unless the needed references are already available."
+            },
+            {
+              "question": "What should an empty list do?",
+              "answer": "Traversal and search stop immediately; head insertion at index 0 is allowed; deleting a nonexistent position is an error."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    },
+    {
+      "id": "stack",
+      "title": "Stacks",
+      "category": "Data Structures",
+      "icon": "stack",
+      "description": "Learn last-in-first-out order and safe boundary operations.",
+      "prerequisites": [
+        "foundations",
+        "arrays"
+      ],
+      "slides": [
+        {
+          "id": "basics",
+          "title": "The last item in is the first out",
+          "kind": "intro",
+          "teaches": [
+            "stack.lifo"
+          ],
+          "paragraphs": [
+            "A stack stores a sequence with access at one end, called the top. Push adds at the top; pop removes the top; peek reads it without removal. A pile of plates is a useful model.",
+            "If you push 2, then 4, then 6, the first pop returns 6. A stack describes allowed behavior; it can be implemented with an array or linked nodes."
+          ]
+        },
+        {
+          "id": "representation",
+          "title": "Length identifies the top",
+          "kind": "explain",
+          "teaches": [
+            "stack.representation"
+          ],
+          "paragraphs": [
+            "In a bounded array-backed stack, occupied values lie at indices 0 through length−1. The top is at length−1 when the stack is nonempty. Capacity limits how many values can be stored.",
+            "Empty and full are different conditions. Empty means there is no item to read/remove; full means a bounded implementation has no room for another push."
+          ],
+          "exampleId": "stack-peek",
+          "runtime": {
+            "moduleId": "stack",
+            "op": 2
+          }
+        },
+        {
+          "id": "push",
+          "title": "Push: check capacity, then append",
+          "kind": "operation",
+          "teaches": [
+            "stack.push"
+          ],
+          "paragraphs": [
+            "Push checks for space, stores the new value at index length, then increases length. It does not reorder earlier elements. If capacity is exhausted, report the failure without overwriting a live value.",
+            "The bounded array example takes O(1) time and O(1) auxiliary space for one valid push. The visualization holds at most 32 values."
+          ],
+          "exampleId": "stack-push",
+          "runtime": {
+            "moduleId": "stack",
+            "op": 0,
+            "arg": 8
+          }
+        },
+        {
+          "id": "pop",
+          "title": "Pop: remove and return the top",
+          "kind": "operation",
+          "teaches": [
+            "stack.pop"
+          ],
+          "paragraphs": [
+            "Check that length is positive before reducing it. The removed value is the old last element. Popping [2, 4, 6] returns 6 and leaves [2, 4].",
+            "Popping an empty stack is underflow. An error or explicit empty result is safer than treating an arbitrary zero as a removed value. A valid pop is O(1)."
+          ],
+          "exampleId": "stack-pop",
+          "runtime": {
+            "moduleId": "stack",
+            "op": 1
+          }
+        },
+        {
+          "id": "peek",
+          "title": "Peek leaves the stack unchanged",
+          "kind": "operation",
+          "teaches": [
+            "stack.peek"
+          ],
+          "paragraphs": [
+            "Peek reads the top value and preserves length and order. It needs the same nonempty check as pop. Repeated peeks return the same value unless another operation changes the stack.",
+            "The operation is O(1). A linked implementation can also push/pop at the head in O(1), but each node requires its own storage and allocation handling."
+          ],
+          "exampleId": "stack-peek",
+          "runtime": {
+            "moduleId": "stack",
+            "op": 2
+          }
+        },
+        {
+          "id": "faq",
+          "title": "Questions and common pitfalls",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "Does peek remove a value?",
+              "answer": "No. Peek reads the top while pop removes it. Both reject an empty stack."
+            },
+            {
+              "question": "Is zero an underflow marker?",
+              "answer": "Not by itself: zero can be a legitimate stored value. Use a separate status, exception or optional result."
+            },
+            {
+              "question": "Why do call stacks relate to this structure?",
+              "answer": "The most recent unfinished function call returns first. Each recursive call adds another active frame before earlier calls can finish."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    },
+    {
+      "id": "queue",
+      "title": "Queues",
+      "category": "Data Structures",
+      "icon": "queue",
+      "description": "Track first-in-first-out order and compare representations.",
+      "prerequisites": [
+        "foundations",
+        "arrays"
+      ],
+      "slides": [
+        {
+          "id": "basics",
+          "title": "The first item in is the first out",
+          "kind": "intro",
+          "teaches": [
+            "queue.fifo"
+          ],
+          "paragraphs": [
+            "A queue adds at the back and removes from the front. People waiting in a single orderly line illustrate first-in-first-out (FIFO) behavior. Enqueue adds; dequeue removes; inspect reads the front without removing it.",
+            "Enqueueing 2, 4 and 6 in that order means the first dequeue returns 2, regardless of which value is largest."
+          ]
+        },
+        {
+          "id": "representation",
+          "title": "Locate the front and the back",
+          "kind": "explain",
+          "teaches": [
+            "queue.representation"
+          ],
+          "paragraphs": [
+            "Our compact array representation stores the front at index 0 and the back at length−1. Enqueue appends. Dequeue shifts remaining values left to keep the front at index 0.",
+            "FIFO is the behavior, not a promise that every representation has the same cost. Empty means length is zero; full means length equals the bounded capacity."
+          ],
+          "exampleId": "queue-inspect",
+          "runtime": {
+            "moduleId": "queue",
+            "op": 2
+          }
+        },
+        {
+          "id": "enqueue",
+          "title": "Enqueue at the back",
+          "kind": "operation",
+          "teaches": [
+            "queue.enqueue"
+          ],
+          "paragraphs": [
+            "Check for capacity, write the value after the current back, then increase length. Earlier arrivals keep their order. One enqueue in reserved storage takes O(1) time.",
+            "A full queue must reject the operation or grow through a documented policy. Silently overwriting the front would lose an arrival."
+          ],
+          "exampleId": "queue-enqueue",
+          "runtime": {
+            "moduleId": "queue",
+            "op": 0,
+            "arg": 8
+          }
+        },
+        {
+          "id": "dequeue",
+          "title": "Dequeue the oldest value",
+          "kind": "operation",
+          "teaches": [
+            "queue.dequeue"
+          ],
+          "paragraphs": [
+            "Preserve the front value, shift each later value one slot left, and decrease length. Dequeueing [2, 4, 6] returns 2 and leaves [4, 6]. Check for underflow before reading.",
+            "This compact representation takes O(n) time for dequeue and O(1) auxiliary space. The single conceptual dequeue in the visualization includes these shifts; it is not a constant-time CPU instruction."
+          ],
+          "exampleId": "queue-dequeue",
+          "runtime": {
+            "moduleId": "queue",
+            "op": 1
+          }
+        },
+        {
+          "id": "inspect",
+          "title": "Inspect without removal",
+          "kind": "operation",
+          "teaches": [
+            "queue.inspect"
+          ],
+          "paragraphs": [
+            "Inspect returns the front but changes neither length nor order. The empty check matters even if a previously used physical slot still contains an old value: only logical elements belong to the queue.",
+            "In this representation inspection takes O(1) time and auxiliary space."
+          ],
+          "exampleId": "queue-inspect",
+          "runtime": {
+            "moduleId": "queue",
+            "op": 2
+          }
+        },
+        {
+          "id": "circular",
+          "title": "Alternative: a circular buffer",
+          "kind": "explain",
+          "teaches": [
+            "queue.circular"
+          ],
+          "paragraphs": [
+            "A circular queue keeps a head index and a size. The next back slot is (head + size) modulo capacity. Modulo means the remainder: after the final slot, the index wraps around to zero.",
+            "Dequeue advances head instead of shifting values, so both enqueue and dequeue can be O(1). Keep size to distinguish full from empty when indices wrap. The alternative example implements these rules; the compact shifting visualization remains the same FIFO abstraction."
+          ],
+          "exampleId": "circular-queue"
+        },
+        {
+          "id": "faq",
+          "title": "Questions and common pitfalls",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "Why does the compact dequeue take O(n)?",
+              "answer": "It shifts the remaining values. FIFO behavior does not require shifting; a circular representation avoids it."
+            },
+            {
+              "question": "Do enqueue and dequeue use the same end?",
+              "answer": "No. Enqueue uses the back and dequeue uses the front. A stack instead adds and removes at its top."
+            },
+            {
+              "question": "Why retain a size in a circular buffer?",
+              "answer": "Wrapped indices alone can look the same for empty and full states. Size explicitly distinguishes them and enforces capacity."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    },
+    {
+      "id": "bst",
+      "title": "Binary search trees",
+      "category": "Data Structures",
+      "icon": "tree",
+      "description": "Use ordering to navigate, update and traverse a tree.",
+      "prerequisites": [
+        "foundations",
+        "linked-list"
+      ],
+      "slides": [
+        {
+          "id": "basics",
+          "title": "Branch using comparisons",
+          "kind": "intro",
+          "teaches": [
+            "bst.order"
+          ],
+          "paragraphs": [
+            "A binary tree node has at most a left child and a right child. A binary search tree (BST) adds an ordering rule: every value in the left subtree is smaller, and every value in the right subtree is larger.",
+            "The root is the first node to inspect. An empty tree has no root. This module ignores duplicate insertions, making the ordering strict."
+          ]
+        },
+        {
+          "id": "representation",
+          "title": "Subtrees and height",
+          "kind": "explain",
+          "teaches": [
+            "bst.height"
+          ],
+          "paragraphs": [
+            "A subtree contains a node and all nodes below it. The ordering rule applies to all descendants, not only immediate children. Height h describes the longest root-to-leaf route.",
+            "Search, insertion and deletion follow routes of length O(h). An unbalanced tree can become a chain with h proportional to n; logarithmic behavior is not guaranteed. Traversals visit all n nodes."
+          ],
+          "exampleId": "bst-search",
+          "runtime": {
+            "moduleId": "bst",
+            "op": 1,
+            "arg": 6
+          }
+        },
+        {
+          "id": "insert",
+          "title": "Insert at a missing child",
+          "kind": "operation",
+          "teaches": [
+            "bst.insert"
+          ],
+          "paragraphs": [
+            "Start at the root and compare. Go left for a smaller value, right for a larger one, and stop without adding a node on equality. Attach a new node where the required child is missing.",
+            "Inserting into an empty tree creates the root. The ordering invariant must hold for every ancestor, not just the parent."
+          ],
+          "exampleId": "bst-insert",
+          "runtime": {
+            "moduleId": "bst",
+            "op": 0,
+            "arg": 5
+          }
+        },
+        {
+          "id": "search",
+          "title": "Search follows the ordering rule",
+          "kind": "operation",
+          "teaches": [
+            "bst.search"
+          ],
+          "paragraphs": [
+            "Compare with the current node. An equal value is a match; otherwise descend into the only subtree that could contain the target. Reaching a missing child means no match.",
+            "A search costs O(h). Duplicate handling is an explicit policy; a different BST could count duplicate values, but this lesson does not add duplicate nodes."
+          ],
+          "exampleId": "bst-search",
+          "runtime": {
+            "moduleId": "bst",
+            "op": 1,
+            "arg": 6
+          }
+        },
+        {
+          "id": "delete-leaf",
+          "title": "Delete a leaf",
+          "kind": "operation",
+          "teaches": [
+            "bst.delete"
+          ],
+          "paragraphs": [
+            "First search for the target. A leaf has no children, so its parent’s corresponding child becomes null. If the target is the only root, the whole tree becomes empty.",
+            "A missing target leaves the tree unchanged. Deletion must update the link that enters the target; deleting a local reference alone does not repair the tree."
+          ],
+          "exampleId": "bst-delete",
+          "runtime": {
+            "moduleId": "bst",
+            "op": 2,
+            "arg": 1
+          }
+        },
+        {
+          "id": "delete-one",
+          "title": "Delete a node with one child",
+          "kind": "operation",
+          "teaches": [
+            "bst.delete-one"
+          ],
+          "paragraphs": [
+            "Replace the link entering the target with a link to its only child. This preserves every descendant without needing to copy an entire subtree. If the target is the root, its child becomes the new root.",
+            "Check left and right cases symmetrically. The full deletion function handles leaf, one-child and two-child cases together."
+          ],
+          "exampleId": "bst-delete",
+          "runtime": {
+            "moduleId": "bst",
+            "op": 2,
+            "arg": 14
+          }
+        },
+        {
+          "id": "delete-two",
+          "title": "Delete a node with two children",
+          "kind": "operation",
+          "teaches": [
+            "bst.delete-two"
+          ],
+          "paragraphs": [
+            "The inorder successor is the smallest value in the right subtree: follow left links from the right child. It has no left child. Replacing the target by this successor preserves ordering, but the successor must be removed from its old position.",
+            "The example copies the successor value and recursively removes that value; the diagram relinks the successor node. Both preserve the BST value ordering, but node identities can differ. Do not confuse a node’s identity with its stored value."
+          ],
+          "exampleId": "bst-delete",
+          "runtime": {
+            "moduleId": "bst",
+            "op": 2,
+            "arg": 8
+          }
+        },
+        {
+          "id": "inorder",
+          "title": "Inorder traversal: left, node, right",
+          "kind": "operation",
+          "teaches": [
+            "bst.traversals"
+          ],
+          "paragraphs": [
+            "Visit the left subtree, then the node, then the right subtree. The BST ordering rule makes this output ascending, regardless of the shape of the tree.",
+            "Each node is visited once, so traversal takes Θ(n) time. Recursive examples use O(h) call-stack space. An empty tree produces no visits."
+          ],
+          "exampleId": "bst-inorder",
+          "runtime": {
+            "moduleId": "bst",
+            "op": 3
+          }
+        },
+        {
+          "id": "preorder",
+          "title": "Preorder traversal: node, left, right",
+          "kind": "operation",
+          "teaches": [
+            "bst.preorder"
+          ],
+          "paragraphs": [
+            "Visit the node before its children. Preorder exposes the root before exploring its subtrees and can describe the shape when paired with enough structural information.",
+            "Preorder is not sorted order. It still visits each node once and uses O(h) recursive stack space."
+          ],
+          "exampleId": "bst-preorder",
+          "runtime": {
+            "moduleId": "bst",
+            "op": 4
+          }
+        },
+        {
+          "id": "postorder",
+          "title": "Postorder traversal: left, right, node",
+          "kind": "operation",
+          "teaches": [
+            "bst.postorder"
+          ],
+          "paragraphs": [
+            "Visit both subtrees before the node. This order is useful when a parent’s work depends on its children, such as releasing a manually allocated tree.",
+            "Postorder is not the reverse of inorder in general. All three traversal orders require Θ(n) time for n nodes."
+          ],
+          "exampleId": "bst-postorder",
+          "runtime": {
+            "moduleId": "bst",
+            "op": 5
+          }
+        },
+        {
+          "id": "variants",
+          "title": "Shape changes the cost",
+          "kind": "explain",
+          "teaches": [
+            "bst.variants"
+          ],
+          "paragraphs": [
+            "Inserting sorted distinct values can create a chain. A balanced-tree policy can keep height logarithmic, but rotations and balancing rules are future topics, not operations implemented in this module.",
+            "The iterative search example uses O(1) auxiliary space. Recursive insert/delete examples can use O(h) call-stack space. State both tree shape and implementation when explaining cost."
+          ]
+        },
+        {
+          "id": "faq",
+          "title": "Questions and common pitfalls",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "What happens to duplicates?",
+              "answer": "Insertion is ignored on equality in this module. Counting duplicates or choosing a tie direction would be different documented policies."
+            },
+            {
+              "question": "Why not replace a deleted two-child node by any child?",
+              "answer": "That can lose a subtree or violate ordering. The inorder successor gives a replacement value with a specific ordering guarantee."
+            },
+            {
+              "question": "Is a BST always logarithmic?",
+              "answer": "No. Cost depends on height; an unbalanced tree can be a chain of n nodes."
+            },
+            {
+              "question": "Why is inorder sorted but preorder is not?",
+              "answer": "Inorder visits all smaller descendants before the node and all larger descendants after it. Preorder deliberately visits the node first."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    },
+    {
+      "id": "graph",
+      "title": "Graphs and paths",
+      "category": "Data Structures",
+      "icon": "graph",
+      "description": "Model connections, explore reachable places and find weighted distances.",
+      "prerequisites": [
+        "foundations",
+        "arrays",
+        "stack",
+        "queue"
+      ],
+      "slides": [
+        {
+          "id": "basics",
+          "title": "Vertices and edges model connections",
+          "kind": "intro",
+          "teaches": [
+            "graph.model"
+          ],
+          "paragraphs": [
+            "A graph consists of vertices (nodes) and edges (connections). A road map, friendship network or prerequisite diagram can be modeled this way. Labels identify vertices; their numeric order is not a traversal rule.",
+            "A directed edge can be followed only from its source to its target. An undirected edge works both ways. A weight is a cost attached to an edge; zero is a valid weight."
+          ]
+        },
+        {
+          "id": "representation",
+          "title": "Represent adjacency explicitly",
+          "kind": "explain",
+          "teaches": [
+            "graph.representation"
+          ],
+          "paragraphs": [
+            "An adjacency matrix has a row and column for each vertex and records which edges exist. Presence is separate from weight, so weight zero does not mean “missing.” With V vertices, matrix storage is O(V²).",
+            "An adjacency list stores outgoing neighbors instead and can use O(V+E) storage for E edges. The default examples here use a matrix to match the diagrams’ neighbor scans; the BFS alternative demonstrates a list after these representation ideas."
+          ],
+          "exampleId": "graph-create"
+        },
+        {
+          "id": "edit",
+          "title": "Build and edit a graph",
+          "kind": "operation",
+          "teaches": [
+            "graph.edit"
+          ],
+          "paragraphs": [
+            "Add/remove vertices and set/remove edges with the controls. Labels are unique integers from 1 to 31, with at most 16 vertices. Removing a vertex also removes its incident edges. Setting an existing edge replaces its weight instead of adding a parallel edge.",
+            "Self-loops are allowed. In undirected mode an edge is symmetric. Changing direction mode rebuilds the selected graph interpretation, so inspect its arrows before choosing a start vertex."
+          ],
+          "exampleId": "graph-create",
+          "runtime": {
+            "moduleId": "graph",
+            "op": 0
+          }
+        },
+        {
+          "id": "visited",
+          "title": "Track visits and disconnected components",
+          "kind": "explain",
+          "teaches": [
+            "graph.visited"
+          ],
+          "paragraphs": [
+            "A cycle can lead back to an earlier vertex. Track visited vertices to avoid repeated work or an infinite traversal. A disconnected graph may contain vertices unreachable from a chosen source; one source-based traversal does not claim to visit them all.",
+            "Neighbor order affects the visit order when several choices are possible. Our diagrams follow input order. Direction matters: an incoming edge is not necessarily an outgoing route."
+          ]
+        },
+        {
+          "id": "bfs",
+          "title": "BFS: explore in layers",
+          "kind": "operation",
+          "teaches": [
+            "graph.bfs"
+          ],
+          "paragraphs": [
+            "Breadth-first search uses a FIFO queue. Mark a vertex when enqueuing it so it enters the queue once. Dequeue it, visit it, then enqueue unvisited outgoing neighbors. This explores one edge-distance layer before the next.",
+            "BFS ignores weights. With a matrix, scanning all potential neighbors gives O(V²) time; an adjacency-list version gives O(V+E) for a complete reachable traversal. Auxiliary visited/queue storage is O(V)."
+          ],
+          "exampleId": "bfs",
+          "runtime": {
+            "moduleId": "bfs",
+            "op": 0,
+            "arg": 1
+          }
+        },
+        {
+          "id": "dfs",
+          "title": "DFS: follow a branch and backtrack",
+          "kind": "operation",
+          "teaches": [
+            "graph.dfs"
+          ],
+          "paragraphs": [
+            "Depth-first search follows an unvisited outgoing neighbor before returning to earlier choices. An explicit stack remembers the active path and which neighbor to try next. When a vertex has no unvisited outgoing neighbor, backtrack.",
+            "DFS also ignores weights and only visits reachable vertices. Matrix neighbor scans take O(V²) time; the active stack and visited information need O(V) auxiliary space."
+          ],
+          "exampleId": "dfs",
+          "runtime": {
+            "moduleId": "dfs",
+            "op": 0,
+            "arg": 1
+          }
+        },
+        {
+          "id": "dijkstra",
+          "title": "Dijkstra: settle shortest distances",
+          "kind": "operation",
+          "teaches": [
+            "graph.dijkstra"
+          ],
+          "paragraphs": [
+            "For nonnegative edge weights, repeatedly select the unsettled vertex with smallest tentative distance. Its distance is final. Relax an outgoing edge by replacing a neighbor’s distance when current distance + weight is smaller.",
+            "The source distance is zero; unreachable vertices retain infinity. This implementation uses linear minimum selection and a matrix, taking O(V²) time and O(V) auxiliary distance/visited storage. All negative edges are rejected, including unreachable negative edges."
+          ],
+          "exampleId": "dijkstra",
+          "runtime": {
+            "moduleId": "dijkstra",
+            "op": 0,
+            "arg": 1
+          }
+        },
+        {
+          "id": "restrictions",
+          "title": "Choose the right question and prerequisites",
+          "kind": "explain",
+          "teaches": [
+            "graph.restrictions"
+          ],
+          "paragraphs": [
+            "BFS answers reachability and unweighted edge-distance questions; DFS explores branches and backtracking; Dijkstra minimizes total nonnegative edge weight. A path with fewer edges need not have a smaller total weight.",
+            "Negative weights can invalidate the settled-distance argument. They require a different shortest-path method, which is outside this module. Do not “fix” them by silently taking absolute values. Try disconnected vertices, zero weights and directed one-way edges."
+          ]
+        },
+        {
+          "id": "faq",
+          "title": "Questions and common pitfalls",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "Why mark BFS vertices on enqueue?",
+              "answer": "Two different neighbors could otherwise enqueue the same vertex before it is processed. Marking immediately prevents duplicate queue entries."
+            },
+            {
+              "question": "Did the algorithm fail if a vertex was not visited?",
+              "answer": "Not necessarily. It may be disconnected or unreachable along outgoing directed edges from the chosen source."
+            },
+            {
+              "question": "Can Dijkstra use negative weights if there is no negative cycle?",
+              "answer": "No. The nonnegative-edge guarantee is needed for its settled-distance rule; absence of negative cycles alone is not enough."
+            },
+            {
+              "question": "Does weight zero mean no edge?",
+              "answer": "No. Presence is stored separately. A zero-cost edge is valid and Dijkstra can follow it."
+            },
+            {
+              "question": "Does BFS find cheapest weighted paths?",
+              "answer": "No. BFS minimizes edge count in an unweighted interpretation. Weighted costs require a suitable shortest-path algorithm."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    }
+  ],
+  "aliases": {
+    "linear-search": {
+      "moduleId": "searching",
+      "slideId": "linear"
+    },
+    "binary-search": {
+      "moduleId": "searching",
+      "slideId": "binary"
+    },
+    "insertion-sort": {
+      "moduleId": "sorting",
+      "slideId": "insertion"
+    },
+    "merge-sort": {
+      "moduleId": "sorting",
+      "slideId": "merge"
+    },
+    "quick-sort": {
+      "moduleId": "sorting",
+      "slideId": "quick"
+    },
+    "bfs": {
+      "moduleId": "graph",
+      "slideId": "bfs"
+    },
+    "dfs": {
+      "moduleId": "graph",
+      "slideId": "dfs"
+    },
+    "dijkstra": {
+      "moduleId": "graph",
+      "slideId": "dijkstra"
+    }
+  }
+}

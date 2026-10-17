@@ -286,8 +286,192 @@
       "title": "Create an initial sequence"
     },
     {
+      "id": "hash-tables.basics",
+      "title": "Find a value by its key"
+    },
+    {
+      "id": "hash-tables.hashing",
+      "title": "Turn an integer key into a bucket"
+    },
+    {
+      "id": "hash-tables.chaining",
+      "title": "Separate chaining keeps colliding entries"
+    },
+    {
+      "id": "hash-tables.upsert",
+      "title": "Insertion of a duplicate updates its value"
+    },
+    {
+      "id": "hash-tables.chain-delete",
+      "title": "Delete without losing the remaining chain"
+    },
+    {
+      "id": "hash-tables.probing",
+      "title": "Linear probing searches neighboring slots"
+    },
+    {
+      "id": "hash-tables.probe-update",
+      "title": "Probe insertion and updates"
+    },
+    {
+      "id": "hash-tables.tombstones",
+      "title": "A deletion marker preserves the search path"
+    },
+    {
+      "id": "hash-tables.rehash",
+      "title": "Grow the capacity and recompute every bucket"
+    },
+    {
+      "id": "hash-tables.costs",
+      "title": "Expected cost needs assumptions"
+    },
+    {
       "id": "heaps.order",
-      "title": "Complete tree and heap ordering"
+      "title": "A complete tree of priorities"
+    },
+    {
+      "id": "heaps.representation",
+      "title": "Array indices describe tree links"
+    },
+    {
+      "id": "heaps.max",
+      "title": "Min-heaps and max-heaps reverse priority"
+    },
+    {
+      "id": "heaps.insert",
+      "title": "Insert at the end, then sift up"
+    },
+    {
+      "id": "heaps.insert-max",
+      "title": "The same sift with maximum priority"
+    },
+    {
+      "id": "heaps.peek",
+      "title": "Peek reads without removing"
+    },
+    {
+      "id": "heaps.extract",
+      "title": "Extract the root and sift down"
+    },
+    {
+      "id": "heaps.extract-max",
+      "title": "Extract the maximum"
+    },
+    {
+      "id": "heaps.build",
+      "title": "Bottom-up construction is linear"
+    },
+    {
+      "id": "heaps.heap-sort",
+      "title": "Use a max-heap to sort in place"
+    },
+    {
+      "id": "heaps.uses",
+      "title": "Priority queues in applications"
+    },
+    {
+      "id": "recursion.basics",
+      "title": "Solve a smaller instance of the same problem"
+    },
+    {
+      "id": "recursion.factorial",
+      "title": "Factorial multiplies while unwinding"
+    },
+    {
+      "id": "recursion.frames",
+      "title": "Each call keeps its own unfinished work"
+    },
+    {
+      "id": "recursion.sum",
+      "title": "Recursively sum a prefix"
+    },
+    {
+      "id": "recursion.binary",
+      "title": "Recursive binary search returns a location"
+    },
+    {
+      "id": "recursion.branching",
+      "title": "Fibonacci has two recursive children"
+    },
+    {
+      "id": "recursion.termination",
+      "title": "Choose a decreasing measure"
+    },
+    {
+      "id": "recursion.costs",
+      "title": "Count work and peak storage separately"
+    },
+    {
+      "id": "two-pointers.basics",
+      "title": "Two positions coordinate one scan"
+    },
+    {
+      "id": "two-pointers.pair",
+      "title": "Find a target pair in sorted input"
+    },
+    {
+      "id": "two-pointers.boundaries",
+      "title": "Empty, duplicate and extreme values"
+    },
+    {
+      "id": "two-pointers.reverse",
+      "title": "Reverse in place from opposite ends"
+    },
+    {
+      "id": "two-pointers.unique",
+      "title": "Read ahead while writing a unique prefix"
+    },
+    {
+      "id": "two-pointers.costs",
+      "title": "Two monotone scans stay linear"
+    },
+    {
+      "id": "sliding-window.basics",
+      "title": "A window contains a contiguous range"
+    },
+    {
+      "id": "sliding-window.fixed",
+      "title": "Maximum sum of exactly k values"
+    },
+    {
+      "id": "sliding-window.fixed-edges",
+      "title": "Negative values still work for fixed size"
+    },
+    {
+      "id": "sliding-window.variable",
+      "title": "Find the shortest window reaching a target"
+    },
+    {
+      "id": "sliding-window.proof",
+      "title": "Nonnegative values justify shrinking"
+    },
+    {
+      "id": "sliding-window.negative",
+      "title": "The proof fails for unrestricted negatives"
+    },
+    {
+      "id": "sliding-window.costs",
+      "title": "Incremental sums and monotone boundaries"
+    },
+    {
+      "id": "hash-tables.probe-build",
+      "title": "Build an open-addressed table"
+    },
+    {
+      "id": "hash-tables.probe-delete",
+      "title": "Delete an occupied probing slot"
+    },
+    {
+      "id": "hash-tables.chain-rehash",
+      "title": "Rehash a linked-bucket representation"
+    },
+    {
+      "id": "hash-tables.chain-route",
+      "title": "Delete and follow the remaining links"
+    },
+    {
+      "id": "heaps.peek-max",
+      "title": "Inspect maximum priority"
     }
   ],
   "modules": [
@@ -925,6 +1109,26 @@
           "paragraphs": [
             "Run the same input through insertion, merge and quicksort. Compare the number and kinds of operations, not animation duration. A swap, a buffer read and a write represent different work, so report their counts separately.",
             "Try sorted, reverse-sorted and duplicate-heavy inputs. These expose adaptivity, pivot imbalance and stable tie handling. Empty and one-element inputs are already sorted and still need a correct completion result."
+          ]
+        },
+        {
+          "id": "heap-sort",
+          "title": "Another in-place choice: heap sort",
+          "kind": "explain",
+          "teaches": [],
+          "paragraphs": [
+            "Heap sort builds a max-heap and moves its largest value to a sorted suffix. The Heaps and Priority Queues module teaches the representation, construction and sift-down proof in full. Explore its pages before using this alternative. The visualization here calls exactly the same heap-sort implementation."
+          ],
+          "runtime": {
+            "moduleId": "heaps",
+            "op": 8
+          },
+          "exampleId": "heap-sort",
+          "related": [
+            {
+              "moduleId": "heaps",
+              "label": "Learn heaps and priority queues"
+            }
           ]
         },
         {
@@ -1776,11 +1980,418 @@
       ]
     },
     {
+      "id": "hash-tables",
+      "title": "Hash Tables",
+      "category": "Data Structures",
+      "icon": "links",
+      "description": "Map keys to values, resolve collisions and rebuild buckets.",
+      "prerequisites": [
+        "arrays"
+      ],
+      "slides": [
+        {
+          "id": "basics",
+          "title": "Find a value by its key",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.basics"
+          ],
+          "paragraphs": [
+            "A key identifies a record; its value is the information attached to that key. A student number might identify a score. A hash table maps keys to values instead of treating a key as an array index. The keys 10 and 100000 need not require 100001 array slots.",
+            "You will compute buckets, resolve collisions with two representations, insert/update/delete entries, and explain how table size changes the cost. Arrays and Foundations supply the ideas of indices, capacity and operation counts."
+          ],
+          "bullets": [
+            "Compute normalized bucket indices",
+            "Trace chaining and probing",
+            "Explain deletion and rehashing"
+          ]
+        },
+        {
+          "id": "hashing",
+          "title": "Turn an integer key into a bucket",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.hashing"
+          ],
+          "paragraphs": [
+            "A hash function deterministically maps a key to a bucket index. Here bucket(k) = ((k % capacity) + capacity) % capacity. The second remainder normalizes negative remainders in C, C++, Java and JavaScript; Python already gives a nonnegative remainder for positive capacity.",
+            "With eight buckets, -1 and 7 both map to 7. Equal buckets are a collision, not proof that the keys are equal. Always compare keys. Input is alternating key,value integers, for example -1,90,7,80. Values and keys are bounded at ±100000."
+          ],
+          "runtime": {
+            "moduleId": "hash-chain",
+            "op": 0,
+            "values": [
+              -1,
+              90,
+              7,
+              80,
+              15,
+              70
+            ]
+          },
+          "exampleId": "hash-chain"
+        },
+        {
+          "id": "chaining",
+          "title": "Separate chaining keeps colliding entries",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.chaining"
+          ],
+          "paragraphs": [
+            "Each bucket names the first entry in a linked chain. An entry stores key, value and next. Search follows the links and compares keys until it finds equality or reaches the end. Entries have stable conceptual IDs; their links are not browser addresses.",
+            "Inserting a new key at the head costs constant link work after the bucket is chosen. Finding whether it already exists may traverse the whole chain. Try keys 0,8,16 with eight buckets and count the comparisons."
+          ],
+          "runtime": {
+            "moduleId": "hash-chain",
+            "op": 1,
+            "values": [
+              0,
+              10,
+              8,
+              20,
+              16,
+              30
+            ],
+            "arg": 8
+          },
+          "exampleId": "hash-chain"
+        },
+        {
+          "id": "upsert",
+          "title": "Insertion of a duplicate updates its value",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.upsert"
+          ],
+          "paragraphs": [
+            "This map has one entry per key. Inserting key 8 with value 99 replaces the value for 8 without increasing the number of entries. It does not add a second copy. A value of zero is valid, so success must be reported separately from the returned value.",
+            "The editable Key field selects the key; New value is the value written by this operation. Missing lookups return a separate not-found result and leave the table unchanged."
+          ],
+          "runtime": {
+            "moduleId": "hash-chain",
+            "op": 2,
+            "arg": 8,
+            "index": 99,
+            "values": [
+              0,
+              10,
+              8,
+              20
+            ]
+          },
+          "exampleId": "hash-chain"
+        },
+        {
+          "id": "chain-delete",
+          "title": "Delete without losing the remaining chain",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.chain-delete"
+          ],
+          "paragraphs": [
+            "To delete a chained entry, make its predecessor point to its successor. Deleting the first entry changes the bucket head. The other links stay reachable. Empty buckets and missing keys need no unlinking.",
+            "For 0→8→16 in one bucket, removing 8 must still leave a path from 0 to 16. Our insertion-at-head representation may display this order in reverse, but the same reachability rule applies."
+          ],
+          "runtime": {
+            "moduleId": "hash-chain",
+            "op": 3,
+            "arg": 8,
+            "values": [
+              0,
+              10,
+              8,
+              20,
+              16,
+              30
+            ]
+          },
+          "exampleId": "hash-chain"
+        },
+        {
+          "id": "chain-route",
+          "title": "Delete and follow the remaining links",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.chain-route"
+          ],
+          "paragraphs": [
+            "This compound worked example removes key 8, then searches for 16 in the surviving chain. Compare it with the probing tombstone experiment. Chaining repairs an actual conceptual link instead of leaving a tombstone; both strategies keep unrelated keys reachable."
+          ],
+          "runtime": {
+            "moduleId": "hash-chain",
+            "op": 5,
+            "arg": 8,
+            "index": 16,
+            "values": [
+              0,
+              10,
+              8,
+              20,
+              16,
+              30
+            ]
+          },
+          "exampleId": "hash-chain"
+        },
+        {
+          "id": "probing",
+          "title": "Linear probing searches neighboring slots",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.probing"
+          ],
+          "paragraphs": [
+            "Linear probing stores entries directly in a slot array. Try the home bucket first, then (home+1) % capacity, then the next slot, wrapping around. An occupied slot with a different key means continue. An empty never-used slot means the key is absent.",
+            "A probe is bounded by capacity, even when no empty slot is encountered. Closely spaced collisions form clusters and can make later operations slower. Compare this layout with separate chaining on the same keys."
+          ],
+          "runtime": {
+            "moduleId": "hash-probe",
+            "op": 1,
+            "arg": 16,
+            "values": [
+              0,
+              10,
+              8,
+              20,
+              16,
+              30
+            ]
+          },
+          "exampleId": "hash-probe"
+        },
+        {
+          "id": "probe-build",
+          "title": "Build an open-addressed table",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.probe-build"
+          ],
+          "paragraphs": [
+            "Each missing key starts at its normalized home slot and advances across occupied slots. Try colliding keys -1,7,15 and compare the resulting slot layout with chaining. Construction itself uses the same bounded insertion rule as later updates."
+          ],
+          "runtime": {
+            "moduleId": "hash-probe",
+            "op": 0,
+            "arg": 0,
+            "index": 0,
+            "values": [
+              -1,
+              10,
+              7,
+              20,
+              15,
+              30
+            ]
+          },
+          "exampleId": "hash-probe"
+        },
+        {
+          "id": "probe-delete",
+          "title": "Delete an occupied probing slot",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.probe-delete"
+          ],
+          "paragraphs": [
+            "Deleting key 8 leaves a tombstone, reduces live size, and preserves the probe path for other keys. A missing deletion does not change the table. The tombstone page’s delete-then-lookup experiment lets you inspect the continued search in the same run."
+          ],
+          "runtime": {
+            "moduleId": "hash-probe",
+            "op": 3,
+            "arg": 8,
+            "index": 0,
+            "values": [
+              0,
+              10,
+              8,
+              20,
+              16,
+              30
+            ]
+          },
+          "exampleId": "hash-probe"
+        },
+        {
+          "id": "tombstones",
+          "title": "A deletion marker preserves the search path",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.tombstones"
+          ],
+          "paragraphs": [
+            "Suppose keys 0,8,16 occupy slots 0,1,2. If slot 1 is cleared to never-used empty after deleting 8, a lookup for 16 stops too early at slot 1. A tombstone says an entry was deleted here: keep searching.",
+            "This experiment deletes Key, then looks up the second key supplied in Lookup key after deletion. Delete 8 and find 16. The tombstone is neither an occupied entry nor a stopping empty slot."
+          ],
+          "runtime": {
+            "moduleId": "hash-probe",
+            "op": 5,
+            "arg": 8,
+            "index": 16,
+            "values": [
+              0,
+              10,
+              8,
+              20,
+              16,
+              30
+            ]
+          },
+          "exampleId": "hash-probe"
+        },
+        {
+          "id": "probe-update",
+          "title": "Probe insertion and updates",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.probe-update"
+          ],
+          "paragraphs": [
+            "Search for an existing key before inserting: an equal key is updated in place. Otherwise remember the first tombstone, keep checking for duplicates, and insert into that tombstone or the first empty slot.",
+            "Stopping immediately at a tombstone can create duplicate keys later in the same probe sequence. This bounded demonstration grows conservatively before inserting a missing key if its load would exceed 0.75."
+          ],
+          "runtime": {
+            "moduleId": "hash-probe",
+            "op": 2,
+            "arg": 8,
+            "index": 99,
+            "values": [
+              0,
+              10,
+              8,
+              20,
+              16,
+              30
+            ]
+          },
+          "exampleId": "hash-probe"
+        },
+        {
+          "id": "rehash",
+          "title": "Grow the capacity and recompute every bucket",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.rehash"
+          ],
+          "paragraphs": [
+            "Load factor is number of live entries divided by capacity. Six entries in eight slots have load 0.75. Our policy doubles capacity before an insertion would exceed 0.75. Manual Rehash also doubles capacity. The teaching table starts at eight buckets and grows at most to 64.",
+            "Changing capacity changes the remainder calculation. Move each live entry into its new bucket; copying an old slot index is incorrect. Rehashing removes tombstones and preserves keys, values and entry IDs. Watch old placements while new buckets fill."
+          ],
+          "runtime": {
+            "moduleId": "hash-probe",
+            "op": 4,
+            "values": [
+              0,
+              10,
+              8,
+              20,
+              16,
+              30,
+              24,
+              40
+            ]
+          },
+          "exampleId": "hash-probe"
+        },
+        {
+          "id": "chain-rehash",
+          "title": "Rehash a linked-bucket representation",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.chain-rehash"
+          ],
+          "paragraphs": [
+            "Chaining also recomputes the bucket of every live key when capacity changes. Entry IDs and values remain stable, but next links are rebuilt for the new bucket heads. Rehashing is not specific to probing; its purpose is to change the bucket layout and control load."
+          ],
+          "runtime": {
+            "moduleId": "hash-chain",
+            "op": 4,
+            "arg": 0,
+            "index": 0,
+            "values": [
+              0,
+              10,
+              8,
+              20,
+              16,
+              30
+            ]
+          },
+          "exampleId": "hash-chain"
+        },
+        {
+          "id": "costs",
+          "title": "Expected cost needs assumptions",
+          "kind": "explain",
+          "teaches": [
+            "hash-tables.costs"
+          ],
+          "paragraphs": [
+            "With well-distributed hashes and a controlled load factor, lookup/insertion/deletion have expected O(1) cost. A fixed remainder hash can distribute adversarial multiples of capacity badly: all entries may collide, giving O(n) worst-case work. Expected is an assumption about inputs or hashing, not a promise for every key.",
+            "One rehash takes O(n + capacity) work to initialize buckets and move entries; doubling spreads occasional rebuild cost across many insertions. Our tiny fixed maximum is an input safety limit, not an asymptotic complexity claim. Tombstones lengthen probes even when the live load is low."
+          ],
+          "runtime": {
+            "moduleId": "hash-chain",
+            "op": 0,
+            "values": [
+              0,
+              1,
+              8,
+              2,
+              16,
+              3,
+              24,
+              4,
+              32,
+              5,
+              40,
+              6,
+              48,
+              7
+            ]
+          },
+          "exampleId": "hash-chain"
+        },
+        {
+          "id": "faq",
+          "title": "FAQs and common pitfalls",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "Does a collision overwrite another key?",
+              "answer": "No. Only equality of the actual key means update. Chaining and probing keep distinct colliding keys."
+            },
+            {
+              "question": "Can I erase a probed slot to empty?",
+              "answer": "Use a tombstone or repair the whole probe cluster. A never-used empty slot would make later lookups stop early."
+            },
+            {
+              "question": "Why did my bucket change after resizing?",
+              "answer": "The capacity participates in the hash calculation. Recompute each live key’s bucket."
+            },
+            {
+              "question": "Is O(1) guaranteed?",
+              "answer": "No. It is expected under distribution and load assumptions; collision-heavy inputs can require a linear scan."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    },
+    {
       "id": "heaps",
       "title": "Heaps and Priority Queues",
       "category": "Data Structures",
       "icon": "tree",
-      "description": "Organize priorities with a complete tree.",
+      "description": "Maintain priorities with complete trees and linked array views.",
       "prerequisites": [
         "arrays"
       ],
@@ -1793,29 +2404,809 @@
             "heaps.order"
           ],
           "paragraphs": [
-            "A min-heap places the smallest value at the root. Every parent is no greater than its children, but siblings need not be sorted. A complete binary tree fills each level from left to right. In zero-based storage the children of i are 2i+1 and 2i+2. The parent of a non-root node is floor((i-1)/2). Bottom-up construction repairs parents from the last internal node to the root."
+            "A priority queue removes the most urgent item instead of the oldest item. A min-heap treats the smallest number as most urgent; a max-heap treats the largest as most urgent. A complete binary tree fills levels from left to right with no gaps.",
+            "You will connect an array to that tree, repair ordering with sifts, compare construction methods, and use the same operations for heap sort. Duplicate priorities are allowed. This numeric heap promises no stable ordering among equal-priority records."
           ],
           "runtime": {
             "moduleId": "heaps",
             "op": 0
-          }
+          },
+          "exampleId": "heap-build",
+          "bullets": [
+            "Relate heap arrays and trees",
+            "Maintain min/max ordering",
+            "Build, insert, extract and sort"
+          ]
+        },
+        {
+          "id": "representation",
+          "title": "Array indices describe tree links",
+          "kind": "explain",
+          "teaches": [
+            "heaps.representation"
+          ],
+          "paragraphs": [
+            "With zero-based indices, children of i are 2i+1 and 2i+2. The parent of a non-root i is floor((i-1)/2). A child index outside the active heap extent means that child is absent. No explicit link objects are required.",
+            "Heap order constrains each parent and its children. It does not order siblings or different branches: [1,4,2] is a valid min-heap but is not sorted. The array and tree highlight the same compared or swapped indices."
+          ],
+          "runtime": {
+            "moduleId": "heaps",
+            "op": 0
+          },
+          "exampleId": "heap-build"
+        },
+        {
+          "id": "max",
+          "title": "Min-heaps and max-heaps reverse priority",
+          "kind": "explain",
+          "teaches": [
+            "heaps.max"
+          ],
+          "paragraphs": [
+            "Min-heaps require parent ≤ child. Max-heaps require parent ≥ child. The shape is unchanged; the comparison changes. Equal values need no swap. When children tie, the demonstration chooses the left child, but equal-priority extraction has no record-order guarantee.",
+            "Every run first builds the supplied values into the requested heap, then performs the selected operation. Displayed counters include this preparation. The per-operation bounds assume a heap has already been built."
+          ],
+          "runtime": {
+            "moduleId": "heaps",
+            "op": 1
+          },
+          "exampleId": "heap-build"
+        },
+        {
+          "id": "build",
+          "title": "Bottom-up construction is linear",
+          "kind": "explain",
+          "teaches": [
+            "heaps.build"
+          ],
+          "paragraphs": [
+            "Leaves already satisfy heap order. Start at floor(n/2)-1, the last parent, and sift each parent down toward the root. Many nodes are near the bottom and can move only one or two levels.",
+            "Summing the work by height gives n/4 one-level moves, n/8 two-level moves, and progressively fewer longer paths. This sum is O(n), not n times log n. Inserting n elements one at a time instead costs O(n log n) in the worst case."
+          ],
+          "runtime": {
+            "moduleId": "heaps",
+            "op": 0,
+            "values": [
+              9,
+              8,
+              7,
+              6,
+              5,
+              4,
+              3,
+              2,
+              1
+            ]
+          },
+          "exampleId": "heap-build"
+        },
+        {
+          "id": "insert",
+          "title": "Insert at the end, then sift up",
+          "kind": "explain",
+          "teaches": [
+            "heaps.insert"
+          ],
+          "paragraphs": [
+            "Append the new value at the first free array slot to preserve completeness. Compare it to its parent. If the child has higher priority, swap and repeat toward the root. Stop at correct order or the root.",
+            "For a built heap, at most the tree height is crossed: O(log n) worst-case time and O(1) auxiliary space for iterative repair. This lab holds at most 32 values and rejects insertion when full."
+          ],
+          "runtime": {
+            "moduleId": "heaps",
+            "op": 2,
+            "arg": 0
+          },
+          "exampleId": "heap-insert"
+        },
+        {
+          "id": "insert-max",
+          "title": "The same sift with maximum priority",
+          "kind": "explain",
+          "teaches": [
+            "heaps.insert-max"
+          ],
+          "paragraphs": [
+            "Insert 12 into a max-heap and follow it upward while it exceeds its parent. Smaller values stay below larger parents. The complete-tree shape still follows array length.",
+            "Compare this run with min insertion on identical values. Swapping only on a strict priority improvement avoids unnecessary movement for equal values."
+          ],
+          "runtime": {
+            "moduleId": "heaps",
+            "op": 5,
+            "arg": 12
+          },
+          "exampleId": "heap-insert"
+        },
+        {
+          "id": "peek",
+          "title": "Peek reads without removing",
+          "kind": "explain",
+          "teaches": [
+            "heaps.peek"
+          ],
+          "paragraphs": [
+            "Peek returns the root in O(1) time after construction. It changes neither the heap length nor its ordering. Empty heaps have no root: the operation reports an error rather than inventing a sentinel value that might also be valid data."
+          ],
+          "runtime": {
+            "moduleId": "heaps",
+            "op": 4
+          },
+          "exampleId": "heap-peek"
+        },
+        {
+          "id": "peek-max",
+          "title": "Inspect maximum priority",
+          "kind": "explain",
+          "teaches": [
+            "heaps.peek-max"
+          ],
+          "paragraphs": [
+            "A max-heap peek returns a largest value without removing it, just as min peek returns a smallest value. It is O(1) after construction and rejects an empty heap. The complete-tree shape and physical array length stay unchanged."
+          ],
+          "runtime": {
+            "moduleId": "heaps",
+            "op": 7,
+            "arg": 0,
+            "index": 0,
+            "values": [
+              8,
+              3,
+              7,
+              1,
+              5
+            ]
+          },
+          "exampleId": "heap-peek"
+        },
+        {
+          "id": "extract",
+          "title": "Extract the root and sift down",
+          "kind": "explain",
+          "teaches": [
+            "heaps.extract"
+          ],
+          "paragraphs": [
+            "Save the root result, move the last value into the root slot, and shorten the active prefix. Compare the two children, choose the higher-priority child, then compare with the parent. Swap only when needed and continue downward.",
+            "Choosing an arbitrary child can leave the other child out of order. Extraction from an existing heap is O(log n) worst-case time, with O(1) iterative extra space. A singleton heap becomes empty after extraction."
+          ],
+          "runtime": {
+            "moduleId": "heaps",
+            "op": 3
+          },
+          "exampleId": "heap-extract"
+        },
+        {
+          "id": "extract-max",
+          "title": "Extract the maximum",
+          "kind": "explain",
+          "teaches": [
+            "heaps.extract-max"
+          ],
+          "paragraphs": [
+            "The same repair chooses the larger child for a max-heap. The removed value is shown separately from the remaining array. Repeated max extractions produce nonincreasing priorities; min extractions produce nondecreasing priorities."
+          ],
+          "runtime": {
+            "moduleId": "heaps",
+            "op": 6
+          },
+          "exampleId": "heap-extract"
+        },
+        {
+          "id": "heap-sort",
+          "title": "Use a max-heap to sort in place",
+          "kind": "explain",
+          "teaches": [
+            "heaps.heap-sort"
+          ],
+          "paragraphs": [
+            "Build a max-heap, swap its root with the last active element, shrink the heap extent, and sift down again. The suffix outside the tree is sorted and no longer participates in repair. Repeat until the entire array is ascending.",
+            "Heap sort takes O(n log n) worst-case time and O(1) auxiliary space with iterative sifts. It is not stable: equal values can change relative record order. This is the same implementation linked from Sorting."
+          ],
+          "runtime": {
+            "moduleId": "heaps",
+            "op": 8
+          },
+          "exampleId": "heap-sort"
+        },
+        {
+          "id": "uses",
+          "title": "Priority queues in applications",
+          "kind": "explain",
+          "teaches": [
+            "heaps.uses"
+          ],
+          "paragraphs": [
+            "Schedulers, event simulation and shortest-path algorithms often need the next smallest priority. A heap provides efficient insertion and extraction, but searching an arbitrary key remains O(n) unless another index is maintained.",
+            "A priority queue can select Dijkstra’s next tentative distance efficiently. The existing graph lesson actually uses a scan of all unsettled vertices and an adjacency matrix, giving O(V²) work. It does not secretly switch to a heap. A heap-based adjacency-list variant requires tracking updated or stale queue entries; it is a future graph extension."
+          ]
         },
         {
           "id": "faq",
-          "title": "Questions about heap ordering",
+          "title": "FAQs and common pitfalls",
           "kind": "faq",
           "teaches": [],
           "paragraphs": [],
           "faqs": [
             {
-              "question": "Is a heap array sorted?",
-              "answer": "No. Parent-child ordering says nothing about the relative order of siblings."
+              "question": "Why is my heap array not sorted?",
+              "answer": "Only parent-child priority is guaranteed. Siblings and distant branches can appear in either order."
+            },
+            {
+              "question": "Is building a heap always O(n log n)?",
+              "answer": "Repeated insertion has that worst-case bound. Bottom-up construction is O(n) because most nodes are close to leaves."
+            },
+            {
+              "question": "Which duplicate comes out first?",
+              "answer": "This numeric heap has no stable tie ordering. Use a secondary sequence number if a real application needs FIFO ties."
+            },
+            {
+              "question": "Do operation counters exclude setup?",
+              "answer": "No. A run first constructs the heap; the displayed comparisons include construction. Per-operation bounds assume an existing heap."
+            },
+            {
+              "question": "Does the graph lesson already use this queue?",
+              "answer": "No. Its Dijkstra implementation scans unsettled vertices in a matrix representation."
             }
           ]
         },
         {
           "id": "quiz",
-          "title": "Check your heap understanding",
+          "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    },
+    {
+      "id": "recursion",
+      "title": "Recursion",
+      "category": "Algorithms",
+      "icon": "stack",
+      "description": "Trace call frames, base cases, returns and repeated subproblems.",
+      "prerequisites": [
+        "stack",
+        "searching"
+      ],
+      "slides": [
+        {
+          "id": "basics",
+          "title": "Solve a smaller instance of the same problem",
+          "kind": "explain",
+          "teaches": [
+            "recursion.basics"
+          ],
+          "paragraphs": [
+            "A recursive function calls itself on a smaller instance. A base case answers a small instance directly. A recursive case must make measurable progress toward a base case. Merely writing a base case does not guarantee that future calls ever reach it.",
+            "This module uses stack frames and sorted binary search from its explicit prerequisites. You will trace factorial, array sum, recursive binary search and branching Fibonacci, including return values and maximum simultaneous depth."
+          ],
+          "bullets": [
+            "State a terminating recursive contract",
+            "Trace locals and return values",
+            "Separate total work from maximum stack depth"
+          ]
+        },
+        {
+          "id": "factorial",
+          "title": "Factorial multiplies while unwinding",
+          "kind": "explain",
+          "teaches": [
+            "recursion.factorial"
+          ],
+          "paragraphs": [
+            "For nonnegative n, factorial(0)=1 and factorial(n)=n×factorial(n-1). For 4, calls descend through 4,3,2,1; returns unwind as 1,2,6,24. The current frame waits until the smaller call returns.",
+            "This lab accepts n from 0 to 12. Then 12! = 479001600 fits signed 32-bit arithmetic; 13! does not. Negative n is rejected before execution. The displayed functions enforce this contract; wider accumulators do not make arbitrary n safe."
+          ],
+          "runtime": {
+            "moduleId": "recursion",
+            "op": 0,
+            "arg": 4
+          },
+          "exampleId": "rec-factorial"
+        },
+        {
+          "id": "frames",
+          "title": "Each call keeps its own unfinished work",
+          "kind": "explain",
+          "teaches": [
+            "recursion.frames"
+          ],
+          "paragraphs": [
+            "A frame stores arguments, local values and where execution resumes after a child returns. Two frames may use the same variable names but hold different values. The active frame is on top of the conceptual stack, shown at the bottom of the list.",
+            "A waiting frame records where it resumes after a child returns. Call IDs and parent IDs show nesting, not actual addresses. A return removes one active frame and passes a value to its caller. The call-tree record remains visible for review; branching calls keep the first answer while evaluating their second child."
+          ],
+          "runtime": {
+            "moduleId": "recursion",
+            "op": 0,
+            "arg": 5
+          },
+          "exampleId": "rec-factorial"
+        },
+        {
+          "id": "sum",
+          "title": "Recursively sum a prefix",
+          "kind": "explain",
+          "teaches": [
+            "recursion.sum"
+          ],
+          "paragraphs": [
+            "Define sum(a,n) as the sum of the first n values. The empty prefix returns 0. For n>0, sum(a,n)=sum(a,n-1)+a[n-1]. The original array is unchanged. For [2,-1,4], returns are 0,2,1,5.",
+            "This visits n elements in O(n) time and keeps O(n) active call-stack space. An iterative scan can use O(1) extra space instead. Here n≤32 and |value|≤100000, so the magnitude of a sum is at most 3200000."
+          ],
+          "runtime": {
+            "moduleId": "recursion",
+            "op": 1,
+            "values": [
+              2,
+              -1,
+              4
+            ]
+          },
+          "exampleId": "rec-sum"
+        },
+        {
+          "id": "binary",
+          "title": "Recursive binary search returns a location",
+          "kind": "explain",
+          "teaches": [
+            "recursion.binary"
+          ],
+          "paragraphs": [
+            "The contract searches a sorted ascending array within inclusive bounds [lo,hi]. If lo>hi, return -1. Otherwise inspect mid=lo+(hi-lo)/2. Equality returns mid; a strict comparison chooses [mid+1,hi] or [lo,mid-1].",
+            "Both bounds exclude the inspected midpoint on a failed comparison, so the interval shrinks. Empty input returns -1; duplicates may return any matching index. O(log n) time and O(log n) call-stack space differ from the O(1) extra space of iterative binary search."
+          ],
+          "runtime": {
+            "moduleId": "recursion",
+            "op": 2,
+            "arg": 7,
+            "values": [
+              1,
+              3,
+              5,
+              7,
+              9
+            ]
+          },
+          "exampleId": "rec-binary"
+        },
+        {
+          "id": "branching",
+          "title": "Fibonacci has two recursive children",
+          "kind": "explain",
+          "teaches": [
+            "recursion.branching"
+          ],
+          "paragraphs": [
+            "Define F(0)=0, F(1)=1, and F(n)=F(n-1)+F(n-2) for n≥2. The first child returns before the second begins; the parent keeps the first return in a saved local. For F(4), the two child answers are 2 and 1, yielding 3.",
+            "The tree repeats smaller calls, such as F(2). The number of calls grows exponentially, bounded above by O(2^n), while maximum simultaneous depth is O(n). Total calls and active depth are different measurements. This lab limits n to 0..10 (at most 177 calls), far before numeric overflow or excessive animation."
+          ],
+          "runtime": {
+            "moduleId": "recursion",
+            "op": 3,
+            "arg": 5
+          },
+          "exampleId": "rec-fibonacci"
+        },
+        {
+          "id": "termination",
+          "title": "Choose a decreasing measure",
+          "kind": "explain",
+          "teaches": [
+            "recursion.termination"
+          ],
+          "paragraphs": [
+            "For factorial and Fibonacci, n decreases toward 0 or 1. For array sum, the prefix length decreases. For binary search, the candidate interval becomes strictly shorter. A function that calls itself with the same argument never makes this progress.",
+            "Prevent invalid inputs before starting. Do not demonstrate an actual infinite call chain: browser playback must remain cancellable. These examples use bounded resumable frames, at most 34 active frames and fewer than 4096 events. Reset discards the current call state."
+          ]
+        },
+        {
+          "id": "costs",
+          "title": "Count work and peak storage separately",
+          "kind": "explain",
+          "teaches": [
+            "recursion.costs"
+          ],
+          "paragraphs": [
+            "Factorial and prefix sum form one chain: linear work and linear stack depth. Binary search follows only one of its two possible halves, so work and depth are logarithmic. Naive Fibonacci follows both branches, causing repeated work even though only one path is active at a time.",
+            "Remembering an already-computed Fibonacci result is called memoization. That idea motivates a later lesson; no dynamic-programming knowledge is required or assessed here. Python integers can grow, but Java/C/C++ fixed-width integers and JavaScript exact-number limits still matter. The stated lab limits make the examples agree."
+          ]
+        },
+        {
+          "id": "faq",
+          "title": "FAQs and common pitfalls",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "Does every recursive function need a base case?",
+              "answer": "It needs a directly answerable stopping case and progress toward it. Missing either can prevent termination."
+            },
+            {
+              "question": "Do both Fibonacci branches occupy the stack at once?",
+              "answer": "The first finishes before the second runs. The parent saves its first answer, so total calls greatly exceed peak active depth."
+            },
+            {
+              "question": "Why is recursive binary search not O(1) extra space?",
+              "answer": "Each unfinished call retains a frame. The halved interval creates O(log n) simultaneous frames."
+            },
+            {
+              "question": "Can I compute arbitrary factorials by choosing Python?",
+              "answer": "Only the educational example language changes. The visualization uses the same documented 0..12 input contract."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    },
+    {
+      "id": "two-pointers",
+      "title": "Two Pointers",
+      "category": "Algorithms",
+      "icon": "search",
+      "description": "Maintain boundaries and invariants while scanning an array.",
+      "prerequisites": [
+        "searching"
+      ],
+      "slides": [
+        {
+          "id": "basics",
+          "title": "Two positions coordinate one scan",
+          "kind": "explain",
+          "teaches": [
+            "two-pointers.basics"
+          ],
+          "paragraphs": [
+            "A pointer here is an array index, not a raw memory address. Opposite-direction pointers start near the two ends and move inward. Same-direction pointers can separate a read position from an output position.",
+            "The key question is why a move is safe: an invariant describes what is already known before and after each iteration. You will find a sorted pair, reverse an array, and compact duplicate values."
+          ],
+          "bullets": [
+            "Justify each pointer movement",
+            "Validate sorted-input assumptions",
+            "Distinguish physical storage and logical output"
+          ]
+        },
+        {
+          "id": "pair",
+          "title": "Find a target pair in sorted input",
+          "kind": "explain",
+          "teaches": [
+            "two-pointers.pair"
+          ],
+          "paragraphs": [
+            "Start left=0 and right=n-1, requiring left<right so one element is not used twice. If a[left]+a[right] is too small, every partner at or left of right is also too small for a[left], so discard left. If too large, every partner at or right of left is too large for a[right], so discard right.",
+            "For [1,2,4,7] and target 9, 1+7 is too small; moving left finds 2+7. The remaining interval contains every not-yet-excluded solution. Return one pair of indices, or no solution. Sorting is required and validated; input is never silently rearranged."
+          ],
+          "runtime": {
+            "moduleId": "two-pointers",
+            "op": 0,
+            "values": [
+              1,
+              2,
+              4,
+              7
+            ],
+            "arg": 9
+          },
+          "exampleId": "two-pair"
+        },
+        {
+          "id": "boundaries",
+          "title": "Empty, duplicate and extreme values",
+          "kind": "explain",
+          "teaches": [
+            "two-pointers.boundaries"
+          ],
+          "paragraphs": [
+            "Empty and singleton inputs cannot supply two distinct indices. Equal values can form a pair if they occupy different positions, such as [3,3] for target 6. When pointers meet without equality, no pair exists.",
+            "Use a sufficiently wide accumulator for the addition before comparing with the target. C/C++ cast before adding, and Java uses long. Our input bound means sums lie in [-200000,200000], exactly representable in JavaScript. Sorting beforehand would add O(n log n) cost and could change original indices; it is an explicit separate preparation, not part of this O(n) scan."
+          ],
+          "runtime": {
+            "moduleId": "two-pointers",
+            "op": 0,
+            "values": [
+              3,
+              3
+            ],
+            "arg": 6
+          },
+          "exampleId": "two-pair"
+        },
+        {
+          "id": "reverse",
+          "title": "Reverse in place from opposite ends",
+          "kind": "explain",
+          "teaches": [
+            "two-pointers.reverse"
+          ],
+          "paragraphs": [
+            "Swap a[left] with a[right], then increment left and decrement right. Everything strictly outside the two pointers is already in its final reversed position. Stop when the pointers meet or cross.",
+            "This operation does not require sorting. Empty and singleton inputs are already reversed. At most floor(n/2) swaps give O(n) time and O(1) auxiliary space, while preserving all values and duplicates."
+          ],
+          "runtime": {
+            "moduleId": "two-pointers",
+            "op": 1,
+            "values": [
+              4,
+              1,
+              4,
+              9
+            ]
+          },
+          "exampleId": "two-reverse"
+        },
+        {
+          "id": "unique",
+          "title": "Read ahead while writing a unique prefix",
+          "kind": "explain",
+          "teaches": [
+            "two-pointers.unique"
+          ],
+          "paragraphs": [
+            "In sorted input, equal values are adjacent. Keep write=1 after the first value and scan read from index 1. If a[read] differs from a[write-1], copy it to a[write] and increment write. Otherwise skip it.",
+            "Invariant: a[0..write) contains exactly one copy of each distinct value seen so far, in order, and write≤read+1. For [1,1,2,2,4], the result prefix is [1,2,4] and logical length is 3. Slots after that prefix still exist and may contain stale values; they are not part of the answer."
+          ],
+          "runtime": {
+            "moduleId": "two-pointers",
+            "op": 2,
+            "values": [
+              1,
+              1,
+              2,
+              2,
+              4
+            ]
+          },
+          "exampleId": "two-unique"
+        },
+        {
+          "id": "costs",
+          "title": "Two monotone scans stay linear",
+          "kind": "explain",
+          "teaches": [
+            "two-pointers.costs"
+          ],
+          "paragraphs": [
+            "Each pointer moves in one direction and never restarts from the beginning. Pair search and compaction therefore take O(n) time; reversal uses a linear number of swaps. None needs extra storage proportional to n.",
+            "Not every problem becomes linear merely by using two indices. The proof depends on a movement rule that safely discards work. Unsorted pair sum and unsorted adjacent compaction do not satisfy these sorted-order arguments. All equal, missing-pair, empty and boundary inputs are useful checks."
+          ],
+          "runtime": {
+            "moduleId": "two-pointers",
+            "op": 2,
+            "values": []
+          },
+          "exampleId": "two-unique"
+        },
+        {
+          "id": "faq",
+          "title": "FAQs and common pitfalls",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "Are these C pointer addresses?",
+              "answer": "No. The labels are conceptual positions in the array, shared by all five example languages."
+            },
+            {
+              "question": "Why can’t pair sum just use the same moves on unsorted input?",
+              "answer": "The elimination proof depends on all later values being at least as large. Without order, a discarded partner could form a solution."
+            },
+            {
+              "question": "Did duplicate removal shrink the allocation?",
+              "answer": "No. It reports a valid prefix length. Ignore the physical suffix; it has not been promised empty or cleared."
+            },
+            {
+              "question": "Can one position supply both numbers?",
+              "answer": "No. The pair loop requires left<right, so equal values need two distinct elements."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    },
+    {
+      "id": "sliding-window",
+      "title": "Sliding Window",
+      "category": "Algorithms",
+      "icon": "array",
+      "description": "Update contiguous ranges without recomputing every sum.",
+      "prerequisites": [
+        "two-pointers"
+      ],
+      "slides": [
+        {
+          "id": "basics",
+          "title": "A window contains a contiguous range",
+          "kind": "explain",
+          "teaches": [
+            "sliding-window.basics"
+          ],
+          "paragraphs": [
+            "A subarray uses consecutive indices. A subsequence may skip positions. For [2,5,1], [2,5] is a subarray; [2,1] is only a subsequence. Sliding windows solve selected problems about contiguous ranges.",
+            "Represent a window as [left,right): left is included, right is excluded. Its length is right-left; [i,i) is empty. You will update a running sum as values enter and leave, then justify fixed-size and variable-size movement."
+          ],
+          "bullets": [
+            "Maintain a contiguous half-open window",
+            "Reuse running sums",
+            "Prove when variable shrinking is safe"
+          ]
+        },
+        {
+          "id": "fixed",
+          "title": "Maximum sum of exactly k values",
+          "kind": "explain",
+          "teaches": [
+            "sliding-window.fixed"
+          ],
+          "paragraphs": [
+            "Add the value entering at right and advance right. If the window is longer than k, subtract the value leaving at left and advance left. Only compare against the best when the length equals k.",
+            "For [2,-1,4,3] with k=2, candidate sums are 1,3,7, so the answer is 7 starting at index 2. Updating by one addition and one subtraction avoids summing each k-element window from scratch."
+          ],
+          "runtime": {
+            "moduleId": "sliding-window",
+            "op": 0,
+            "values": [
+              2,
+              -1,
+              4,
+              3
+            ],
+            "index": 2
+          },
+          "exampleId": "window-fixed"
+        },
+        {
+          "id": "fixed-edges",
+          "title": "Negative values still work for fixed size",
+          "kind": "explain",
+          "teaches": [
+            "sliding-window.fixed-edges"
+          ],
+          "paragraphs": [
+            "Fixed-size sum updates are arithmetic identities; they do not rely on values being nonnegative. For [-5,-2,-8] with k=2, the best sum is -7, not zero. Initialize the best from a real window, not an invented empty candidate.",
+            "Require integer k with 1≤k≤n. Empty input therefore has no valid fixed-size window and is rejected. k=1 chooses the greatest single value, and k=n chooses the whole array. Strict improvement keeps the earliest starting index when sums tie."
+          ],
+          "runtime": {
+            "moduleId": "sliding-window",
+            "op": 0,
+            "values": [
+              -5,
+              -2,
+              -8
+            ],
+            "index": 2
+          },
+          "exampleId": "window-fixed"
+        },
+        {
+          "id": "variable",
+          "title": "Find the shortest window reaching a target",
+          "kind": "explain",
+          "teaches": [
+            "sliding-window.variable"
+          ],
+          "paragraphs": [
+            "Here values must be nonnegative and target must be positive. Expand right until the running sum reaches the target. Record the current length, then remove values from the left while the sum still qualifies. This explores shorter qualifying windows ending at the same position.",
+            "For [2,3,1,2,4,3] and target 7, [4,3] has length 2. Empty input and a target larger than every possible window give no solution, represented by length 0. A length-0 window cannot meet a positive target."
+          ],
+          "runtime": {
+            "moduleId": "sliding-window",
+            "op": 1,
+            "values": [
+              2,
+              3,
+              1,
+              2,
+              4,
+              3
+            ],
+            "arg": 7
+          },
+          "exampleId": "window-variable"
+        },
+        {
+          "id": "proof",
+          "title": "Nonnegative values justify shrinking",
+          "kind": "explain",
+          "teaches": [
+            "sliding-window.proof"
+          ],
+          "paragraphs": [
+            "With nonnegative entries, adding a value cannot decrease the sum, and removing a value cannot increase it. Once removing the leftmost value makes the sum fall below target, further shrinking cannot repair that same window. Expansion is then necessary.",
+            "Left and right only advance. A zero may be removed without reducing the sum, which can still improve length. For [0,0,5] and target 5, shrink to the single value 5. The positive target prevents an empty qualifying window."
+          ],
+          "runtime": {
+            "moduleId": "sliding-window",
+            "op": 1,
+            "values": [
+              0,
+              0,
+              5
+            ],
+            "arg": 5
+          },
+          "exampleId": "window-variable"
+        },
+        {
+          "id": "negative",
+          "title": "The proof fails for unrestricted negatives",
+          "kind": "explain",
+          "teaches": [
+            "sliding-window.negative"
+          ],
+          "paragraphs": [
+            "Consider [1,-1,5] with target 5. The whole window qualifies. Removing 1 drops the sum below target, but also removing -1 would raise the sum to 5 and reveal the shorter [5]. The nonnegative shrinking rule stops too early.",
+            "Therefore the selected variable-size algorithm rejects negative values. It does not silently drop them or apply an invalid proof. More general algorithms can solve signed-input variants, but they need different reasoning and are outside this lesson. Fixed-size maximum sum still accepts negatives."
+          ]
+        },
+        {
+          "id": "costs",
+          "title": "Incremental sums and monotone boundaries",
+          "kind": "explain",
+          "teaches": [
+            "sliding-window.costs"
+          ],
+          "paragraphs": [
+            "In both algorithms, each value enters once and leaves at most once: O(n) time and O(1) auxiliary state. A nested shrinking loop does not imply O(n²), because left advances at most n times over the entire run.",
+            "Use 64-bit sums in fixed-width examples. With at most 32 values of magnitude 100000, |sum|≤3200000, within exact JavaScript integer range as well. A result includes both the best sum/length and its starting position; window boundaries use the same half-open convention throughout."
+          ],
+          "runtime": {
+            "moduleId": "sliding-window",
+            "op": 1,
+            "values": [
+              1,
+              2,
+              1,
+              1
+            ],
+            "arg": 20
+          },
+          "exampleId": "window-variable"
+        },
+        {
+          "id": "faq",
+          "title": "FAQs and common pitfalls",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "Can a window skip a negative value?",
+              "answer": "No. A window is contiguous. Skipping an interior element creates a subsequence, a different problem."
+            },
+            {
+              "question": "Why reject k=0?",
+              "answer": "This lesson asks for exactly k actual elements and defines k in 1..n. An empty fixed window is outside that contract."
+            },
+            {
+              "question": "Why are negative values allowed in one example but not the other?",
+              "answer": "Fixed-size sum updates always hold. The selected variable-size stopping proof needs nonnegative values."
+            },
+            {
+              "question": "Does the inner while loop make the variable example quadratic?",
+              "answer": "No. Every left movement removes a new element; across the full run there are at most n such movements."
+            },
+            {
+              "question": "What does a best length of zero mean?",
+              "answer": "No qualifying nonempty window was found, including on empty input. The positive target cannot be reached by an empty window."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your understanding",
           "kind": "quiz",
           "teaches": [],
           "paragraphs": []

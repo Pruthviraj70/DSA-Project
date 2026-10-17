@@ -49,6 +49,35 @@ export function validate(input: Input): string | undefined {
     )
   )
     return "Graph edges need existing endpoints and integer weights in range.";
+  const sorted = input.values.every(
+    (v, i) => i === 0 || v >= input.values[i - 1],
+  );
+  if ([15, 16].includes(input.module) && input.values.length % 2)
+    return "Use alternating key,value pairs.";
+  if (
+    ((input.module === 18 && input.op === 2) ||
+      (input.module === 19 && input.op !== 1)) &&
+    !sorted
+  )
+    return "This operation requires sorted ascending input.";
+  if (
+    input.module === 18 &&
+    ((input.op === 0 && (input.arg < 0 || input.arg > 12)) ||
+      (input.op === 3 && (input.arg < 0 || input.arg > 10)))
+  )
+    return "Factorial accepts 0..12; Fibonacci accepts 0..10.";
+  if (
+    input.module === 20 &&
+    input.op === 0 &&
+    (input.index < 1 || input.index > input.values.length)
+  )
+    return "Window size k must be between 1 and input length; empty input has no fixed window.";
+  if (
+    input.module === 20 &&
+    input.op === 1 &&
+    (input.arg <= 0 || input.values.some((v) => v < 0))
+  )
+    return "Variable windows require nonnegative values and a positive target.";
   if (input.module === 14 && input.edges.some((e) => e.weight < 0))
     return "Dijkstra requires nonnegative edge weights.";
 }

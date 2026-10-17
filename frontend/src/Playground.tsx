@@ -55,14 +55,20 @@ export function Playground({
   const m = input.module;
   const needsIndex =
     (m === 1 && [1, 2, 3, 4].includes(input.op)) ||
-    (m === 7 && [0, 1].includes(input.op));
+    (m === 7 && [0, 1].includes(input.op)) ||
+    ([15, 16].includes(m) && [2, 5].includes(input.op)) ||
+    (m === 20 && input.op === 0);
   const needsValue =
     (m === 1 && [2, 3].includes(input.op)) ||
     [2, 3, 12, 13, 14].includes(m) ||
     (m === 7 && [0, 2].includes(input.op)) ||
     ([8, 9].includes(m) && input.op === 0) ||
     (m === 10 && input.op < 3) ||
-    (m === 17 && [2, 5].includes(input.op));
+    (m === 17 && [2, 5].includes(input.op)) ||
+    ([15, 16].includes(m) && [1, 2, 3, 5].includes(input.op)) ||
+    (m === 18 && input.op !== 1) ||
+    (m === 19 && input.op === 0) ||
+    (m === 20 && input.op === 1);
   return (
     <section className="playground" aria-label="Visualization">
       <div className="section-heading">
@@ -95,7 +101,11 @@ export function Playground({
         className="input-controls"
       >
         <label>
-          {m >= 11 && m <= 14 ? "Vertex labels" : "Input values"}
+          {[15, 16].includes(m)
+            ? "Key, value pairs (alternating integers)"
+            : m >= 11 && m <= 14
+              ? "Vertex labels"
+              : "Input values"}
           <input
             aria-label="Input values"
             value={raw}
@@ -105,9 +115,23 @@ export function Playground({
         <div className="inline">
           {needsIndex && (
             <label>
-              Index
+              {m === 20
+                ? "Window size k"
+                : [15, 16].includes(m)
+                  ? input.op === 5
+                    ? "Lookup key after deletion"
+                    : "New value"
+                  : "Index"}
               <input
-                aria-label="Index"
+                aria-label={
+                  m === 20
+                    ? "Window size k"
+                    : [15, 16].includes(m)
+                      ? input.op === 5
+                        ? "Lookup key after deletion"
+                        : "New value"
+                      : "Index"
+                }
                 type="number"
                 value={input.index}
                 onChange={(e) => setInput({ ...input, index: +e.target.value })}
@@ -116,9 +140,21 @@ export function Playground({
           )}
           {needsValue && (
             <label>
-              {m >= 12 && m <= 14 ? "Start vertex" : "Value / target"}
+              {[15, 16].includes(m)
+                ? "Key"
+                : m === 18 && [0, 3].includes(input.op)
+                  ? "n"
+                  : m >= 12 && m <= 14
+                    ? "Start vertex"
+                    : "Value / target"}
               <input
-                aria-label="Value or target"
+                aria-label={
+                  [15, 16].includes(m)
+                    ? "Key"
+                    : m === 18 && [0, 3].includes(input.op)
+                      ? "n"
+                      : "Value or target"
+                }
                 type="number"
                 value={input.arg}
                 onChange={(e) => setInput({ ...input, arg: +e.target.value })}
@@ -290,10 +326,21 @@ export function Playground({
       <details>
         <summary>Save or reuse this input</summary>
         <button
-          disabled={!event?.done}
+          disabled={
+            !event?.done ||
+            ([15, 16].includes(m) &&
+              (event?.extended?.entries.length ?? 0) > 16)
+          }
           onClick={() => {
             if (!event) return;
             let values = event.data;
+            if ([15, 16].includes(m) && event.extended)
+              values = event.extended.entries.flatMap((entry) => [
+                entry.key,
+                entry.value,
+              ]);
+            if (m === 19 && input.op === 2 && event.extended)
+              values = event.data.slice(0, event.extended.logical);
             if (m === 10) {
               values = [];
               const nodes = new Map(event.nodes.map((n) => [n.id, n]));
@@ -323,7 +370,11 @@ export function Playground({
             setRaw(values.join(", "));
           }}
         >
-          Use result as input
+          {[15, 16].includes(m)
+            ? "Use live entries as fresh input"
+            : [18, 20].includes(m)
+              ? "Use current values as input"
+              : "Use result as input"}
         </button>
         <label>
           Experiment title

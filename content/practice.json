@@ -288,5 +288,240 @@
       "correctIndex": 0,
       "explanation": "Backtracking occurs when the current branch has no unvisited neighbor to follow."
     }
+  ],
+  "hash-tables": [
+    {
+      "id": "practice.hash-tables.1",
+      "revision": 1,
+      "concepts": [
+        "hash-tables.hashing"
+      ],
+      "prompt": "Capacity is 8. Which pair of different keys collides?",
+      "options": [
+        "0 and 8",
+        "0 and 1",
+        "2 and 3"
+      ],
+      "correctIndex": 0,
+      "explanation": "Both 0 and 8 normalize to bucket 0."
+    },
+    {
+      "id": "practice.hash-tables.2",
+      "revision": 1,
+      "concepts": [
+        "hash-tables.tombstones"
+      ],
+      "prompt": "Lookup reaches a deleted probing slot. What happens next?",
+      "options": [
+        "Always report absent immediately",
+        "Return the deleted value",
+        "Continue the bounded probe"
+      ],
+      "correctIndex": 2,
+      "explanation": "A tombstone preserves the route to later colliding entries."
+    },
+    {
+      "id": "practice.hash-tables.3",
+      "revision": 1,
+      "concepts": [
+        "hash-tables.rehash"
+      ],
+      "prompt": "A table has 3 live entries and capacity 8. What is its live load factor?",
+      "options": [
+        "3",
+        "3/8",
+        "8/3"
+      ],
+      "correctIndex": 1,
+      "explanation": "Load factor divides live entry count by capacity, not the reverse."
+    }
+  ],
+  "heaps": [
+    {
+      "id": "practice.heaps.1",
+      "revision": 1,
+      "concepts": [
+        "heaps.representation"
+      ],
+      "prompt": "For array index 2, what are the possible child indices?",
+      "options": [
+        "5 and 6",
+        "3 and 4",
+        "1 and 2"
+      ],
+      "correctIndex": 0,
+      "explanation": "The formulas are 2i+1 and 2i+2."
+    },
+    {
+      "id": "practice.heaps.2",
+      "revision": 1,
+      "concepts": [
+        "heaps.max"
+      ],
+      "prompt": "Which value must be at a nonempty max-heap root?",
+      "options": [
+        "A smallest value",
+        "The oldest inserted value",
+        "A largest value"
+      ],
+      "correctIndex": 2,
+      "explanation": "Parent≥child along every path puts a maximum at the root."
+    },
+    {
+      "id": "practice.heaps.3",
+      "revision": 1,
+      "concepts": [
+        "heaps.insert"
+      ],
+      "prompt": "Why insert a heap value at the end first?",
+      "options": [
+        "To avoid all comparisons",
+        "To preserve completeness before sifting",
+        "To sort the suffix"
+      ],
+      "correctIndex": 1,
+      "explanation": "The first free array slot is the next complete-tree position."
+    }
+  ],
+  "recursion": [
+    {
+      "id": "practice.recursion.1",
+      "revision": 1,
+      "concepts": [
+        "recursion.factorial"
+      ],
+      "prompt": "What does factorial(0) return in this lesson?",
+      "options": [
+        "1",
+        "0",
+        "No result"
+      ],
+      "correctIndex": 0,
+      "explanation": "The directly answered base case is factorial(0)=1."
+    },
+    {
+      "id": "practice.recursion.2",
+      "revision": 1,
+      "concepts": [
+        "recursion.sum"
+      ],
+      "prompt": "What does the recursive sum of an empty prefix return?",
+      "options": [
+        "The first value",
+        "-1",
+        "0"
+      ],
+      "correctIndex": 2,
+      "explanation": "There are no terms in an empty sum, so the base result is zero."
+    },
+    {
+      "id": "practice.recursion.3",
+      "revision": 1,
+      "concepts": [
+        "recursion.branching"
+      ],
+      "prompt": "After Fibonacci’s first child returns, where is its answer kept?",
+      "options": [
+        "It is discarded before addition",
+        "In a saved local of the waiting parent frame",
+        "In every input array slot"
+      ],
+      "correctIndex": 1,
+      "explanation": "The parent needs that value when the second child returns."
+    }
+  ],
+  "two-pointers": [
+    {
+      "id": "practice.two-pointers.1",
+      "revision": 1,
+      "concepts": [
+        "two-pointers.reverse"
+      ],
+      "prompt": "How many endpoint swaps reverse four values?",
+      "options": [
+        "2",
+        "4",
+        "0"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each swap fixes two positions, so four values need two swaps."
+    },
+    {
+      "id": "practice.two-pointers.2",
+      "revision": 1,
+      "concepts": [
+        "two-pointers.unique"
+      ],
+      "prompt": "For [2,2,5,5,8], what is the valid unique prefix?",
+      "options": [
+        "[2,2,5]",
+        "[8]",
+        "[2,5,8]"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sorted duplicates are skipped while one copy of each distinct value is written."
+    },
+    {
+      "id": "practice.two-pointers.3",
+      "revision": 1,
+      "concepts": [
+        "two-pointers.pair"
+      ],
+      "prompt": "Which input can use the proved sorted pair-sum movement directly?",
+      "options": [
+        "Any permutation without checking",
+        "[1,3,7]",
+        "[7,1,3]"
+      ],
+      "correctIndex": 1,
+      "explanation": "The elimination proof requires nondecreasing values."
+    }
+  ],
+  "sliding-window": [
+    {
+      "id": "practice.sliding-window.1",
+      "revision": 1,
+      "concepts": [
+        "sliding-window.basics"
+      ],
+      "prompt": "How many values are in the half-open window [2,5)?",
+      "options": [
+        "3",
+        "4",
+        "2"
+      ],
+      "correctIndex": 0,
+      "explanation": "Included indices are 2,3,4, giving right-left=3."
+    },
+    {
+      "id": "practice.sliding-window.2",
+      "revision": 1,
+      "concepts": [
+        "sliding-window.fixed"
+      ],
+      "prompt": "When a fixed window moves one position, how can its sum be updated?",
+      "options": [
+        "Always replace it with zero",
+        "Sort the whole array",
+        "Subtract the leaving value and add the entering value"
+      ],
+      "correctIndex": 2,
+      "explanation": "The overlap is unchanged, so only the two boundary contributions change."
+    },
+    {
+      "id": "practice.sliding-window.3",
+      "revision": 1,
+      "concepts": [
+        "sliding-window.variable"
+      ],
+      "prompt": "What result length represents no qualifying variable window?",
+      "options": [
+        "The input length in every case",
+        "0",
+        "A fabricated negative index as a length"
+      ],
+      "correctIndex": 1,
+      "explanation": "The contract uses length zero for no solution; a positive target excludes a qualifying empty window."
+    }
   ]
 }

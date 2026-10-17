@@ -9,7 +9,17 @@ class ContentValidation(unittest.TestCase):
         self.b=[json.loads((ROOT/f'content/{f}').read_text()) for f in ['practice.json','assessments.private.json']]
     def rejects(self):
         with self.assertRaises(ValueError):v.validate(self.c,self.b)
-    def test_complete_curriculum(self):self.assertEqual(v.validate(self.c,self.b),(9,71,51))
+    def test_complete_curriculum(self):self.assertEqual(v.validate(self.c,self.b),(14,118,91))
+    def test_missing_example_is_rejected(self):
+        runtime=json.loads((ROOT/'content/modules.json').read_text());examples=json.loads((ROOT/'content/examples.json').read_text())
+        self.c['modules'][0]['slides'][0]['exampleId']='absent'
+        with self.assertRaises(ValueError):v.validate_assets(self.c,runtime,examples)
+    def test_new_module_cannot_assess_unrelated_concept(self):
+        self.b[0]['sliding-window'][0]['concepts']=['heaps.heap-sort'];self.rejects()
+    def test_invalid_new_runtime_operation(self):
+        runtime=json.loads((ROOT/'content/modules.json').read_text());examples=json.loads((ROOT/'content/examples.json').read_text())
+        self.c['modules'][-1]['slides'][0]['runtime']={'moduleId':'sliding-window','op':99}
+        with self.assertRaises(ValueError):v.validate_assets(self.c,runtime,examples)
     def test_unknown_taught_concept(self):self.c['modules'][0]['slides'][0]['teaches']=['missing'];self.rejects()
     def test_unknown_question_concept(self):self.b[0]['arrays'][0]['concepts']=['missing'];self.rejects()
     def test_concept_outside_prerequisite_closure(self):self.b[0]['arrays'][0]['concepts']=['graph.dijkstra'];self.rejects()

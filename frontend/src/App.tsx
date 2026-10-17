@@ -108,7 +108,7 @@ export default function App() {
     }
   }
   function load(saved: SavedExperiment) {
-    if (!["1.0.0", "1.1.0"].includes(saved.engineVersion)) {
+    if (!["1.0.0", "1.1.0", "1.2.0"].includes(saved.engineVersion)) {
       setNotice(
         "This saved experiment needs a newer application. Your saved copy is unchanged.",
       );

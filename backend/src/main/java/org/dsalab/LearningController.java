@@ -43,7 +43,7 @@ public class LearningController {
       @NotBlank @Size(max = 120) String title,
       @NotNull JsonNode input,
       @NotNull JsonNode configuration,
-      @Pattern(regexp = "1\\.[01]\\.0") @NotBlank String engineVersion) {}
+      @Pattern(regexp = "1\\.[012]\\.0") @NotBlank String engineVersion) {}
 
   record Answer(@NotNull @Positive Long revisionId, @NotNull @Positive Long optionId) {}
 
@@ -194,8 +194,10 @@ public class LearningController {
           || !input.get(name).isIntegralNumber()
           || !input.get(name).canConvertToInt())
         throw new ApiException(400, "validation", "Engine parameters must be integers");
-    int[] operations = {0, 6, 1, 1, 1, 1, 1, 4, 3, 3, 6, 5, 1, 1, 1};
-    if (input.get("module").asInt() != module
+    int[] operations = {0, 6, 1, 1, 1, 1, 1, 4, 3, 3, 6, 5, 1, 1, 1, 6, 6, 9, 4, 3, 2};
+    if (module < 1
+        || module >= operations.length
+        || input.get("module").asInt() != module
         || input.get("op").asInt() < 0
         || input.get("op").asInt() >= operations[module]
         || Math.abs((long) input.get("arg").asInt()) > 100000
@@ -204,7 +206,7 @@ public class LearningController {
     JsonNode values = input.get("values"), edges = input.get("edges");
     if (values == null
         || !values.isArray()
-        || values.size() > (module >= 11 ? 16 : 32)
+        || values.size() > (module >= 11 && module <= 14 ? 16 : 32)
         || edges == null
         || !edges.isArray()
         || edges.size() > 256
@@ -216,7 +218,9 @@ public class LearningController {
       if (!value.isIntegralNumber()
           || !value.canConvertToInt()
           || Math.abs((long) value.asInt()) > 100000
-          || (module >= 11 && (value.asInt() < 1 || value.asInt() > 31 || !ids.add(value.asInt()))))
+          || (module >= 11
+              && module <= 14
+              && (value.asInt() < 1 || value.asInt() > 31 || !ids.add(value.asInt()))))
         throw new ApiException(400, "validation", "Invalid value or duplicate graph ID");
     }
     for (JsonNode edge : edges) {
@@ -224,6 +228,7 @@ public class LearningController {
         if (!edge.has(key) || !edge.get(key).isIntegralNumber() || !edge.get(key).canConvertToInt())
           throw new ApiException(400, "validation", "Invalid graph edge");
       if (module < 11
+          || module > 14
           || edge.get("from").asInt() < 0
           || edge.get("to").asInt() < 0
           || edge.get("from").asInt() >= values.size()
@@ -231,6 +236,26 @@ public class LearningController {
           || Math.abs((long) edge.get("weight").asInt()) > 100000)
         throw new ApiException(400, "validation", "Invalid graph edge endpoint or weight");
     }
+    int op = input.path("op").asInt(),
+        argument = input.path("arg").asInt(),
+        index = input.path("index").asInt();
+    if ((module == 15 || module == 16) && values.size() % 2 != 0)
+      throw new ApiException(400, "validation", "Use alternating key,value pairs");
+    if ((module == 18 && op == 2) || (module == 19 && op != 1))
+      for (int i = 1; i < values.size(); i++)
+        if (values.get(i).asInt() < values.get(i - 1).asInt())
+          throw new ApiException(400, "validation", "Sorted ascending input required");
+    if (module == 18
+        && ((op == 0 && (argument < 0 || argument > 12))
+            || (op == 3 && (argument < 0 || argument > 10))))
+      throw new ApiException(400, "validation", "Recursion input exceeds safe range");
+    if (module == 20
+        && ((op == 0 && (index < 1 || index > values.size())) || (op == 1 && argument <= 0)))
+      throw new ApiException(400, "validation", "Invalid window size or target");
+    if (module == 20 && op == 1)
+      for (JsonNode value : values)
+        if (value.asInt() < 0)
+          throw new ApiException(400, "validation", "Variable windows require nonnegative values");
     if (input.has("weight")
         && (!input.get("weight").isIntegralNumber()
             || !input.get("weight").canConvertToInt()

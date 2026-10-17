@@ -2,7 +2,7 @@
 import importlib.util,json,pathlib
 ROOT=pathlib.Path(__file__).resolve().parent.parent
 spec=importlib.util.spec_from_file_location('validation',ROOT/'scripts/validate-content.py');validation=importlib.util.module_from_spec(spec);spec.loader.exec_module(validation)
-c=json.loads((ROOT/'content/curriculum.json').read_text());bank=json.loads((ROOT/'content/assessments.private.json').read_text());practice=json.loads((ROOT/'content/practice.json').read_text());validation.validate(c,[bank,practice])
+c=json.loads((ROOT/'content/history/v4-curriculum.json').read_text());bank=json.loads((ROOT/'content/history/v4-assessments.private.json').read_text());practice=json.loads((ROOT/'content/history/v4-practice.json').read_text());validation.validate(c,[bank,practice])
 def q(value):return "'"+value.replace("'","''")+"'"
 def lesson(id):return f'(SELECT id FROM lessons WHERE slug={q(id)})'
 def topic(id):return f'(SELECT id FROM topics WHERE slug={q(id)})'

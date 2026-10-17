@@ -4,6 +4,7 @@ cd "$(dirname "$0")/.."
 python3 scripts/validate-content.py
 python3 scripts/test-content.py
 python3 scripts/test-examples.py
+python3 scripts/test-next-examples.py
 scripts/test-native.sh
 python3 scripts/generate-engine-fixtures.py
 scripts/build-wasm.sh

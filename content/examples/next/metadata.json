@@ -1,0 +1,239 @@
+{
+  "heap-build": {
+    "id": "heap-build",
+    "title": "Bottom-up min/max heap construction",
+    "alternatives": [],
+    "preconditions": [
+      "Values are integers; logical length is in 0..32. maximum=false selects a min-heap; true selects a max-heap.",
+      "Mutation operations assume an existing heap; heap_build/heapBuild is included for explicit setup. C and Java use a capacity buffer plus logical length; vector/list/Array use their current length."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(1)"
+  },
+  "heap-insert": {
+    "id": "heap-insert",
+    "title": "Append and sift upward",
+    "alternatives": [],
+    "preconditions": [
+      "Values are integers; logical length is in 0..32. maximum=false selects a min-heap; true selects a max-heap.",
+      "Mutation operations assume an existing heap; heap_build/heapBuild is included for explicit setup. C and Java use a capacity buffer plus logical length; vector/list/Array use their current length."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution.",
+      "Equal priorities do not promise stable ordering. Strict comparisons choose the left child on ties.",
+      "Preparation is O(n) and is separate from the per-operation bound."
+    ],
+    "time": "O(log n) sift with reserved capacity; a dynamic collection can take O(n) when reallocating",
+    "space": "O(1) sifting state; growable collection reallocation may use O(n) storage"
+  },
+  "heap-extract": {
+    "id": "heap-extract",
+    "title": "Remove the highest-priority root",
+    "alternatives": [],
+    "preconditions": [
+      "Values are integers; logical length is in 0..32. maximum=false selects a min-heap; true selects a max-heap.",
+      "Mutation operations assume an existing heap; heap_build/heapBuild is included for explicit setup. C and Java use a capacity buffer plus logical length; vector/list/Array use their current length."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution.",
+      "Equal priorities do not promise stable ordering. Strict comparisons choose the left child on ties.",
+      "Preparation is O(n) and is separate from the per-operation bound."
+    ],
+    "time": "O(log n)",
+    "space": "O(1) auxiliary storage"
+  },
+  "heap-peek": {
+    "id": "heap-peek",
+    "title": "Inspect the root without removal",
+    "alternatives": [],
+    "preconditions": [
+      "Values are integers; logical length is in 0..32. maximum=false selects a min-heap; true selects a max-heap.",
+      "Mutation operations assume an existing heap; heap_build/heapBuild is included for explicit setup. C and Java use a capacity buffer plus logical length; vector/list/Array use their current length."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution.",
+      "Equal priorities do not promise stable ordering. Strict comparisons choose the left child on ties.",
+      "Preparation is O(n) and is separate from the per-operation bound."
+    ],
+    "time": "O(1)",
+    "space": "O(1) auxiliary storage"
+  },
+  "heap-sort": {
+    "id": "heap-sort",
+    "title": "Ascending in-place heap sort",
+    "alternatives": [],
+    "preconditions": [
+      "Values are integers; logical length is in 0..32. maximum=false selects a min-heap; true selects a max-heap.",
+      "Mutation operations assume an existing heap; heap_build/heapBuild is included for explicit setup. C and Java use a capacity buffer plus logical length; vector/list/Array use their current length."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution.",
+      "Equal priorities do not promise stable ordering. Strict comparisons choose the left child on ties.",
+      "Preparation is O(n) and is separate from the per-operation bound."
+    ],
+    "time": "O(n log n)",
+    "space": "O(1) auxiliary storage"
+  },
+  "rec-factorial": {
+    "id": "rec-factorial",
+    "title": "Factorial with a safe finite contract",
+    "alternatives": [],
+    "preconditions": [
+      "Integer n in 0..12; 12! fits signed 32-bit range. Invalid n is rejected."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(n) call stack"
+  },
+  "rec-sum": {
+    "id": "rec-sum",
+    "title": "Recursive sum of a prefix",
+    "alternatives": [],
+    "preconditions": [
+      "0\u2264n\u226432 and n\u2264array length; |value|\u2264100000. The input is not modified."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(n) call stack"
+  },
+  "rec-binary": {
+    "id": "rec-binary",
+    "title": "Recursive inclusive binary search",
+    "alternatives": [],
+    "preconditions": [
+      "Input is sorted ascending and length\u226432. Call with lo=0, hi=length-1. Bounds describe a valid subrange, including an empty crossed interval.",
+      "Returns any matching index or -1. The visualization checks sortedness; these functions assume it rather than adding a linear scan to each recursive call."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(log n) after prerequisite validation",
+    "space": "O(log n) call stack"
+  },
+  "rec-fibonacci": {
+    "id": "rec-fibonacci",
+    "title": "Branching Fibonacci without memoization",
+    "alternatives": [],
+    "preconditions": [
+      "Integer n in 0..10. Repeated subproblems are intentionally recomputed to illustrate total calls versus active depth."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(2^n) upper bound",
+    "space": "O(n) maximum call-stack depth"
+  },
+  "two-pair": {
+    "id": "two-pair",
+    "title": "Opposite pointers for sorted pair sum",
+    "alternatives": [],
+    "preconditions": [
+      "Input is sorted ascending, length\u226432 and |value|,|target|\u2264100000. Sortedness is a prerequisite, not silently repaired.",
+      "Two distinct indices are returned; no solution uses (-1,-1) or null/None. Cast before addition in fixed-width examples."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(1)"
+  },
+  "two-reverse": {
+    "id": "two-reverse",
+    "title": "Reverse by swapping endpoints",
+    "alternatives": [],
+    "preconditions": [
+      "Array length\u226432; no sorting precondition. Mutates the original array."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(1)"
+  },
+  "two-unique": {
+    "id": "two-unique",
+    "title": "Compact a sorted distinct prefix",
+    "alternatives": [],
+    "preconditions": [
+      "Input is sorted ascending, length\u226432. Returns logical output length; physical capacity and suffix contents remain unchanged."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(1)"
+  },
+  "window-fixed": {
+    "id": "window-fixed",
+    "title": "Maximum sum of exactly k values",
+    "alternatives": [],
+    "preconditions": [
+      "1\u2264k\u2264n\u226432; |value|\u2264100000, including negative values. Strict improvement retains the first best window.",
+      "C invalid input returns start=-1; other languages raise an argument/range error."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(1)"
+  },
+  "window-variable": {
+    "id": "window-variable",
+    "title": "Shortest nonnegative window reaching a target",
+    "alternatives": [],
+    "preconditions": [
+      "n\u226432, 0\u2264value\u2264100000 and positive target\u2264100000. No solution is (length=0,start=-1).",
+      "Invalid negative inputs/targets are rejected. A 64-bit sum is used in fixed-width examples; lab bounds keep JavaScript Number additions exact."
+    ],
+    "notes": [
+      "Example implementation; choosing a language does not change visualization execution."
+    ],
+    "time": "O(n)",
+    "space": "O(1)"
+  },
+  "hash-chain": {
+    "id": "hash-chain",
+    "title": "Complete integer map: separate chaining",
+    "alternatives": [
+      "hash-probe"
+    ],
+    "preconditions": [
+      "Integer keys and values in \u00b1100000. Initialize an empty map first; these example maps hold up to 32 distinct keys, with capacity 8..64. The interactive input has at most 16 initial pairs plus one operation.",
+      "Duplicate insertion updates; missing lookup is distinct from a stored zero. Probing stops after at most capacity inspections."
+    ],
+    "notes": [
+      "Chaining C allocates nodes and requires map_free after successful map_init. C++ vectors own their entries; Java/Python/JavaScript use managed storage.",
+      "The C lookup returns a success boolean and writes an output parameter. Other examples use optional/null/None for missing integer values.",
+      "Rehashing recomputes buckets and removes tombstones. The live-load threshold is 0.75.",
+      "Chaining examples with collection buckets may shift a bucket list on deletion; the C linked representation unlinks nodes. Both traverse colliding keys, with linear worst-case bucket work."
+    ],
+    "time": "Expected O(1) under distribution/load assumptions; O(n) worst-case operation; rehash O(n+capacity)",
+    "space": "O(n+capacity) map storage; rehash temporarily holds old and new storage"
+  },
+  "hash-probe": {
+    "id": "hash-probe",
+    "title": "Complete integer map: linear probing",
+    "alternatives": [
+      "hash-chain"
+    ],
+    "preconditions": [
+      "Integer keys and values in \u00b1100000. Initialize an empty map first; these example maps hold up to 32 distinct keys, with capacity 8..64. The interactive input has at most 16 initial pairs plus one operation.",
+      "Duplicate insertion updates; missing lookup is distinct from a stored zero. Probing stops after at most capacity inspections."
+    ],
+    "notes": [
+      "Chaining C allocates nodes and requires map_free after successful map_init. C++ vectors own their entries; Java/Python/JavaScript use managed storage.",
+      "The C lookup returns a success boolean and writes an output parameter. Other examples use optional/null/None for missing integer values.",
+      "Rehashing recomputes buckets and removes tombstones. The live-load threshold is 0.75.",
+      "Chaining examples with collection buckets may shift a bucket list on deletion; the C linked representation unlinks nodes. Both traverse colliding keys, with linear worst-case bucket work."
+    ],
+    "time": "Expected O(1) under distribution/load assumptions; O(n) worst-case operation; rehash O(n+capacity)",
+    "space": "O(n+capacity) map storage; rehash temporarily holds old and new storage"
+  }
+}

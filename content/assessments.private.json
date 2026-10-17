@@ -528,5 +528,390 @@
       "correctIndex": 1,
       "explanation": "BFS treats each edge as one step. Weighted shortest paths add actual edge costs, so fewer edges can still cost more."
     }
+  ],
+  "hash-tables": [
+    {
+      "id": "hash-tables.recorded.1",
+      "revision": 1,
+      "concepts": [
+        "hash-tables.hashing"
+      ],
+      "prompt": "With capacity 8, which bucket receives key -1 after normalization?",
+      "options": [
+        "7",
+        "-1",
+        "8"
+      ],
+      "correctIndex": 0,
+      "explanation": "The remainder is normalized into 0..7; -1 and 7 share bucket 7."
+    },
+    {
+      "id": "hash-tables.recorded.2",
+      "revision": 1,
+      "concepts": [
+        "hash-tables.upsert"
+      ],
+      "prompt": "What happens when an existing key is inserted with a new value?",
+      "options": [
+        "Two copies are kept",
+        "The whole table is cleared",
+        "Its value changes without adding another key"
+      ],
+      "correctIndex": 2,
+      "explanation": "This map updates the existing entry; distinct-key count stays the same."
+    },
+    {
+      "id": "hash-tables.recorded.3",
+      "revision": 1,
+      "concepts": [
+        "hash-tables.tombstones"
+      ],
+      "prompt": "Why keep a tombstone after a probing deletion?",
+      "options": [
+        "To count the removed key as live",
+        "To keep later colliding keys reachable",
+        "To stop all later searches"
+      ],
+      "correctIndex": 1,
+      "explanation": "A lookup must pass a deleted slot to reach keys farther along the same probe sequence."
+    },
+    {
+      "id": "hash-tables.recorded.4",
+      "revision": 1,
+      "concepts": [
+        "hash-tables.rehash"
+      ],
+      "prompt": "When capacity doubles, how should entries move?",
+      "options": [
+        "Recompute each live key’s bucket",
+        "Keep every old slot index",
+        "Discard colliding keys"
+      ],
+      "correctIndex": 0,
+      "explanation": "The remainder uses the new capacity, so old bucket positions can be wrong."
+    },
+    {
+      "id": "hash-tables.recorded.5",
+      "revision": 1,
+      "concepts": [
+        "hash-tables.costs"
+      ],
+      "prompt": "When can expected O(1) hash lookup be a useful model?",
+      "options": [
+        "For every input without assumptions",
+        "Only when every bucket is full",
+        "When hashing distributes keys well and load is controlled"
+      ],
+      "correctIndex": 2,
+      "explanation": "Good distribution and bounded load limit expected collisions; worst-case chains or probes may still be linear."
+    }
+  ],
+  "heaps": [
+    {
+      "id": "heaps.recorded.1",
+      "revision": 1,
+      "concepts": [
+        "heaps.representation"
+      ],
+      "prompt": "Which relationship must a min-heap satisfy?",
+      "options": [
+        "Each parent is no greater than its children",
+        "Every adjacent array pair is sorted",
+        "All left children exceed right children"
+      ],
+      "correctIndex": 0,
+      "explanation": "Heap ordering compares parents with children, not all neighboring array values."
+    },
+    {
+      "id": "heaps.recorded.2",
+      "revision": 1,
+      "concepts": [
+        "heaps.extract"
+      ],
+      "prompt": "During min-heap sift-down, which child should be considered first?",
+      "options": [
+        "Always the left child regardless of value",
+        "The last array value regardless of parent",
+        "The smaller-priority child"
+      ],
+      "correctIndex": 2,
+      "explanation": "Choosing the smaller child allows the moved parent to satisfy both child relationships."
+    },
+    {
+      "id": "heaps.recorded.3",
+      "revision": 1,
+      "concepts": [
+        "heaps.build"
+      ],
+      "prompt": "What is the worst-case time of bottom-up heap construction?",
+      "options": [
+        "O(1) for arbitrary input",
+        "O(n)",
+        "O(n²)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most nodes can move only a short distance, so work summed by height is linear."
+    },
+    {
+      "id": "heaps.recorded.4",
+      "revision": 1,
+      "concepts": [
+        "heaps.heap-sort"
+      ],
+      "prompt": "What happens to the suffix outside the heap during ascending heap sort?",
+      "options": [
+        "It is sorted and excluded from later sifts",
+        "It must be rebuilt each step",
+        "It contains arbitrary discarded values"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each maximum is moved into its final suffix position; only the remaining prefix is repaired."
+    },
+    {
+      "id": "heaps.recorded.5",
+      "revision": 1,
+      "concepts": [
+        "heaps.uses"
+      ],
+      "prompt": "How does the existing graph lesson choose Dijkstra’s next unsettled vertex?",
+      "options": [
+        "This heap automatically replaces the scan",
+        "Random selection",
+        "A scan using its matrix-based representation"
+      ],
+      "correctIndex": 2,
+      "explanation": "The graph lesson uses an unsettled-vertex scan, not this priority queue."
+    }
+  ],
+  "recursion": [
+    {
+      "id": "recursion.recorded.1",
+      "revision": 1,
+      "concepts": [
+        "recursion.termination"
+      ],
+      "prompt": "What must a recursive case do in addition to having a base case?",
+      "options": [
+        "Move toward a stopping case",
+        "Keep the same input forever",
+        "Increase depth without limit"
+      ],
+      "correctIndex": 0,
+      "explanation": "A decreasing measure such as prefix length or interval size establishes progress."
+    },
+    {
+      "id": "recursion.recorded.2",
+      "revision": 1,
+      "concepts": [
+        "recursion.factorial"
+      ],
+      "prompt": "Why is factorial visualization limited to n≤12?",
+      "options": [
+        "Factorial is undefined above 12",
+        "Python always overflows at 13",
+        "The stated integer result range stays safe"
+      ],
+      "correctIndex": 2,
+      "explanation": "13! exceeds signed 32-bit range; the lab uses one safe contract across all example languages."
+    },
+    {
+      "id": "recursion.recorded.3",
+      "revision": 1,
+      "concepts": [
+        "recursion.sum"
+      ],
+      "prompt": "Compared with an iterative O(1)-space scan, what space does recursive prefix sum use?",
+      "options": [
+        "O(n²) arrays",
+        "O(n) call-stack space",
+        "Always O(1)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Every unfinished prefix call retains a frame until its child returns."
+    },
+    {
+      "id": "recursion.recorded.4",
+      "revision": 1,
+      "concepts": [
+        "recursion.branching"
+      ],
+      "prompt": "Why can naive Fibonacci have many calls but only linear peak depth?",
+      "options": [
+        "The two branches run sequentially while one path is active",
+        "Every call stays active forever",
+        "The result is always computed by one call"
+      ],
+      "correctIndex": 0,
+      "explanation": "A parent saves one child’s answer, then calls the other; total tree size differs from active path length."
+    },
+    {
+      "id": "recursion.recorded.5",
+      "revision": 1,
+      "concepts": [
+        "recursion.binary"
+      ],
+      "prompt": "What marks an empty search interval in inclusive recursive binary search?",
+      "options": [
+        "lo==hi always",
+        "mid==0 always",
+        "lo>hi"
+      ],
+      "correctIndex": 2,
+      "explanation": "A singleton still has one candidate; only crossed inclusive bounds mean no candidates remain."
+    }
+  ],
+  "two-pointers": [
+    {
+      "id": "two-pointers.recorded.1",
+      "revision": 1,
+      "concepts": [
+        "two-pointers.pair"
+      ],
+      "prompt": "In sorted pair sum, why move left when the sum is too small?",
+      "options": [
+        "The current left value cannot reach the target with any remaining partner",
+        "Sorting no longer matters",
+        "The current right value must be removed too"
+      ],
+      "correctIndex": 0,
+      "explanation": "The largest available partner already gives too small a sum for that left value."
+    },
+    {
+      "id": "two-pointers.recorded.2",
+      "revision": 1,
+      "concepts": [
+        "two-pointers.boundaries"
+      ],
+      "prompt": "Can pair sum reuse one element when left equals right?",
+      "options": [
+        "Yes, every value can be used twice",
+        "Only for negative targets",
+        "No, two distinct indices are required"
+      ],
+      "correctIndex": 2,
+      "explanation": "The loop condition left<right prevents using one index twice."
+    },
+    {
+      "id": "two-pointers.recorded.3",
+      "revision": 1,
+      "concepts": [
+        "two-pointers.reverse"
+      ],
+      "prompt": "What is already correct outside reversal’s two pointers?",
+      "options": [
+        "The values have been deleted",
+        "The values are in final reversed positions",
+        "The values are necessarily sorted"
+      ],
+      "correctIndex": 1,
+      "explanation": "Each swap fixes two endpoint positions before the pointers move inward."
+    },
+    {
+      "id": "two-pointers.recorded.4",
+      "revision": 1,
+      "concepts": [
+        "two-pointers.unique"
+      ],
+      "prompt": "What does a unique-prefix result length of 3 mean?",
+      "options": [
+        "Only indices 0,1,2 are output",
+        "The array allocation must now have three slots",
+        "All later values are zero"
+      ],
+      "correctIndex": 0,
+      "explanation": "Physical storage remains; the suffix is not part of the logical result."
+    },
+    {
+      "id": "two-pointers.recorded.5",
+      "revision": 1,
+      "concepts": [
+        "two-pointers.costs"
+      ],
+      "prompt": "Why are the selected pointer scans linear?",
+      "options": [
+        "Two indices always imply O(1) time",
+        "They sort every suffix",
+        "Each pointer moves monotonically and never restarts"
+      ],
+      "correctIndex": 2,
+      "explanation": "There are at most a linear number of index advances under the proved movement rules."
+    }
+  ],
+  "sliding-window": [
+    {
+      "id": "sliding-window.recorded.1",
+      "revision": 1,
+      "concepts": [
+        "sliding-window.basics"
+      ],
+      "prompt": "What distinguishes a subarray from a general subsequence?",
+      "options": [
+        "Its indices are consecutive",
+        "Its values must be sorted",
+        "It must contain the whole array"
+      ],
+      "correctIndex": 0,
+      "explanation": "A contiguous range cannot skip an interior position."
+    },
+    {
+      "id": "sliding-window.recorded.2",
+      "revision": 1,
+      "concepts": [
+        "sliding-window.fixed-edges"
+      ],
+      "prompt": "For [-5,-2,-8] and k=2, what is the maximum window sum?",
+      "options": [
+        "0",
+        "-2",
+        "-7"
+      ],
+      "correctIndex": 2,
+      "explanation": "The two eligible sums are -7 and -10. A singleton or empty window is not allowed."
+    },
+    {
+      "id": "sliding-window.recorded.3",
+      "revision": 1,
+      "concepts": [
+        "sliding-window.proof"
+      ],
+      "prompt": "Why are nonnegative values required for the selected minimum-length algorithm?",
+      "options": [
+        "They make all windows the same size",
+        "Removing a left value cannot increase the sum",
+        "They guarantee every target is reachable"
+      ],
+      "correctIndex": 1,
+      "explanation": "This monotonicity justifies stopping shrinking once the sum falls below target."
+    },
+    {
+      "id": "sliding-window.recorded.4",
+      "revision": 1,
+      "concepts": [
+        "sliding-window.negative"
+      ],
+      "prompt": "Which signed-input behavior breaks that shrinking proof?",
+      "options": [
+        "Removing a negative value can increase the sum",
+        "Fixed-size arithmetic stops working",
+        "A subarray becomes a subsequence"
+      ],
+      "correctIndex": 0,
+      "explanation": "An invalid current window might become valid after further shrinking, so the stopping rule is no longer justified."
+    },
+    {
+      "id": "sliding-window.recorded.5",
+      "revision": 1,
+      "concepts": [
+        "sliding-window.costs"
+      ],
+      "prompt": "Why does the inner shrinking loop still allow O(n) total time?",
+      "options": [
+        "It never runs",
+        "The array is sorted automatically",
+        "Left advances at most n times across the whole run"
+      ],
+      "correctIndex": 2,
+      "explanation": "Each removal consumes a new position; expansions and removals are both bounded linearly."
+    }
   ]
 }

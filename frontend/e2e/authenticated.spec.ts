@@ -60,7 +60,7 @@ test("login merges explicit guest slides, records server grading and restores ac
   ).toBeVisible();
   const saved = await (await page.request.get("/api/experiments")).json();
   expect(saved.items[0].title).toBe("Recorded lesson experiment");
-  expect(saved.items[0].engineVersion).toBe("1.1.0");
+  expect(saved.items[0].engineVersion).toBe("1.2.0");
   await page.getByLabel("Lesson pages").selectOption("quiz");
   const response = await (
     await page.request.get("/api/modules/arrays/questions")

@@ -21,6 +21,13 @@ export type EventKind =
   | "dequeue"
   | "pointer-update"
   | "relax"
+  | "hash"
+  | "probe"
+  | "rehash"
+  | "call"
+  | "return"
+  | "window-expand"
+  | "window-shrink"
   | "complete";
 export interface EngineEvent {
   protocol: 1;
@@ -60,6 +67,9 @@ export interface EngineEvent {
     bucket: number;
     probe: number;
     rehashing: boolean;
+    operation: number;
+    oldCapacity: number;
+    oldEntries: { entry: number; bucket: number }[];
     slots: { id: number; state: number; entry: number }[];
     entries: { id: number; key: number; value: number; next: number }[];
     frames: {

@@ -200,6 +200,11 @@ export function Lesson({
             {slide.paragraphs.map((p) => (
               <p key={p}>{p}</p>
             ))}
+            {slide.related?.map((link) => (
+              <p key={link.moduleId}>
+                <a href={`#/lesson/${link.moduleId}`}>{link.label} →</a>
+              </p>
+            ))}
             {slide.bullets && (
               <ul>
                 {slide.bullets.map((b) => (

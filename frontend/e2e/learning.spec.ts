@@ -17,7 +17,7 @@ test("home uses accessible tiles with Foundations and two distinct catalog secti
   await expect(
     page.getByRole("region", { name: "Algorithms", exact: true }),
   ).toBeVisible();
-  await expect(page.locator(".module-tile")).toHaveCount(9);
+  await expect(page.locator(".module-tile")).toHaveCount(14);
   await expect(page.locator("aside:not(.prerequisites)")).toHaveCount(0);
   const tile = page.getByRole("link", { name: "Open Arrays", exact: true });
   const box = await tile.boundingBox();

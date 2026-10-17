@@ -1,4 +1,7 @@
-import { NextVisualization } from "./NextVisualization";
+import { lazy, Suspense } from "react";
+const NextVisualization = lazy(() =>
+  import("./NextVisualization").then((m) => ({ default: m.NextVisualization })),
+);
 import { actionLabels } from "./learner-messages";
 import type { EngineEvent } from "./protocol";
 import type { Module } from "./registry";
@@ -18,7 +21,11 @@ export function Visualization({
       </div>
     );
   if (module.engineId >= 15 && event.extended)
-    return <NextVisualization event={event} module={module.engineId} />;
+    return (
+      <Suspense fallback={<p role="status">Opening visualization…</p>}>
+        <NextVisualization event={event} module={module.engineId} />
+      </Suspense>
+    );
   const active = (id: number) => event.a === id || event.b === id;
   const color = (id: number) =>
     active(id) ? "var(--viz-active)" : "var(--viz-node)";

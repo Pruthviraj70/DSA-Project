@@ -73,6 +73,11 @@ def build():
             else:code=headers+body+'\n'
             codes[lang]=code.strip()+'\n'
         out[id]=dict(id=id,title=title,alternatives=ALT.get(id,[]),codes=codes,**metadata(id))
+    extra=ROOT/'content/examples/next'
+    extensions={'C':'c','C++':'cpp','Java':'java','Python':'py','JavaScript':'js'}
+    for id, item in json.loads((extra/'metadata.json').read_text()).items():
+        item['codes']={lang:(extra/(id+'.'+ext)).read_text() for lang,ext in extensions.items()}
+        out[id]=item
     (ROOT/'content/examples.json').write_text(json.dumps(out,indent=2,ensure_ascii=False)+'\n')
     print(f'Built {len(out)} standalone examples × {len(FILES)} languages')
 if __name__=='__main__':build()

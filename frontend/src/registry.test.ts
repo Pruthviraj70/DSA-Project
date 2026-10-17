@@ -8,12 +8,12 @@ import {
 } from "./curriculum";
 import { parseValues } from "./Playground";
 describe("released module contract", () => {
-  it("binds fourteen unique stable modules with complete learning content", () => {
+  it("binds twenty unique stable modules with complete learning content", () => {
     expect(registry.registryVersion).toBe(1);
-    expect(modules).toHaveLength(14);
-    expect(new Set(modules.map((m) => m.id)).size).toBe(14);
+    expect(modules).toHaveLength(20);
+    expect(new Set(modules.map((m) => m.id)).size).toBe(20);
     for (const m of modules) {
-      expect(m.version).toBe("1.1.0");
+      expect(["1.1.0", "1.2.0"]).toContain(m.version);
       expect(m.objectives.length).toBeGreaterThan(0);
       expect(m.example.length).toBeGreaterThan(15);
       expect(m.invariant.length).toBeGreaterThan(15);
@@ -64,7 +64,7 @@ describe("released module contract", () => {
 
 describe("lesson structure", () => {
   it("groups every runtime module once and finishes with FAQs and a quiz", () => {
-    expect(lessons).toHaveLength(9);
+    expect(lessons).toHaveLength(14);
     const covered = new Set<number>();
     for (const lesson of lessons) {
       expect(new Set(lesson.slides.map((s) => s.id)).size).toBe(
@@ -81,7 +81,7 @@ describe("lesson structure", () => {
         }
     }
     expect([...covered].sort((a, b) => a - b)).toEqual(
-      Array.from({ length: 14 }, (_, i) => i + 1),
+      Array.from({ length: 20 }, (_, i) => i + 1),
     );
   });
   it("restores stable slides and maps legacy algorithms into grouped lessons", () => {
@@ -90,5 +90,40 @@ describe("lesson structure", () => {
       moduleId: "arrays",
       slideId: "insert",
     });
+  });
+});
+
+describe("new operation prerequisites", () => {
+  const input = (
+    id: number,
+    op: number,
+    values: number[],
+    arg = 0,
+    index = 0,
+  ) => ({
+    ...initialInput(modules.find((m) => m.engineId === id)!),
+    op,
+    values,
+    arg,
+    index,
+  });
+  it("rejects incomplete hash pairs and preserves signed integer keys", () => {
+    expect(validate(input(15, 0, [-1, 10, 7, 20]))).toBeUndefined();
+    expect(validate(input(16, 0, [1, 10, 2]))).toContain("pairs");
+  });
+  it("keeps sortedness explicit for recursive search and two pointers", () => {
+    expect(validate(input(18, 2, [3, 1]))).toContain("sorted");
+    expect(validate(input(19, 0, [3, 1]))).toContain("sorted");
+    expect(validate(input(19, 1, [3, 1]))).toBeUndefined();
+  });
+  it("separates fixed signed windows from nonnegative variable windows", () => {
+    expect(validate(input(20, 0, [-5, -2, -8], 0, 2))).toBeUndefined();
+    expect(validate(input(20, 0, [], 0, 1))).toContain("Window size");
+    expect(validate(input(20, 1, [-1, 5], 5))).toContain("nonnegative");
+    expect(validate(input(20, 1, [], 5))).toBeUndefined();
+  });
+  it("bounds branching recursion and factorial arithmetic", () => {
+    expect(validate(input(18, 0, [], 13))).toContain("0..12");
+    expect(validate(input(18, 3, [], 11))).toContain("0..10");
   });
 });

@@ -9,6 +9,7 @@ export interface Slide {
   paragraphs: string[];
   bullets?: string[];
   exampleId?: string;
+  related?: { moduleId: string; label: string }[];
   visual?: string;
   runtime?: {
     moduleId: string;

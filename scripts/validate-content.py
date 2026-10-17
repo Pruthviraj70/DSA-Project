@@ -48,10 +48,30 @@ def validate(curriculum,banks):
     for alias,target in curriculum['aliases'].items():
         if target['moduleId'] not in modules or target['slideId'] not in [s['id'] for s in modules[target['moduleId']]['slides']]:raise ValueError('Invalid alias target')
     return len(modules),len(concepts),len(question_ids)
+def validate_assets(curriculum,runtime,examples):
+    modules={m['id']:m for m in runtime['modules']}
+    lesson_ids={m['id'] for m in curriculum['modules']}
+    if len(modules)!=len(runtime['modules']) or len({m['engineId'] for m in runtime['modules']})!=len(modules):raise ValueError('Duplicate runtime identity')
+    used=set()
+    for lesson in curriculum['modules']:
+        for slide in lesson['slides']:
+            if slide.get('exampleId') and slide['exampleId'] not in examples:raise ValueError('Unknown example implementation')
+            for related in slide.get('related',[]):
+                if related['moduleId'] not in lesson_ids:raise ValueError('Unknown related lesson')
+            if slide.get('runtime'):
+                binding=slide['runtime'];module=modules.get(binding['moduleId'])
+                if module is None or not 0<=binding['op']<len(module['operations']):raise ValueError('Invalid runtime operation')
+                used.add((module['id'],binding['op']))
+    for module in modules.values():
+        if module['engineId']>=15 and any((module['id'],op) not in used for op in range(len(module['operations']))):raise ValueError('New runtime operation has no teaching page')
+    for example in examples.values():
+        if set(example['codes'])!={'C','C++','Java','Python','JavaScript'} or any(not code.strip() for code in example['codes'].values()):raise ValueError('Missing example language')
+
 def main():
     curriculum=json.loads((ROOT/'content/curriculum.json').read_text())
     banks=[json.loads((ROOT/f'content/{p}').read_text()) for p in ['practice.json','assessments.private.json']]
     result=validate(curriculum,banks)
+    validate_assets(curriculum,json.loads((ROOT/'content/modules.json').read_text()),json.loads((ROOT/'content/examples.json').read_text()))
     official={q['prompt'] for qs in banks[1].values() for q in qs}
     assert not official.intersection(q['prompt'] for qs in banks[0].values() for q in qs),'Practice and recorded questions must be distinct'
     for p in (ROOT/'frontend/src').glob('**/*'):

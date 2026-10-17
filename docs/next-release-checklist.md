@@ -3,12 +3,12 @@
 Baseline: origin/main `deb646d` (contains accepted learning-lab, preferences and ad342e9 Foundations durability fix). PR target: main. Existing migrations V1–V5 and persisted slide IDs remain immutable. No database reset or automatic completion of new material.
 
 - [x] Inspect architecture, history, instructions and baseline.
-- [ ] Define contracts, concepts, prerequisites and lessons.
+- [x] Define contracts, concepts, prerequisites and lessons.
 - [x] Heap vertical slice: native C → Wasm worker → events → paired array/tree lesson.
-- [ ] Chaining/probing hash tables, heap operations, recursive frames, two pointers and sliding windows.
-- [ ] Native correctness, limits, cleanup and deterministic replay.
-- [ ] Five-language examples and aligned practice/recorded quizzes.
-- [ ] Additive content migration, catalog, experiments and progress.
+- [x] Chaining/probing hash tables, heap operations, recursive frames, two pointers and sliding windows.
+- [x] Native correctness, limits, cleanup and deterministic replay.
+- [x] Five-language examples and aligned practice/recorded quizzes.
+- [x] Additive content migration, catalog, experiments and progress.
 - [ ] Native/Wasm/browser/frontend/MySQL verification and visual inspection.
 - [ ] Final documentation, commits and publication.
 
@@ -21,3 +21,5 @@ The next executable is loaded lazily only for IDs 15–20; legacy learners conti
 Prerequisites will be recorded against actual taught concepts: arrays/Foundations for hashing and heaps; stacks and searching for recursion; searching/arrays for two pointers; two pointers for sliding-window boundary reasoning. All teaching precedes FAQs/final quizzes; historical recorded questions remain unchanged.
 
 Vertical slice evidence: 2,170 legacy native cases plus 2,328 heap cases passed under ASan/UBSan; both Wasm builds and the actual browser heap playback test passed. Full curriculum/quizzes follow in the content milestone.
+
+Content/engine milestone: all 30 new operations have teaching-page bindings. Twelve content tests validate 14 lessons, 118 concepts and 91 questions. Native extension oracles cover 12,696 cases; 77 cross-target traces include empty, collision, overflow-bound and repeated-call cases. All 270 displayed examples compile and 80 new example executions pass in the five languages. MySQL grading/persistence and compatibility tests passed before final ordinal-only lesson refinements; final verification reruns are pending below.

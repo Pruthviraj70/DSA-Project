@@ -75,16 +75,16 @@ class ReleaseIntegrationTest {
 
   @Test
   void realMysqlMigrationsAndSeeds() {
-    assertEquals(14, jdbc.queryForObject("SELECT COUNT(*) FROM algorithms", Integer.class));
-    assertEquals(47, jdbc.queryForObject("SELECT COUNT(*) FROM question_revisions", Integer.class));
-    assertEquals(87, jdbc.queryForObject("SELECT COUNT(*) FROM lesson_slides", Integer.class));
+    assertEquals(20, jdbc.queryForObject("SELECT COUNT(*) FROM algorithms", Integer.class));
+    assertEquals(72, jdbc.queryForObject("SELECT COUNT(*) FROM question_revisions", Integer.class));
+    assertEquals(145, jdbc.queryForObject("SELECT COUNT(*) FROM lesson_slides", Integer.class));
     assertEquals(
-        33, jdbc.queryForObject("SELECT COUNT(*) FROM curriculum_questions", Integer.class));
+        58, jdbc.queryForObject("SELECT COUNT(*) FROM curriculum_questions", Integer.class));
     assertEquals(
-        47, jdbc.queryForObject("SELECT COUNT(*) FROM difficult_questions", Integer.class));
+        72, jdbc.queryForObject("SELECT COUNT(*) FROM difficult_questions", Integer.class));
     assertTrue(jdbc.queryForObject("SELECT COUNT(*) FROM topic_prerequisites", Integer.class) > 10);
     assertEquals(
-        5,
+        6,
         jdbc.queryForObject(
             "SELECT COUNT(*) FROM flyway_schema_history WHERE success=1", Integer.class));
   }
@@ -94,7 +94,7 @@ class ReleaseIntegrationTest {
     mvc.perform(get("/api/modules?size=3&page=1"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items.length()").value(3))
-        .andExpect(jsonPath("$.total").value(14));
+        .andExpect(jsonPath("$.total").value(20));
     String response =
         mvc.perform(get("/api/modules/bst/questions"))
             .andExpect(status().isOk())
@@ -102,8 +102,8 @@ class ReleaseIntegrationTest {
             .getResponse()
             .getContentAsString();
     mvc.perform(get("/api/modules?size=100"))
-        .andExpect(jsonPath("$.items.length()").value(14))
-        .andExpect(jsonPath("$.items[0].engineVersion").value("1.1.0"));
+        .andExpect(jsonPath("$.items.length()").value(20))
+        .andExpect(jsonPath("$.items[0].engineVersion").value("1.2.0"));
     assertFalse(response.contains("correct"));
     assertFalse(response.contains("explanation"));
     mvc.perform(get("/api/modules?size=1000")).andExpect(status().isBadRequest());
@@ -432,7 +432,7 @@ class ReleaseIntegrationTest {
     mvc.perform(get("/api/learning/progress")).andExpect(status().isUnauthorized());
     mvc.perform(get("/api/lessons"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.items.length()").value(9));
+        .andExpect(jsonPath("$.items.length()").value(14));
   }
 
   @Test
@@ -618,5 +618,98 @@ class ReleaseIntegrationTest {
                 .contentType("application/json")
                 .content(reset))
         .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void nextModulesGradeOnServerAndPersistCompatibleExperiments() throws Exception {
+    var account = register();
+    for (String module :
+        List.of("hash-tables", "heaps", "recursion", "two-pointers", "sliding-window")) {
+      String questions =
+          mvc.perform(get("/api/modules/" + module + "/questions").session(account.session()))
+              .andExpect(status().isOk())
+              .andReturn()
+              .getResponse()
+              .getContentAsString();
+      assertEquals(5, mapper.readTree(questions).size());
+      for (JsonNode question : mapper.readTree(questions)) {
+        assertFalse(
+            question.has("correctIndex") || question.has("correct") || question.has("explanation"));
+        for (JsonNode option : question.path("options"))
+          assertFalse(option.has("isCorrect") || option.has("is_correct"));
+      }
+      mvc.perform(
+              post("/api/attempts")
+                  .session(account.session())
+                  .with(csrf())
+                  .contentType("application/json")
+                  .content(json(Map.of("moduleId", module, "answers", answers(module, true)))))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.score").value(5))
+          .andExpect(jsonPath("$.total").value(5))
+          .andExpect(jsonPath("$.feedback[0].review[0].slideId").exists());
+    }
+    String[] ids = {
+      "hash-chain", "hash-probe", "heaps", "recursion", "two-pointers", "sliding-window"
+    };
+    for (int i = 0; i < ids.length; i++) {
+      int module = i + 15;
+      Map<String, Object> input =
+          Map.of(
+              "module",
+              module,
+              "op",
+              0,
+              "values",
+              module <= 16 ? List.of(-8, 2, 0, 4) : List.of(1, 2, 3),
+              "arg",
+              4,
+              "index",
+              2,
+              "directed",
+              false,
+              "weight",
+              1,
+              "edges",
+              List.of());
+      var saved =
+          mvc.perform(
+                  post("/api/experiments")
+                      .session(account.session())
+                      .with(csrf())
+                      .contentType("application/json")
+                      .content(
+                          json(
+                              Map.of(
+                                  "moduleId",
+                                  ids[i],
+                                  "title",
+                                  "New module experiment",
+                                  "input",
+                                  input,
+                                  "configuration",
+                                  Map.of("speed", 30),
+                                  "engineVersion",
+                                  "1.2.0"))))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.engineVersion").value("1.2.0"))
+              .andReturn();
+      long id = mapper.readTree(saved.getResponse().getContentAsString()).path("id").asLong();
+      mvc.perform(get("/api/experiments/" + id).session(account.session()))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.input.module").value(module));
+      mvc.perform(get("/api/experiments/" + id).session(register().session()))
+          .andExpect(status().isNotFound());
+    }
+    assertEquals(
+        5,
+        jdbc.queryForObject(
+            "SELECT COUNT(*) FROM attempts WHERE user_id=?", Integer.class, account.id()));
+    assertEquals(
+        0,
+        jdbc.queryForObject(
+            "SELECT COUNT(*) FROM lesson_slide_progress WHERE user_id=?",
+            Integer.class,
+            account.id()));
   }
 }
