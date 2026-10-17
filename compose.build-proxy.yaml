@@ -1,0 +1,18 @@
+# Optional: use only on networks requiring an explicit trusted HTTPS proxy.
+# Values are local file paths, never credentials embedded in this configuration.
+services:
+  backend:
+    build:
+      secrets: [maven_settings, maven_opts, java_truststore]
+  frontend:
+    build:
+      args:
+        HTTP_PROXY: ${HTTP_PROXY:-}
+        HTTPS_PROXY: ${HTTPS_PROXY:-}
+        NO_PROXY: ${NO_PROXY:-}
+      secrets: [network_ca]
+secrets:
+  maven_settings: {file: "${MAVEN_SETTINGS_FILE:?Path to local Maven proxy settings}"}
+  maven_opts: {file: "${MAVEN_OPTS_FILE:?Path to bootstrap JVM options}"}
+  java_truststore: {file: "${JAVA_TRUSTSTORE_FILE:?Path to trusted Java CA store}"}
+  network_ca: {file: "${NETWORK_CA_FILE:?Path to trusted PEM CA bundle}"}

@@ -1,0 +1,837 @@
+{
+  "array-create": {
+    "id": "array-create",
+    "title": "Create an independent sequence",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct {\n    int data[CAPACITY];\n    int size;\n} Sequence;\n\nbool array_create(Sequence *sequence, const int values[], int n) {\n    if (n < 0 || n > CAPACITY)\n        return false;\n    sequence->size = n;\n    for (int i = 0; i < n; i++)\n        sequence->data[i] = values[i];\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nvector<int> arrayCreate(const vector<int> &values) {\n    if (values.size() > 32)\n        throw std::length_error(\"Use at most 32 values\");\n    vector<int> result;\n    result.reserve(32);\n    for (int value : values)\n        result.push_back(value);\n    return result;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static int[] arrayCreate(int[] values) {\n    if (values.length > 32) throw new IllegalArgumentException(\"Use at most 32 values\");\n    int[] result = new int[values.length];\n    for (int i = 0; i < values.length; i++) result[i] = values[i];\n    return result;\n  }\n}\n",
+      "Python": "def array_create(values):\n    if len(values) > 32:\n        raise ValueError('Use at most 32 values')\n    result = []\n    for value in values:\n        result.append(value)\n    return result\n",
+      "JavaScript": "function arrayCreate(values) {\n  if (values.length > 32) throw new RangeError(\"Use at most 32 values\");\n  const result = [];\n  for (const value of values) result.push(value);\n  return result;\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "The result has independent storage. In C pass Sequence result = {0}; and supply the valid input count."
+    ],
+    "time": "Theta(n) copying work",
+    "space": "Theta(n) output storage; C uses caller-provided fixed-capacity Sequence storage"
+  },
+  "countdown": {
+    "id": "countdown",
+    "title": "Recursive countdown",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nvoid countdown(int n) {\n    if (n <= 0)\n        return; /* Base case: no smaller task remains. */\n    countdown(n - 1);\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nvoid countdown(int n) {\n    if (n <= 0)\n        return;\n    countdown(n - 1);\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static void countdown(int n) {\n    if (n <= 0) return;\n    countdown(n - 1);\n  }\n}\n",
+      "Python": "def countdown(n):\n    if n <= 0:\n        return\n    countdown(n - 1)\n",
+      "JavaScript": "function countdown(n) {\n  if (n <= 0) return;\n  countdown(n - 1);\n}\n"
+    },
+    "preconditions": [
+      "n is a nonnegative integer small enough for the language call stack."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute."
+    ],
+    "time": "Theta(n) time",
+    "space": "Theta(n) call-stack space"
+  },
+  "array-access": {
+    "id": "array-access",
+    "title": "Read one indexed value",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nbool array_access(const int data[], int n, int index, int *result) {\n    if (index < 0 || index >= n)\n        return false;\n    *result = data[index];\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nint arrayAccess(const vector<int> &values, int index) {\n    if (index < 0 || index >= static_cast<int>(values.size()))\n        throw std::out_of_range(\"Invalid index\");\n    return values[index];\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static int arrayAccess(int[] values, int index) {\n    if (index < 0 || index >= values.length) throw new IndexOutOfBoundsException();\n    return values[index];\n  }\n}\n",
+      "Python": "def array_access(values, index):\n    if not 0 <= index < len(values):\n        raise IndexError('No element at this index')\n    return values[index]\n",
+      "JavaScript": "function arrayAccess(values, index) {\n  if (!Number.isInteger(index) || index < 0 || index >= values.length)\n    throw new RangeError(\"No element at this index\");\n  return values[index];\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples.",
+      "0 <= index < logical length; invalid indices are explicitly rejected."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute."
+    ],
+    "time": "O(1) time",
+    "space": "O(1) auxiliary space"
+  },
+  "array-update": {
+    "id": "array-update",
+    "title": "Replace one indexed value",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nbool array_update(int data[], int n, int index, int value) {\n    if (index < 0 || index >= n)\n        return false;\n    data[index] = value;\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nvoid arrayUpdate(vector<int> &values, int index, int value) {\n    if (index < 0 || index >= static_cast<int>(values.size()))\n        throw std::out_of_range(\"Invalid index\");\n    values[index] = value;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static void arrayUpdate(int[] values, int index, int value) {\n    if (index < 0 || index >= values.length) throw new IndexOutOfBoundsException();\n    values[index] = value;\n  }\n}\n",
+      "Python": "def array_update(values, index, value):\n    if not 0 <= index < len(values):\n        raise IndexError('No element at this index')\n    values[index] = value\n",
+      "JavaScript": "function arrayUpdate(values, index, value) {\n  if (!Number.isInteger(index) || index < 0 || index >= values.length)\n    throw new RangeError(\"No element at this index\");\n  values[index] = value;\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples.",
+      "0 <= index < logical length; invalid indices are explicitly rejected."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute."
+    ],
+    "time": "O(1) time",
+    "space": "O(1) auxiliary space"
+  },
+  "array-traverse": {
+    "id": "array-traverse",
+    "title": "Visit each occupied value",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nvoid array_traverse(const int data[], int n) {\n    for (int i = 0; i < n; i++)\n        printf(\"%d \", data[i]);\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nvoid arrayTraverse(const vector<int> &values) {\n    for (int value : values)\n        std::cout << value << ' ';\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static void arrayTraverse(int[] values) {\n    for (int value : values) System.out.print(value + \" \");\n  }\n}\n",
+      "Python": "def array_traverse(values):\n    for value in values:\n        print(value, end=' ')\n",
+      "JavaScript": "function arrayTraverse(values) {\n  for (const value of values) console.log(value);\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute."
+    ],
+    "time": "Theta(n) visits, excluding output-device time",
+    "space": "O(1) auxiliary space"
+  },
+  "array-insert": {
+    "id": "array-insert",
+    "title": "Insert by shifting",
+    "alternatives": [
+      "array-insert-copy"
+    ],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nbool array_insert(int data[], int *length, int capacity, int index, int value) {\n    if (index < 0 || index > *length || *length >= capacity)\n        return false;\n    for (int i = *length; i > index; i--)\n        data[i] = data[i - 1];\n    data[index] = value;\n    (*length)++;\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nvoid arrayInsert(vector<int> &values, int index, int value, int capacity = 32) {\n    int n = static_cast<int>(values.size());\n    if (index < 0 || index > n || n >= capacity)\n        throw std::out_of_range(\"Invalid index or full sequence\");\n    values.push_back(value);\n    for (int i = n; i > index; i--)\n        values[i] = values[i - 1];\n    values[index] = value;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static void arrayInsert(ArrayList<Integer> values, int index, int value, int capacity) {\n    if (index < 0 || index > values.size() || values.size() >= capacity)\n      throw new IndexOutOfBoundsException(\"Invalid index or full sequence\");\n    int n = values.size();\n    values.add(value);\n    for (int i = n; i > index; i--) values.set(i, values.get(i - 1));\n    values.set(index, value);\n  }\n}\n",
+      "Python": "def array_insert(values, index, value, capacity=32):\n    if not 0 <= index <= len(values) or len(values) >= capacity:\n        raise IndexError('Invalid index or full sequence')\n    values.append(value)\n    for i in range(len(values) - 1, index, -1):\n        values[i] = values[i - 1]\n    values[index] = value\n",
+      "JavaScript": "function arrayInsert(values, index, value, capacity = 32) {\n  if (\n    !Number.isInteger(index) ||\n    index < 0 ||\n    index > values.length ||\n    values.length >= capacity\n  )\n    throw new RangeError(\"Invalid index or full sequence\");\n  values.push(value);\n  for (let i = values.length - 1; i > index; i--) values[i] = values[i - 1];\n  values[index] = value;\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples.",
+      "0 <= index <= length. In-place insertion needs a spare slot."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "C uses caller-provided storage and length. Other examples use growable collections and explicitly shift values; collection growth can allocate.",
+      "For Java in-place insertion, initialize ArrayList<Integer> values = new ArrayList<>(); capacity is passed separately."
+    ],
+    "time": "O(n) worst-case time",
+    "space": "O(1) explicit temporary storage when capacity is reserved; growable collections may allocate"
+  },
+  "array-insert-copy": {
+    "id": "array-insert-copy",
+    "title": "Insert into a new sequence",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nint *array_insert_copy(const int data[], int n, int index, int value) {\n    if (n < 0 || index < 0 || index > n)\n        return NULL;\n    int *result = malloc((size_t)(n + 1) * sizeof *result);\n    if (!result)\n        return NULL;\n    for (int i = 0; i < index; i++)\n        result[i] = data[i];\n    result[index] = value;\n    for (int i = index; i < n; i++)\n        result[i + 1] = data[i];\n    return result; /* Caller owns n+1 elements and must free(result). */\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nvector<int> arrayInsertCopy(const vector<int> &values, int index, int value) {\n    int n = static_cast<int>(values.size());\n    if (index < 0 || index > n)\n        throw std::out_of_range(\"Invalid insertion index\");\n    vector<int> result;\n    result.reserve(n + 1);\n    for (int i = 0; i < index; i++)\n        result.push_back(values[i]);\n    result.push_back(value);\n    for (int i = index; i < n; i++)\n        result.push_back(values[i]);\n    return result;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static int[] arrayInsertCopy(int[] values, int index, int value) {\n    if (index < 0 || index > values.length) throw new IndexOutOfBoundsException();\n    int[] result = new int[values.length + 1];\n    for (int i = 0; i < index; i++) result[i] = values[i];\n    result[index] = value;\n    for (int i = index; i < values.length; i++) result[i + 1] = values[i];\n    return result;\n  }\n}\n",
+      "Python": "def array_insert_copy(values, index, value):\n    if not 0 <= index <= len(values):\n        raise IndexError('Invalid insertion index')\n    result = []\n    for i in range(index):\n        result.append(values[i])\n    result.append(value)\n    for i in range(index, len(values)):\n        result.append(values[i])\n    return result\n",
+      "JavaScript": "function arrayInsertCopy(values, index, value) {\n  if (!Number.isInteger(index) || index < 0 || index > values.length)\n    throw new RangeError(\"Invalid insertion index\");\n  const result = [];\n  for (let i = 0; i < index; i++) result.push(values[i]);\n  result.push(value);\n  for (let i = index; i < values.length; i++) result.push(values[i]);\n  return result;\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples.",
+      "0 <= index <= length. In-place insertion needs a spare slot."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "C uses caller-provided storage and length. Other examples use growable collections and explicitly shift values; collection growth can allocate.",
+      "For Java in-place insertion, initialize ArrayList<Integer> values = new ArrayList<>(); capacity is passed separately."
+    ],
+    "time": "O(n) worst-case time",
+    "space": "Theta(n) new/output storage; original input unchanged"
+  },
+  "array-delete": {
+    "id": "array-delete",
+    "title": "Delete and close the gap",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nbool array_delete(int data[], int *length, int index, int *removed) {\n    if (index < 0 || index >= *length)\n        return false;\n    *removed = data[index];\n    for (int i = index; i + 1 < *length; i++)\n        data[i] = data[i + 1];\n    (*length)--;\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nint arrayDelete(vector<int> &values, int index) {\n    int n = static_cast<int>(values.size());\n    if (index < 0 || index >= n)\n        throw std::out_of_range(\"No element to remove\");\n    int removed = values[index];\n    for (int i = index + 1; i < n; i++)\n        values[i - 1] = values[i];\n    values.pop_back();\n    return removed;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static int arrayDelete(ArrayList<Integer> values, int index) {\n    if (index < 0 || index >= values.size()) throw new IndexOutOfBoundsException();\n    int removed = values.get(index);\n    for (int i = index + 1; i < values.size(); i++) values.set(i - 1, values.get(i));\n    values.remove(values.size() - 1);\n    return removed;\n  }\n}\n",
+      "Python": "def array_delete(values, index):\n    if not 0 <= index < len(values):\n        raise IndexError('No element to remove')\n    removed = values[index]\n    for i in range(index + 1, len(values)):\n        values[i - 1] = values[i]\n    values.pop()  # Remove the now-unused final slot.\n    return removed\n",
+      "JavaScript": "function arrayDelete(values, index) {\n  if (!Number.isInteger(index) || index < 0 || index >= values.length)\n    throw new RangeError(\"No element to remove\");\n  const removed = values[index];\n  for (let i = index + 1; i < values.length; i++) values[i - 1] = values[i];\n  values.pop();\n  return removed;\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples.",
+      "The index must address an existing logical element; the removed value is preserved."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute."
+    ],
+    "time": "O(n) worst-case time",
+    "space": "O(1) auxiliary space"
+  },
+  "linear-search": {
+    "id": "linear-search",
+    "title": "Left-to-right linear search",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nint linear_search(const int data[], int n, int target) {\n    for (int i = 0; i < n; i++)\n        if (data[i] == target)\n            return i;\n    return -1;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nint linearSearch(const vector<int> &values, int target) {\n    for (int i = 0; i < static_cast<int>(values.size()); i++)\n        if (values[i] == target)\n            return i;\n    return -1;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static int linearSearch(int[] values, int target) {\n    for (int i = 0; i < values.length; i++) if (values[i] == target) return i;\n    return -1;\n  }\n}\n",
+      "Python": "def linear_search(values, target):\n    for i, value in enumerate(values):\n        if value == target:\n            return i\n    return -1\n",
+      "JavaScript": "function linearSearch(values, target) {\n  for (let i = 0; i < values.length; i++) if (values[i] === target) return i;\n  return -1;\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Returns the first matching index, or -1; empty input returns -1."
+    ],
+    "time": "O(n) worst-case time",
+    "space": "O(1) auxiliary space"
+  },
+  "binary-search": {
+    "id": "binary-search",
+    "title": "Iterative binary search",
+    "alternatives": [
+      "binary-search-recursive",
+      "binary-first"
+    ],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nint binary_search(const int data[], int n, int target) {\n    int lo = 0, hi = n - 1;\n    while (lo <= hi) {\n        int mid = lo + (hi - lo) / 2;\n        if (data[mid] == target)\n            return mid;\n        if (data[mid] < target)\n            lo = mid + 1;\n        else\n            hi = mid - 1;\n    }\n    return -1;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nint binarySearch(const vector<int> &values, int target) {\n    int lo = 0, hi = static_cast<int>(values.size()) - 1;\n    while (lo <= hi) {\n        int mid = lo + (hi - lo) / 2;\n        if (values[mid] == target)\n            return mid;\n        if (values[mid] < target)\n            lo = mid + 1;\n        else\n            hi = mid - 1;\n    }\n    return -1;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static int binarySearch(int[] values, int target) {\n    int lo = 0, hi = values.length - 1;\n    while (lo <= hi) {\n      int mid = lo + (hi - lo) / 2;\n      if (values[mid] == target) return mid;\n      if (values[mid] < target) lo = mid + 1;\n      else hi = mid - 1;\n    }\n    return -1;\n  }\n}\n",
+      "Python": "def binary_search(values, target):\n    lo, hi = 0, len(values) - 1\n    while lo <= hi:\n        mid = lo + (hi - lo) // 2\n        if values[mid] == target:\n            return mid\n        if values[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1\n",
+      "JavaScript": "function binarySearch(values, target) {\n  let lo = 0,\n    hi = values.length - 1;\n  while (lo <= hi) {\n    const mid = lo + Math.floor((hi - lo) / 2);\n    if (values[mid] === target) return mid;\n    if (values[mid] < target) lo = mid + 1;\n    else hi = mid - 1;\n  }\n  return -1;\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples.",
+      "Input must already be sorted ascending. This precondition is not checked with a linear scan inside the function."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "An ordinary match may be any duplicate; first-occurrence search continues left after equality."
+    ],
+    "time": "O(log n) worst-case time",
+    "space": "O(1) auxiliary space"
+  },
+  "binary-search-recursive": {
+    "id": "binary-search-recursive",
+    "title": "Recursive binary search",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nint binary_search_range(const int data[], int lo, int hi, int target) {\n    if (lo > hi)\n        return -1;\n    int mid = lo + (hi - lo) / 2;\n    if (data[mid] == target)\n        return mid;\n    if (data[mid] < target)\n        return binary_search_range(data, mid + 1, hi, target);\n    return binary_search_range(data, lo, mid - 1, target);\n}\nint binary_search_recursive(const int data[], int n, int target) {\n    return binary_search_range(data, 0, n - 1, target);\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nint binarySearchRange(const vector<int> &values, int lo, int hi, int target) {\n    if (lo > hi)\n        return -1;\n    int mid = lo + (hi - lo) / 2;\n    if (values[mid] == target)\n        return mid;\n    return values[mid] < target ? binarySearchRange(values, mid + 1, hi, target)\n                                : binarySearchRange(values, lo, mid - 1, target);\n}\nint binarySearchRecursive(const vector<int> &values, int target) {\n    return binarySearchRange(values, 0, static_cast<int>(values.size()) - 1, target);\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static int binarySearchRange(int[] values, int lo, int hi, int target) {\n    if (lo > hi) return -1;\n    int mid = lo + (hi - lo) / 2;\n    if (values[mid] == target) return mid;\n    return values[mid] < target\n        ? binarySearchRange(values, mid + 1, hi, target)\n        : binarySearchRange(values, lo, mid - 1, target);\n  }\n\n  static int binarySearchRecursive(int[] values, int target) {\n    return binarySearchRange(values, 0, values.length - 1, target);\n  }\n}\n",
+      "Python": "def binary_search_recursive(values, target):\n    def search(lo, hi):\n        if lo > hi:\n            return -1\n        mid = lo + (hi - lo) // 2\n        if values[mid] == target:\n            return mid\n        if values[mid] < target:\n            return search(mid + 1, hi)\n        return search(lo, mid - 1)\n    return search(0, len(values) - 1)\n",
+      "JavaScript": "function binarySearchRecursive(values, target) {\n  function search(lo, hi) {\n    if (lo > hi) return -1;\n    const mid = lo + Math.floor((hi - lo) / 2);\n    if (values[mid] === target) return mid;\n    return values[mid] < target ? search(mid + 1, hi) : search(lo, mid - 1);\n  }\n  return search(0, values.length - 1);\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples.",
+      "Input must already be sorted ascending. This precondition is not checked with a linear scan inside the function."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "An ordinary match may be any duplicate; first-occurrence search continues left after equality."
+    ],
+    "time": "O(log n) worst-case time",
+    "space": "O(log n) recursive stack"
+  },
+  "binary-first": {
+    "id": "binary-first",
+    "title": "First-occurrence binary search",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nint binary_first(const int data[], int n, int target) {\n    int lo = 0, hi = n - 1, found = -1;\n    while (lo <= hi) {\n        int mid = lo + (hi - lo) / 2;\n        if (data[mid] >= target) {\n            if (data[mid] == target)\n                found = mid;\n            hi = mid - 1;\n        } else\n            lo = mid + 1;\n    }\n    return found;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nint binaryFirst(const vector<int> &values, int target) {\n    int lo = 0, hi = static_cast<int>(values.size()) - 1, found = -1;\n    while (lo <= hi) {\n        int mid = lo + (hi - lo) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target)\n                found = mid;\n            hi = mid - 1;\n        } else\n            lo = mid + 1;\n    }\n    return found;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static int binaryFirst(int[] values, int target) {\n    int lo = 0, hi = values.length - 1, found = -1;\n    while (lo <= hi) {\n      int mid = lo + (hi - lo) / 2;\n      if (values[mid] >= target) {\n        if (values[mid] == target) found = mid;\n        hi = mid - 1;\n      } else lo = mid + 1;\n    }\n    return found;\n  }\n}\n",
+      "Python": "def binary_first(values, target):\n    lo, hi, found = 0, len(values) - 1, -1\n    while lo <= hi:\n        mid = lo + (hi - lo) // 2\n        if values[mid] >= target:\n            if values[mid] == target:\n                found = mid\n            hi = mid - 1\n        else:\n            lo = mid + 1\n    return found\n",
+      "JavaScript": "function binaryFirst(values, target) {\n  let lo = 0,\n    hi = values.length - 1,\n    found = -1;\n  while (lo <= hi) {\n    const mid = lo + Math.floor((hi - lo) / 2);\n    if (values[mid] >= target) {\n      if (values[mid] === target) found = mid;\n      hi = mid - 1;\n    } else lo = mid + 1;\n  }\n  return found;\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples.",
+      "Input must already be sorted ascending. This precondition is not checked with a linear scan inside the function."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "An ordinary match may be any duplicate; first-occurrence search continues left after equality."
+    ],
+    "time": "O(log n) worst-case time",
+    "space": "O(1) auxiliary space"
+  },
+  "insertion-sort": {
+    "id": "insertion-sort",
+    "title": "Stable insertion sort",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nvoid insertion_sort(int data[], int n) {\n    for (int i = 1; i < n; i++) {\n        int key = data[i], j = i - 1;\n        while (j >= 0 && data[j] > key) {\n            data[j + 1] = data[j];\n            j--;\n        }\n        data[j + 1] = key;\n    }\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nvoid insertionSort(vector<int> &values) {\n    for (int i = 1; i < static_cast<int>(values.size()); i++) {\n        int key = values[i], j = i - 1;\n        while (j >= 0 && values[j] > key) {\n            values[j + 1] = values[j];\n            j--;\n        }\n        values[j + 1] = key;\n    }\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static void insertionSort(int[] values) {\n    for (int i = 1; i < values.length; i++) {\n      int key = values[i], j = i - 1;\n      while (j >= 0 && values[j] > key) {\n        values[j + 1] = values[j];\n        j--;\n      }\n      values[j + 1] = key;\n    }\n  }\n}\n",
+      "Python": "def insertion_sort(values):\n    for i in range(1, len(values)):\n        key, j = values[i], i - 1\n        while j >= 0 and values[j] > key:\n            values[j + 1] = values[j]\n            j -= 1\n        values[j + 1] = key\n",
+      "JavaScript": "function insertionSort(values) {\n  for (let i = 1; i < values.length; i++) {\n    const key = values[i];\n    let j = i - 1;\n    while (j >= 0 && values[j] > key) {\n      values[j + 1] = values[j];\n      j--;\n    }\n    values[j + 1] = key;\n  }\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Values and duplicate counts are preserved. Empty and one-element inputs need no movement.",
+      "Strict > shifts preserve stability."
+    ],
+    "time": "Theta(n) best case; Theta(n²) worst case",
+    "space": "O(1) auxiliary space"
+  },
+  "merge-sort": {
+    "id": "merge-sort",
+    "title": "Bottom-up merge sort",
+    "alternatives": [
+      "merge-sort-recursive"
+    ],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nbool merge_sort(int data[], int n) {\n    if (n < 2)\n        return true;\n    int *buffer = malloc((size_t)n * sizeof *buffer);\n    if (!buffer)\n        return false;\n    for (int width = 1; width < n; width *= 2) {\n        for (int start = 0; start < n; start += 2 * width) {\n            int mid = start + width < n ? start + width : n;\n            int end = start + 2 * width < n ? start + 2 * width : n;\n            int left = start, right = mid, out = start;\n            while (left < mid || right < end) {\n                if (right == end || (left < mid && data[left] <= data[right]))\n                    buffer[out++] = data[left++];\n                else\n                    buffer[out++] = data[right++];\n            }\n            for (int i = start; i < end; i++)\n                data[i] = buffer[i];\n        }\n    }\n    free(buffer);\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nvoid mergeSort(vector<int> &values) {\n    int n = static_cast<int>(values.size());\n    vector<int> buffer(n);\n    for (int width = 1; width < n; width *= 2)\n        for (int start = 0; start < n; start += 2 * width) {\n            int mid = std::min(start + width, n), end = std::min(start + 2 * width, n),\n                left = start, right = mid, out = start;\n            while (left < mid || right < end) {\n                if (right == end || (left < mid && values[left] <= values[right]))\n                    buffer[out++] = values[left++];\n                else\n                    buffer[out++] = values[right++];\n            }\n            for (int i = start; i < end; i++)\n                values[i] = buffer[i];\n        }\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static void mergeSort(int[] values) {\n    int n = values.length;\n    int[] buffer = new int[n];\n    for (int width = 1; width < n; width *= 2)\n      for (int start = 0; start < n; start += 2 * width) {\n        int mid = Math.min(start + width, n),\n            end = Math.min(start + 2 * width, n),\n            left = start,\n            right = mid,\n            out = start;\n        while (left < mid || right < end) {\n          if (right == end || (left < mid && values[left] <= values[right]))\n            buffer[out++] = values[left++];\n          else buffer[out++] = values[right++];\n        }\n        for (int i = start; i < end; i++) values[i] = buffer[i];\n      }\n  }\n}\n",
+      "Python": "def merge_sort(values):\n    n, width = len(values), 1\n    buffer = [0] * n\n    while width < n:\n        for start in range(0, n, 2 * width):\n            mid, end = min(start + width, n), min(start + 2 * width, n)\n            left, right, out = start, mid, start\n            while left < mid or right < end:\n                if right == end or (left < mid and values[left] <= values[right]):\n                    buffer[out] = values[left]\n                    left += 1\n                else:\n                    buffer[out] = values[right]\n                    right += 1\n                out += 1\n            for i in range(start, end):\n                values[i] = buffer[i]\n        width *= 2\n",
+      "JavaScript": "function mergeSort(values) {\n  const n = values.length,\n    buffer = Array(n);\n  for (let width = 1; width < n; width *= 2)\n    for (let start = 0; start < n; start += 2 * width) {\n      const mid = Math.min(start + width, n),\n        end = Math.min(start + 2 * width, n);\n      let left = start,\n        right = mid,\n        out = start;\n      while (left < mid || right < end) {\n        if (right === end || (left < mid && values[left] <= values[right]))\n          buffer[out++] = values[left++];\n        else buffer[out++] = values[right++];\n      }\n      for (let i = start; i < end; i++) values[i] = buffer[i];\n    }\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Values and duplicate counts are preserved. Empty and one-element inputs need no movement.",
+      "Choosing left on equal keys preserves stability."
+    ],
+    "time": "Theta(n log n) time",
+    "space": "Theta(n) buffer plus O(log n) stack for the recursive alternative"
+  },
+  "merge-sort-recursive": {
+    "id": "merge-sort-recursive",
+    "title": "Top-down merge sort",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nvoid merge_range(int data[], int buffer[], int lo, int hi) {\n    if (hi - lo < 2)\n        return;\n    int mid = lo + (hi - lo) / 2;\n    merge_range(data, buffer, lo, mid);\n    merge_range(data, buffer, mid, hi);\n    int left = lo, right = mid, out = lo;\n    while (left < mid || right < hi) {\n        if (right == hi || (left < mid && data[left] <= data[right]))\n            buffer[out++] = data[left++];\n        else\n            buffer[out++] = data[right++];\n    }\n    for (int i = lo; i < hi; i++)\n        data[i] = buffer[i];\n}\nbool merge_sort_recursive(int data[], int n) {\n    if (n < 2)\n        return true;\n    int *buffer = malloc((size_t)n * sizeof *buffer);\n    if (!buffer)\n        return false;\n    merge_range(data, buffer, 0, n);\n    free(buffer);\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nvoid mergeRange(vector<int> &values, vector<int> &buffer, int lo, int hi) {\n    if (hi - lo < 2)\n        return;\n    int mid = lo + (hi - lo) / 2;\n    mergeRange(values, buffer, lo, mid);\n    mergeRange(values, buffer, mid, hi);\n    int left = lo, right = mid, out = lo;\n    while (left < mid || right < hi) {\n        if (right == hi || (left < mid && values[left] <= values[right]))\n            buffer[out++] = values[left++];\n        else\n            buffer[out++] = values[right++];\n    }\n    for (int i = lo; i < hi; i++)\n        values[i] = buffer[i];\n}\nvoid mergeSortRecursive(vector<int> &values) {\n    vector<int> buffer(values.size());\n    mergeRange(values, buffer, 0, static_cast<int>(values.size()));\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static void mergeRange(int[] values, int[] buffer, int lo, int hi) {\n    if (hi - lo < 2) return;\n    int mid = lo + (hi - lo) / 2;\n    mergeRange(values, buffer, lo, mid);\n    mergeRange(values, buffer, mid, hi);\n    int left = lo, right = mid, out = lo;\n    while (left < mid || right < hi) {\n      if (right == hi || (left < mid && values[left] <= values[right]))\n        buffer[out++] = values[left++];\n      else buffer[out++] = values[right++];\n    }\n    for (int i = lo; i < hi; i++) values[i] = buffer[i];\n  }\n\n  static void mergeSortRecursive(int[] values) {\n    mergeRange(values, new int[values.length], 0, values.length);\n  }\n}\n",
+      "Python": "def merge_sort_recursive(values):\n    buffer = [0] * len(values)\n    def merge_range(lo, hi):\n        if hi - lo < 2:\n            return\n        mid = lo + (hi - lo) // 2\n        merge_range(lo, mid)\n        merge_range(mid, hi)\n        left, right, out = lo, mid, lo\n        while left < mid or right < hi:\n            if right == hi or (left < mid and values[left] <= values[right]):\n                buffer[out] = values[left]\n                left += 1\n            else:\n                buffer[out] = values[right]\n                right += 1\n            out += 1\n        for i in range(lo, hi):\n            values[i] = buffer[i]\n    merge_range(0, len(values))\n",
+      "JavaScript": "function mergeSortRecursive(values) {\n  const buffer = Array(values.length);\n  function sortRange(lo, hi) {\n    if (hi - lo < 2) return;\n    const mid = lo + Math.floor((hi - lo) / 2);\n    sortRange(lo, mid);\n    sortRange(mid, hi);\n    let left = lo,\n      right = mid,\n      out = lo;\n    while (left < mid || right < hi) {\n      if (right === hi || (left < mid && values[left] <= values[right]))\n        buffer[out++] = values[left++];\n      else buffer[out++] = values[right++];\n    }\n    for (let i = lo; i < hi; i++) values[i] = buffer[i];\n  }\n  sortRange(0, values.length);\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Values and duplicate counts are preserved. Empty and one-element inputs need no movement.",
+      "Choosing left on equal keys preserves stability."
+    ],
+    "time": "Theta(n log n) time",
+    "space": "Theta(n) buffer plus O(log n) stack for the recursive alternative"
+  },
+  "quick-sort": {
+    "id": "quick-sort",
+    "title": "Lomuto quicksort",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nvoid quick_sort_range(int data[], int lo, int hi) {\n    if (lo >= hi)\n        return;\n    int pivot = data[hi], boundary = lo;\n    for (int j = lo; j < hi; j++)\n        if (data[j] <= pivot) {\n            int value = data[boundary];\n            data[boundary++] = data[j];\n            data[j] = value;\n        }\n    int value = data[boundary];\n    data[boundary] = data[hi];\n    data[hi] = value;\n    quick_sort_range(data, lo, boundary - 1);\n    quick_sort_range(data, boundary + 1, hi);\n}\nvoid quick_sort(int data[], int n) { quick_sort_range(data, 0, n - 1); }\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nvoid quickSortRange(vector<int> &values, int lo, int hi) {\n    if (lo >= hi)\n        return;\n    int pivot = values[hi], boundary = lo;\n    for (int j = lo; j < hi; j++)\n        if (values[j] <= pivot) {\n            std::swap(values[boundary], values[j]);\n            boundary++;\n        }\n    std::swap(values[boundary], values[hi]);\n    quickSortRange(values, lo, boundary - 1);\n    quickSortRange(values, boundary + 1, hi);\n}\nvoid quickSort(vector<int> &values) {\n    quickSortRange(values, 0, static_cast<int>(values.size()) - 1);\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static void quickSortRange(int[] values, int lo, int hi) {\n    if (lo >= hi) return;\n    int pivot = values[hi], boundary = lo;\n    for (int j = lo; j < hi; j++)\n      if (values[j] <= pivot) {\n        int value = values[boundary];\n        values[boundary++] = values[j];\n        values[j] = value;\n      }\n    int value = values[boundary];\n    values[boundary] = values[hi];\n    values[hi] = value;\n    quickSortRange(values, lo, boundary - 1);\n    quickSortRange(values, boundary + 1, hi);\n  }\n\n  static void quickSort(int[] values) {\n    quickSortRange(values, 0, values.length - 1);\n  }\n}\n",
+      "Python": "def quick_sort(values):\n    def sort_range(lo, hi):\n        if lo >= hi:\n            return\n        pivot, boundary = values[hi], lo\n        for j in range(lo, hi):\n            if values[j] <= pivot:\n                values[boundary], values[j] = values[j], values[boundary]\n                boundary += 1\n        values[boundary], values[hi] = values[hi], values[boundary]\n        sort_range(lo, boundary - 1)\n        sort_range(boundary + 1, hi)\n    sort_range(0, len(values) - 1)\n",
+      "JavaScript": "function quickSort(values) {\n  function sortRange(lo, hi) {\n    if (lo >= hi) return;\n    const pivot = values[hi];\n    let boundary = lo;\n    for (let j = lo; j < hi; j++)\n      if (values[j] <= pivot) {\n        [values[boundary], values[j]] = [values[j], values[boundary]];\n        boundary++;\n      }\n    [values[boundary], values[hi]] = [values[hi], values[boundary]];\n    sortRange(lo, boundary - 1);\n    sortRange(boundary + 1, hi);\n  }\n  sortRange(0, values.length - 1);\n}\n"
+    },
+    "preconditions": [
+      "Inputs are integer values; sequence size is at most 32 in these teaching examples."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Values and duplicate counts are preserved. Empty and one-element inputs need no movement.",
+      "This recursive example is not stable. The final-element pivot can be poor on ordered or equal inputs."
+    ],
+    "time": "Theta(n log n) for balanced partitions; Theta(n²) worst case",
+    "space": "O(n) worst-case recursive stack"
+  },
+  "list-insert": {
+    "id": "list-insert",
+    "title": "Insert a linked node",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct Node {\n    int value;\n    struct Node *next;\n} Node;\nvoid list_free(Node *head) {\n    while (head) {\n        Node *next = head->next;\n        free(head);\n        head = next;\n    }\n}\n\nbool list_insert(Node **head, int index, int value) {\n    if (index < 0)\n        return false;\n    Node **link = head;\n    for (int i = 0; i < index; i++) {\n        if (!*link)\n            return false;\n        link = &(*link)->next;\n    }\n    Node *node = malloc(sizeof *node);\n    if (!node)\n        return false;\n    node->value = value;\n    node->next = *link;\n    *link = node;\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Node {\n    int value;\n    Node *next = nullptr;\n};\nvoid listFree(Node *head) {\n    while (head) {\n        Node *next = head->next;\n        delete head;\n        head = next;\n    }\n}\n\nbool listInsert(Node *&head, int index, int value) {\n    if (index < 0)\n        return false;\n    Node **link = &head;\n    for (int i = 0; i < index; i++) {\n        if (!*link)\n            return false;\n        link = &(*link)->next;\n    }\n    *link = new Node{value, *link};\n    return true;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Node {\n    int value;\n    Node next;\n\n    Node(int value, Node next) {\n      this.value = value;\n      this.next = next;\n    }\n  }\n\n  static Node listInsert(Node head, int index, int value) {\n    if (index < 0) throw new IndexOutOfBoundsException();\n    if (index == 0) return new Node(value, head);\n    Node previous = head;\n    for (int i = 0; i < index - 1; i++) {\n      if (previous == null) throw new IndexOutOfBoundsException();\n      previous = previous.next;\n    }\n    if (previous == null) throw new IndexOutOfBoundsException();\n    previous.next = new Node(value, previous.next);\n    return head;\n  }\n}\n",
+      "Python": "class Node:\n    def __init__(self, value, next_node=None):\n        self.value = value\n        self.next = next_node\n\ndef list_insert(head, index, value):\n    if index < 0:\n        raise IndexError('Invalid index')\n    if index == 0:\n        return Node(value, head)\n    previous = head\n    for _ in range(index - 1):\n        if previous is None:\n            raise IndexError('Invalid index')\n        previous = previous.next\n    if previous is None:\n        raise IndexError('Invalid index')\n    previous.next = Node(value, previous.next)\n    return head\n",
+      "JavaScript": "class Node {\n  constructor(value, next = null) {\n    this.value = value;\n    this.next = next;\n  }\n}\n\nfunction listInsert(head, index, value) {\n  if (!Number.isInteger(index) || index < 0)\n    throw new RangeError(\"Invalid index\");\n  if (index === 0) return new Node(value, head);\n  let previous = head;\n  for (let i = 0; i < index - 1; i++) {\n    if (previous === null) throw new RangeError(\"Invalid index\");\n    previous = previous.next;\n  }\n  if (previous === null) throw new RangeError(\"Invalid index\");\n  previous.next = new Node(value, previous.next);\n  return head;\n}\n"
+    },
+    "preconditions": [
+      "Head is null/None or a finite acyclic singly linked chain. Positions are zero-based.",
+      "Insertion permits index equal to length; allocation failure must not be ignored."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "C/C++ examples can change the caller’s head. Java/Python/JavaScript insertion/deletion return the new head: assign it back.",
+      "C callers use list_free; C++ callers use listFree to release remaining owned nodes. Other languages manage unreachable objects."
+    ],
+    "time": "O(n) worst-case time",
+    "space": "O(1) auxiliary space"
+  },
+  "list-delete": {
+    "id": "list-delete",
+    "title": "Unlink a node",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct Node {\n    int value;\n    struct Node *next;\n} Node;\nvoid list_free(Node *head) {\n    while (head) {\n        Node *next = head->next;\n        free(head);\n        head = next;\n    }\n}\n\nbool list_delete(Node **head, int index, int *removed) {\n    if (index < 0)\n        return false;\n    Node **link = head;\n    for (int i = 0; i < index; i++) {\n        if (!*link)\n            return false;\n        link = &(*link)->next;\n    }\n    if (!*link)\n        return false;\n    Node *old = *link;\n    *removed = old->value;\n    *link = old->next;\n    free(old);\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Node {\n    int value;\n    Node *next = nullptr;\n};\nvoid listFree(Node *head) {\n    while (head) {\n        Node *next = head->next;\n        delete head;\n        head = next;\n    }\n}\n\nbool listDelete(Node *&head, int index, int &removed) {\n    if (index < 0)\n        return false;\n    Node **link = &head;\n    for (int i = 0; i < index; i++) {\n        if (!*link)\n            return false;\n        link = &(*link)->next;\n    }\n    if (!*link)\n        return false;\n    Node *old = *link;\n    removed = old->value;\n    *link = old->next;\n    delete old;\n    return true;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Node {\n    int value;\n    Node next;\n\n    Node(int value, Node next) {\n      this.value = value;\n      this.next = next;\n    }\n  }\n\n  static Node listDelete(Node head, int index) {\n    if (index < 0 || head == null) throw new IndexOutOfBoundsException();\n    if (index == 0) return head.next;\n    Node previous = head;\n    for (int i = 0; i < index - 1; i++) {\n      if (previous.next == null) throw new IndexOutOfBoundsException();\n      previous = previous.next;\n    }\n    if (previous.next == null) throw new IndexOutOfBoundsException();\n    previous.next = previous.next.next;\n    return head;\n  }\n}\n",
+      "Python": "class Node:\n    def __init__(self, value, next_node=None):\n        self.value = value\n        self.next = next_node\n\ndef list_delete(head, index):\n    if index < 0 or head is None:\n        raise IndexError('No node to remove')\n    if index == 0:\n        return head.next\n    previous = head\n    for _ in range(index - 1):\n        if previous.next is None:\n            raise IndexError('No node to remove')\n        previous = previous.next\n    if previous.next is None:\n        raise IndexError('No node to remove')\n    previous.next = previous.next.next\n    return head\n",
+      "JavaScript": "class Node {\n  constructor(value, next = null) {\n    this.value = value;\n    this.next = next;\n  }\n}\n\nfunction listDelete(head, index) {\n  if (!Number.isInteger(index) || index < 0 || head === null)\n    throw new RangeError(\"No node to remove\");\n  if (index === 0) return head.next;\n  let previous = head;\n  for (let i = 0; i < index - 1; i++) {\n    if (previous.next === null) throw new RangeError(\"No node to remove\");\n    previous = previous.next;\n  }\n  if (previous.next === null) throw new RangeError(\"No node to remove\");\n  previous.next = previous.next.next;\n  return head;\n}\n"
+    },
+    "preconditions": [
+      "Head is null/None or a finite acyclic singly linked chain. Positions are zero-based.",
+      "Deletion requires an existing node; do not lose its successor before repairing the chain."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "C/C++ examples can change the caller’s head. Java/Python/JavaScript insertion/deletion return the new head: assign it back.",
+      "C callers use list_free; C++ callers use listFree to release remaining owned nodes. Other languages manage unreachable objects."
+    ],
+    "time": "O(n) worst-case time",
+    "space": "O(1) auxiliary space"
+  },
+  "list-search": {
+    "id": "list-search",
+    "title": "Search linked values",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct Node {\n    int value;\n    struct Node *next;\n} Node;\nvoid list_free(Node *head) {\n    while (head) {\n        Node *next = head->next;\n        free(head);\n        head = next;\n    }\n}\n\nconst Node *list_search(const Node *head, int target) {\n    for (const Node *node = head; node; node = node->next)\n        if (node->value == target)\n            return node;\n    return NULL;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Node {\n    int value;\n    Node *next = nullptr;\n};\nvoid listFree(Node *head) {\n    while (head) {\n        Node *next = head->next;\n        delete head;\n        head = next;\n    }\n}\n\nconst Node *listSearch(const Node *head, int target) {\n    for (auto node = head; node; node = node->next)\n        if (node->value == target)\n            return node;\n    return nullptr;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Node {\n    int value;\n    Node next;\n\n    Node(int value, Node next) {\n      this.value = value;\n      this.next = next;\n    }\n  }\n\n  static Node listSearch(Node head, int target) {\n    for (Node node = head; node != null; node = node.next) if (node.value == target) return node;\n    return null;\n  }\n}\n",
+      "Python": "class Node:\n    def __init__(self, value, next_node=None):\n        self.value = value\n        self.next = next_node\n\ndef list_search(head, target):\n    node = head\n    while node is not None:\n        if node.value == target:\n            return node\n        node = node.next\n    return None\n",
+      "JavaScript": "class Node {\n  constructor(value, next = null) {\n    this.value = value;\n    this.next = next;\n  }\n}\n\nfunction listSearch(head, target) {\n  for (let node = head; node !== null; node = node.next)\n    if (node.value === target) return node;\n  return null;\n}\n"
+    },
+    "preconditions": [
+      "Head is null/None or a finite acyclic singly linked chain. Positions are zero-based."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "C/C++ examples can change the caller’s head. Java/Python/JavaScript insertion/deletion return the new head: assign it back.",
+      "C callers use list_free; C++ callers use listFree to release remaining owned nodes. Other languages manage unreachable objects.",
+      "Returns the first matching node reference, not its stored value; null/None means missing."
+    ],
+    "time": "O(n) worst-case time",
+    "space": "O(1) auxiliary space"
+  },
+  "list-traverse": {
+    "id": "list-traverse",
+    "title": "Follow the complete chain",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct Node {\n    int value;\n    struct Node *next;\n} Node;\nvoid list_free(Node *head) {\n    while (head) {\n        Node *next = head->next;\n        free(head);\n        head = next;\n    }\n}\n\nvoid list_traverse(const Node *head) {\n    for (const Node *node = head; node; node = node->next)\n        printf(\"%d \", node->value);\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Node {\n    int value;\n    Node *next = nullptr;\n};\nvoid listFree(Node *head) {\n    while (head) {\n        Node *next = head->next;\n        delete head;\n        head = next;\n    }\n}\n\nvoid listTraverse(const Node *head) {\n    for (auto node = head; node; node = node->next)\n        std::cout << node->value << ' ';\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Node {\n    int value;\n    Node next;\n\n    Node(int value, Node next) {\n      this.value = value;\n      this.next = next;\n    }\n  }\n\n  static void listTraverse(Node head) {\n    for (Node node = head; node != null; node = node.next) System.out.print(node.value + \" \");\n  }\n}\n",
+      "Python": "class Node:\n    def __init__(self, value, next_node=None):\n        self.value = value\n        self.next = next_node\n\ndef list_traverse(head):\n    node = head\n    while node is not None:\n        print(node.value, end=' ')\n        node = node.next\n",
+      "JavaScript": "class Node {\n  constructor(value, next = null) {\n    this.value = value;\n    this.next = next;\n  }\n}\n\nfunction listTraverse(head) {\n  for (let node = head; node !== null; node = node.next)\n    console.log(node.value);\n}\n"
+    },
+    "preconditions": [
+      "Head is null/None or a finite acyclic singly linked chain. Positions are zero-based."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "C/C++ examples can change the caller’s head. Java/Python/JavaScript insertion/deletion return the new head: assign it back.",
+      "C callers use list_free; C++ callers use listFree to release remaining owned nodes. Other languages manage unreachable objects."
+    ],
+    "time": "O(n) worst-case time",
+    "space": "O(1) auxiliary space"
+  },
+  "stack-push": {
+    "id": "stack-push",
+    "title": "Push to the top",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct {\n    int data[CAPACITY];\n    int size;\n} Sequence;\n\nbool stack_push(Sequence *stack, int value) {\n    if (stack->size == CAPACITY)\n        return false;\n    stack->data[stack->size++] = value;\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nvoid stackPush(vector<int> &stack, int value) {\n    if (stack.size() >= 32)\n        throw std::overflow_error(\"Stack is full\");\n    stack.push_back(value);\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static void stackPush(ArrayList<Integer> stack, int value) {\n    if (stack.size() >= 32) throw new IllegalStateException(\"Stack is full\");\n    stack.add(value);\n  }\n}\n",
+      "Python": "def stack_push(stack, value):\n    if len(stack) >= 32:\n        raise OverflowError('Stack is full')\n    stack.append(value)\n",
+      "JavaScript": "function stackPush(stack, value) {\n  if (stack.length >= 32) throw new RangeError(\"Stack is full\");\n  stack.push(value);\n}\n"
+    },
+    "preconditions": [
+      "Initialize an empty collection; fixed capacity is 32. C uses Sequence stack = {0}; or Sequence queue = {0}; circular storage also starts with {0}."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Empty removals/reads report underflow separately from stored values. Growable collection allocation can add cost."
+    ],
+    "time": "O(1) per operation with reserved storage",
+    "space": "O(1) auxiliary space"
+  },
+  "stack-pop": {
+    "id": "stack-pop",
+    "title": "Remove the top",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct {\n    int data[CAPACITY];\n    int size;\n} Sequence;\n\nbool stack_pop(Sequence *stack, int *value) {\n    if (stack->size == 0)\n        return false;\n    *value = stack->data[--stack->size];\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nint stackPop(vector<int> &stack) {\n    if (stack.empty())\n        throw std::underflow_error(\"Stack is empty\");\n    int value = stack.back();\n    stack.pop_back();\n    return value;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static int stackPop(ArrayList<Integer> stack) {\n    if (stack.isEmpty()) throw new IllegalStateException(\"Stack is empty\");\n    return stack.remove(stack.size() - 1);\n  }\n}\n",
+      "Python": "def stack_pop(stack):\n    if not stack:\n        raise IndexError('Stack is empty')\n    return stack.pop()\n",
+      "JavaScript": "function stackPop(stack) {\n  if (stack.length === 0) throw new RangeError(\"Stack is empty\");\n  return stack.pop();\n}\n"
+    },
+    "preconditions": [
+      "Initialize an empty collection; fixed capacity is 32. C uses Sequence stack = {0}; or Sequence queue = {0}; circular storage also starts with {0}."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Empty removals/reads report underflow separately from stored values. Growable collection allocation can add cost."
+    ],
+    "time": "O(1) per operation with reserved storage",
+    "space": "O(1) auxiliary space"
+  },
+  "stack-peek": {
+    "id": "stack-peek",
+    "title": "Read the top",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct {\n    int data[CAPACITY];\n    int size;\n} Sequence;\n\nbool stack_peek(const Sequence *stack, int *value) {\n    if (stack->size == 0)\n        return false;\n    *value = stack->data[stack->size - 1];\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nint stackPeek(const vector<int> &stack) {\n    if (stack.empty())\n        throw std::underflow_error(\"Stack is empty\");\n    return stack.back();\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static int stackPeek(ArrayList<Integer> stack) {\n    if (stack.isEmpty()) throw new IllegalStateException(\"Stack is empty\");\n    return stack.get(stack.size() - 1);\n  }\n}\n",
+      "Python": "def stack_peek(stack):\n    if not stack:\n        raise IndexError('Stack is empty')\n    return stack[-1]\n",
+      "JavaScript": "function stackPeek(stack) {\n  if (stack.length === 0) throw new RangeError(\"Stack is empty\");\n  return stack[stack.length - 1];\n}\n"
+    },
+    "preconditions": [
+      "Initialize an empty collection; fixed capacity is 32. C uses Sequence stack = {0}; or Sequence queue = {0}; circular storage also starts with {0}."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Empty removals/reads report underflow separately from stored values. Growable collection allocation can add cost."
+    ],
+    "time": "O(1) per operation with reserved storage",
+    "space": "O(1) auxiliary space"
+  },
+  "queue-enqueue": {
+    "id": "queue-enqueue",
+    "title": "Join the back",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct {\n    int data[CAPACITY];\n    int size;\n} Sequence;\n\nbool queue_enqueue(Sequence *queue, int value) {\n    if (queue->size == CAPACITY)\n        return false;\n    queue->data[queue->size++] = value;\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nvoid queueEnqueue(vector<int> &queue, int value) {\n    if (queue.size() >= 32)\n        throw std::overflow_error(\"Queue is full\");\n    queue.push_back(value);\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static void queueEnqueue(ArrayList<Integer> queue, int value) {\n    if (queue.size() >= 32) throw new IllegalStateException(\"Queue is full\");\n    queue.add(value);\n  }\n}\n",
+      "Python": "def queue_enqueue(queue, value):\n    if len(queue) >= 32:\n        raise OverflowError('Queue is full')\n    queue.append(value)\n",
+      "JavaScript": "function queueEnqueue(queue, value) {\n  if (queue.length >= 32) throw new RangeError(\"Queue is full\");\n  queue.push(value);\n}\n"
+    },
+    "preconditions": [
+      "Initialize an empty collection; fixed capacity is 32. C uses Sequence stack = {0}; or Sequence queue = {0}; circular storage also starts with {0}."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Empty removals/reads report underflow separately from stored values. Growable collection allocation can add cost."
+    ],
+    "time": "O(1) per operation with reserved storage",
+    "space": "O(1) auxiliary space"
+  },
+  "queue-dequeue": {
+    "id": "queue-dequeue",
+    "title": "Remove from the front",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct {\n    int data[CAPACITY];\n    int size;\n} Sequence;\n\nbool queue_dequeue(Sequence *queue, int *value) {\n    if (queue->size == 0)\n        return false;\n    *value = queue->data[0];\n    for (int i = 1; i < queue->size; i++)\n        queue->data[i - 1] = queue->data[i];\n    queue->size--;\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nint queueDequeue(vector<int> &queue) {\n    if (queue.empty())\n        throw std::underflow_error(\"Queue is empty\");\n    int value = queue[0];\n    for (int i = 1; i < static_cast<int>(queue.size()); i++)\n        queue[i - 1] = queue[i];\n    queue.pop_back();\n    return value;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static int queueDequeue(ArrayList<Integer> queue) {\n    if (queue.isEmpty()) throw new IllegalStateException(\"Queue is empty\");\n    int value = queue.get(0);\n    for (int i = 1; i < queue.size(); i++) queue.set(i - 1, queue.get(i));\n    queue.remove(queue.size() - 1);\n    return value;\n  }\n}\n",
+      "Python": "def queue_dequeue(queue):\n    if not queue:\n        raise IndexError('Queue is empty')\n    removed = queue[0]\n    for i in range(1, len(queue)):\n        queue[i - 1] = queue[i]\n    queue.pop()\n    return removed\n",
+      "JavaScript": "function queueDequeue(queue) {\n  if (queue.length === 0) throw new RangeError(\"Queue is empty\");\n  const removed = queue[0];\n  for (let i = 1; i < queue.length; i++) queue[i - 1] = queue[i];\n  queue.pop();\n  return removed;\n}\n"
+    },
+    "preconditions": [
+      "Initialize an empty collection; fixed capacity is 32. C uses Sequence stack = {0}; or Sequence queue = {0}; circular storage also starts with {0}."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Empty removals/reads report underflow separately from stored values. Growable collection allocation can add cost."
+    ],
+    "time": "O(n) for shifting dequeue",
+    "space": "O(1) auxiliary space"
+  },
+  "queue-inspect": {
+    "id": "queue-inspect",
+    "title": "Read the front",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct {\n    int data[CAPACITY];\n    int size;\n} Sequence;\n\nbool queue_inspect(const Sequence *queue, int *value) {\n    if (queue->size == 0)\n        return false;\n    *value = queue->data[0];\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nint queueInspect(const vector<int> &queue) {\n    if (queue.empty())\n        throw std::underflow_error(\"Queue is empty\");\n    return queue[0];\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static int queueInspect(ArrayList<Integer> queue) {\n    if (queue.isEmpty()) throw new IllegalStateException(\"Queue is empty\");\n    return queue.get(0);\n  }\n}\n",
+      "Python": "def queue_inspect(queue):\n    if not queue:\n        raise IndexError('Queue is empty')\n    return queue[0]\n",
+      "JavaScript": "function queueInspect(queue) {\n  if (queue.length === 0) throw new RangeError(\"Queue is empty\");\n  return queue[0];\n}\n"
+    },
+    "preconditions": [
+      "Initialize an empty collection; fixed capacity is 32. C uses Sequence stack = {0}; or Sequence queue = {0}; circular storage also starts with {0}."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Empty removals/reads report underflow separately from stored values. Growable collection allocation can add cost."
+    ],
+    "time": "O(1) per operation with reserved storage",
+    "space": "O(1) auxiliary space"
+  },
+  "circular-queue": {
+    "id": "circular-queue",
+    "title": "Circular-buffer queue",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct {\n    int data[CAPACITY];\n    int head, size;\n} CircularQueue;\n\nbool circular_enqueue(CircularQueue *queue, int value) {\n    if (queue->size == CAPACITY)\n        return false;\n    int back = (queue->head + queue->size) % CAPACITY;\n    queue->data[back] = value;\n    queue->size++;\n    return true;\n}\nbool circular_dequeue(CircularQueue *queue, int *value) {\n    if (queue->size == 0)\n        return false;\n    *value = queue->data[queue->head];\n    queue->head = (queue->head + 1) % CAPACITY;\n    queue->size--;\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct CircularQueue {\n    vector<int> data = vector<int>(32);\n    int head = 0, size = 0;\n};\n\nvoid circularEnqueue(CircularQueue &queue, int value) {\n    if (queue.size == 32)\n        throw std::overflow_error(\"Queue is full\");\n    int back = (queue.head + queue.size) % 32;\n    queue.data[back] = value;\n    queue.size++;\n}\nint circularDequeue(CircularQueue &queue) {\n    if (queue.size == 0)\n        throw std::underflow_error(\"Queue is empty\");\n    int value = queue.data[queue.head];\n    queue.head = (queue.head + 1) % 32;\n    queue.size--;\n    return value;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class CircularQueue {\n    int[] data = new int[32];\n    int head = 0, size = 0;\n  }\n\n  static void circularEnqueue(CircularQueue queue, int value) {\n    if (queue.size == 32) throw new IllegalStateException(\"Queue is full\");\n    int back = (queue.head + queue.size) % 32;\n    queue.data[back] = value;\n    queue.size++;\n  }\n\n  static int circularDequeue(CircularQueue queue) {\n    if (queue.size == 0) throw new IllegalStateException(\"Queue is empty\");\n    int value = queue.data[queue.head];\n    queue.head = (queue.head + 1) % 32;\n    queue.size--;\n    return value;\n  }\n}\n",
+      "Python": "class CircularQueue:\n    def __init__(self):\n        self.data = [0] * 32\n        self.head = 0\n        self.size = 0\n\ndef circular_enqueue(queue, value):\n    if queue.size == len(queue.data):\n        raise OverflowError('Queue is full')\n    back = (queue.head + queue.size) % len(queue.data)\n    queue.data[back] = value\n    queue.size += 1\n\ndef circular_dequeue(queue):\n    if queue.size == 0:\n        raise IndexError('Queue is empty')\n    value = queue.data[queue.head]\n    queue.head = (queue.head + 1) % len(queue.data)\n    queue.size -= 1\n    return value\n",
+      "JavaScript": "class CircularQueue {\n  constructor() {\n    this.data = Array(32).fill(0);\n    this.head = 0;\n    this.size = 0;\n  }\n}\n\nfunction circularEnqueue(queue, value) {\n  if (queue.size === queue.data.length) throw new RangeError(\"Queue is full\");\n  const back = (queue.head + queue.size) % queue.data.length;\n  queue.data[back] = value;\n  queue.size++;\n}\nfunction circularDequeue(queue) {\n  if (queue.size === 0) throw new RangeError(\"Queue is empty\");\n  const value = queue.data[queue.head];\n  queue.head = (queue.head + 1) % queue.data.length;\n  queue.size--;\n  return value;\n}\n"
+    },
+    "preconditions": [
+      "Initialize an empty collection; fixed capacity is 32. C uses Sequence stack = {0}; or Sequence queue = {0}; circular storage also starts with {0}."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Empty removals/reads report underflow separately from stored values. Growable collection allocation can add cost."
+    ],
+    "time": "O(1) per operation with reserved storage",
+    "space": "O(1) auxiliary space"
+  },
+  "bst-insert": {
+    "id": "bst-insert",
+    "title": "Insert with strict ordering",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct Tree {\n    int value;\n    struct Tree *left, *right;\n} Tree;\nvoid tree_free(Tree *root) {\n    if (root) {\n        tree_free(root->left);\n        tree_free(root->right);\n        free(root);\n    }\n}\n\nTree *bst_insert(Tree *root, int value) {\n    if (!root) {\n        Tree *node = calloc(1, sizeof *node);\n        if (node)\n            node->value = value;\n        return node;\n    }\n    if (value < root->value)\n        root->left = bst_insert(root->left, value);\n    else if (value > root->value)\n        root->right = bst_insert(root->right, value);\n    return root;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Tree {\n    int value;\n    Tree *left = nullptr, *right = nullptr;\n};\nvoid treeFree(Tree *root) {\n    if (root) {\n        treeFree(root->left);\n        treeFree(root->right);\n        delete root;\n    }\n}\n\nTree *bstInsert(Tree *root, int value) {\n    if (!root)\n        return new Tree{value};\n    if (value < root->value)\n        root->left = bstInsert(root->left, value);\n    else if (value > root->value)\n        root->right = bstInsert(root->right, value);\n    return root;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Tree {\n    int value;\n    Tree left, right;\n\n    Tree(int value) {\n      this.value = value;\n    }\n  }\n\n  static Tree bstInsert(Tree root, int value) {\n    if (root == null) return new Tree(value);\n    if (value < root.value) root.left = bstInsert(root.left, value);\n    else if (value > root.value) root.right = bstInsert(root.right, value);\n    return root;\n  }\n}\n",
+      "Python": "class Tree:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef bst_insert(root, value):\n    if root is None:\n        return Tree(value)\n    if value < root.value:\n        root.left = bst_insert(root.left, value)\n    elif value > root.value:\n        root.right = bst_insert(root.right, value)\n    return root\n",
+      "JavaScript": "class Tree {\n  constructor(value) {\n    this.value = value;\n    this.left = null;\n    this.right = null;\n  }\n}\n\nfunction bstInsert(root, value) {\n  if (root === null) return new Tree(value);\n  if (value < root.value) root.left = bstInsert(root.left, value);\n  else if (value > root.value) root.right = bstInsert(root.right, value);\n  return root;\n}\n"
+    },
+    "preconditions": [
+      "Root is null/None or a strict BST; duplicate inserts are ignored."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Always assign returned roots after insertion/deletion; C/C++ callers release remaining nodes with tree_free/treeFree.",
+      "C insertion can return null if allocation fails for an empty tree."
+    ],
+    "time": "O(h), where h is tree height",
+    "space": "O(h) recursive stack; iterative search uses O(1)"
+  },
+  "bst-search": {
+    "id": "bst-search",
+    "title": "Follow a search route",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct Tree {\n    int value;\n    struct Tree *left, *right;\n} Tree;\nvoid tree_free(Tree *root) {\n    if (root) {\n        tree_free(root->left);\n        tree_free(root->right);\n        free(root);\n    }\n}\n\nconst Tree *bst_search(const Tree *root, int value) {\n    while (root && root->value != value)\n        root = value < root->value ? root->left : root->right;\n    return root;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Tree {\n    int value;\n    Tree *left = nullptr, *right = nullptr;\n};\nvoid treeFree(Tree *root) {\n    if (root) {\n        treeFree(root->left);\n        treeFree(root->right);\n        delete root;\n    }\n}\n\nconst Tree *bstSearch(const Tree *root, int value) {\n    while (root && root->value != value)\n        root = value < root->value ? root->left : root->right;\n    return root;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Tree {\n    int value;\n    Tree left, right;\n\n    Tree(int value) {\n      this.value = value;\n    }\n  }\n\n  static Tree bstSearch(Tree root, int value) {\n    while (root != null && root.value != value) root = value < root.value ? root.left : root.right;\n    return root;\n  }\n}\n",
+      "Python": "class Tree:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef bst_search(root, value):\n    while root is not None and root.value != value:\n        root = root.left if value < root.value else root.right\n    return root\n",
+      "JavaScript": "class Tree {\n  constructor(value) {\n    this.value = value;\n    this.left = null;\n    this.right = null;\n  }\n}\n\nfunction bstSearch(root, value) {\n  while (root !== null && root.value !== value)\n    root = value < root.value ? root.left : root.right;\n  return root;\n}\n"
+    },
+    "preconditions": [
+      "Root is null/None or a strict BST; duplicate inserts are ignored."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Always assign returned roots after insertion/deletion; C/C++ callers release remaining nodes with tree_free/treeFree.",
+      "C insertion can return null if allocation fails for an empty tree."
+    ],
+    "time": "O(h), where h is tree height",
+    "space": "O(h) recursive stack; iterative search uses O(1)"
+  },
+  "bst-delete": {
+    "id": "bst-delete",
+    "title": "Delete across all three cases",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct Tree {\n    int value;\n    struct Tree *left, *right;\n} Tree;\nvoid tree_free(Tree *root) {\n    if (root) {\n        tree_free(root->left);\n        tree_free(root->right);\n        free(root);\n    }\n}\n\nTree *bst_delete(Tree *root, int value) {\n    if (!root)\n        return NULL;\n    if (value < root->value)\n        root->left = bst_delete(root->left, value);\n    else if (value > root->value)\n        root->right = bst_delete(root->right, value);\n    else {\n        if (!root->left || !root->right) {\n            Tree *child = root->left ? root->left : root->right;\n            free(root);\n            return child;\n        }\n        Tree *successor = root->right;\n        while (successor->left)\n            successor = successor->left;\n        root->value = successor->value;\n        root->right = bst_delete(root->right, successor->value);\n    }\n    return root;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Tree {\n    int value;\n    Tree *left = nullptr, *right = nullptr;\n};\nvoid treeFree(Tree *root) {\n    if (root) {\n        treeFree(root->left);\n        treeFree(root->right);\n        delete root;\n    }\n}\n\nTree *bstDelete(Tree *root, int value) {\n    if (!root)\n        return nullptr;\n    if (value < root->value)\n        root->left = bstDelete(root->left, value);\n    else if (value > root->value)\n        root->right = bstDelete(root->right, value);\n    else {\n        if (!root->left || !root->right) {\n            Tree *child = root->left ? root->left : root->right;\n            delete root;\n            return child;\n        }\n        Tree *successor = root->right;\n        while (successor->left)\n            successor = successor->left;\n        root->value = successor->value;\n        root->right = bstDelete(root->right, successor->value);\n    }\n    return root;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Tree {\n    int value;\n    Tree left, right;\n\n    Tree(int value) {\n      this.value = value;\n    }\n  }\n\n  static Tree bstDelete(Tree root, int value) {\n    if (root == null) return null;\n    if (value < root.value) root.left = bstDelete(root.left, value);\n    else if (value > root.value) root.right = bstDelete(root.right, value);\n    else {\n      if (root.left == null) return root.right;\n      if (root.right == null) return root.left;\n      Tree successor = root.right;\n      while (successor.left != null) successor = successor.left;\n      root.value = successor.value;\n      root.right = bstDelete(root.right, successor.value);\n    }\n    return root;\n  }\n}\n",
+      "Python": "class Tree:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef bst_delete(root, value):\n    if root is None:\n        return None\n    if value < root.value:\n        root.left = bst_delete(root.left, value)\n    elif value > root.value:\n        root.right = bst_delete(root.right, value)\n    else:\n        if root.left is None:\n            return root.right\n        if root.right is None:\n            return root.left\n        successor = root.right\n        while successor.left is not None:\n            successor = successor.left\n        root.value = successor.value\n        root.right = bst_delete(root.right, successor.value)\n    return root\n",
+      "JavaScript": "class Tree {\n  constructor(value) {\n    this.value = value;\n    this.left = null;\n    this.right = null;\n  }\n}\n\nfunction bstDelete(root, value) {\n  if (root === null) return null;\n  if (value < root.value) root.left = bstDelete(root.left, value);\n  else if (value > root.value) root.right = bstDelete(root.right, value);\n  else {\n    if (root.left === null) return root.right;\n    if (root.right === null) return root.left;\n    let successor = root.right;\n    while (successor.left !== null) successor = successor.left;\n    root.value = successor.value;\n    root.right = bstDelete(root.right, successor.value);\n  }\n  return root;\n}\n"
+    },
+    "preconditions": [
+      "Root is null/None or a strict BST; duplicate inserts are ignored."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Always assign returned roots after insertion/deletion; C/C++ callers release remaining nodes with tree_free/treeFree.",
+      "C insertion can return null if allocation fails for an empty tree.",
+      "This example copies the successor value and removes its old occurrence. Node identity differs from a relinking deletion."
+    ],
+    "time": "O(h), where h is tree height",
+    "space": "O(h) recursive stack; iterative search uses O(1)"
+  },
+  "bst-inorder": {
+    "id": "bst-inorder",
+    "title": "Left, node, right",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct Tree {\n    int value;\n    struct Tree *left, *right;\n} Tree;\nvoid tree_free(Tree *root) {\n    if (root) {\n        tree_free(root->left);\n        tree_free(root->right);\n        free(root);\n    }\n}\n\nvoid bst_inorder(const Tree *root) {\n    if (!root)\n        return;\n    bst_inorder(root->left);\n    printf(\"%d \", root->value);\n    bst_inorder(root->right);\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Tree {\n    int value;\n    Tree *left = nullptr, *right = nullptr;\n};\nvoid treeFree(Tree *root) {\n    if (root) {\n        treeFree(root->left);\n        treeFree(root->right);\n        delete root;\n    }\n}\n\nvoid bstInorder(const Tree *root) {\n    if (!root)\n        return;\n    bstInorder(root->left);\n    std::cout << root->value << ' ';\n    bstInorder(root->right);\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Tree {\n    int value;\n    Tree left, right;\n\n    Tree(int value) {\n      this.value = value;\n    }\n  }\n\n  static void bstInorder(Tree root) {\n    if (root == null) return;\n    bstInorder(root.left);\n    System.out.print(root.value + \" \");\n    bstInorder(root.right);\n  }\n}\n",
+      "Python": "class Tree:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef bst_inorder(root):\n    if root is None:\n        return\n    bst_inorder(root.left)\n    print(root.value, end=' ')\n    bst_inorder(root.right)\n",
+      "JavaScript": "class Tree {\n  constructor(value) {\n    this.value = value;\n    this.left = null;\n    this.right = null;\n  }\n}\n\nfunction bstInorder(root) {\n  if (root === null) return;\n  bstInorder(root.left);\n  console.log(root.value);\n  bstInorder(root.right);\n}\n"
+    },
+    "preconditions": [
+      "Root is null/None or a strict BST; duplicate inserts are ignored."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Always assign returned roots after insertion/deletion; C/C++ callers release remaining nodes with tree_free/treeFree.",
+      "C insertion can return null if allocation fails for an empty tree."
+    ],
+    "time": "Theta(n) visits, excluding output-device time",
+    "space": "O(h) recursive stack; iterative search uses O(1)"
+  },
+  "bst-preorder": {
+    "id": "bst-preorder",
+    "title": "Node, left, right",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct Tree {\n    int value;\n    struct Tree *left, *right;\n} Tree;\nvoid tree_free(Tree *root) {\n    if (root) {\n        tree_free(root->left);\n        tree_free(root->right);\n        free(root);\n    }\n}\n\nvoid bst_preorder(const Tree *root) {\n    if (!root)\n        return;\n    printf(\"%d \", root->value);\n    bst_preorder(root->left);\n    bst_preorder(root->right);\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Tree {\n    int value;\n    Tree *left = nullptr, *right = nullptr;\n};\nvoid treeFree(Tree *root) {\n    if (root) {\n        treeFree(root->left);\n        treeFree(root->right);\n        delete root;\n    }\n}\n\nvoid bstPreorder(const Tree *root) {\n    if (!root)\n        return;\n    std::cout << root->value << ' ';\n    bstPreorder(root->left);\n    bstPreorder(root->right);\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Tree {\n    int value;\n    Tree left, right;\n\n    Tree(int value) {\n      this.value = value;\n    }\n  }\n\n  static void bstPreorder(Tree root) {\n    if (root == null) return;\n    System.out.print(root.value + \" \");\n    bstPreorder(root.left);\n    bstPreorder(root.right);\n  }\n}\n",
+      "Python": "class Tree:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef bst_preorder(root):\n    if root is None:\n        return\n    print(root.value, end=' ')\n    bst_preorder(root.left)\n    bst_preorder(root.right)\n",
+      "JavaScript": "class Tree {\n  constructor(value) {\n    this.value = value;\n    this.left = null;\n    this.right = null;\n  }\n}\n\nfunction bstPreorder(root) {\n  if (root === null) return;\n  console.log(root.value);\n  bstPreorder(root.left);\n  bstPreorder(root.right);\n}\n"
+    },
+    "preconditions": [
+      "Root is null/None or a strict BST; duplicate inserts are ignored."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Always assign returned roots after insertion/deletion; C/C++ callers release remaining nodes with tree_free/treeFree.",
+      "C insertion can return null if allocation fails for an empty tree."
+    ],
+    "time": "Theta(n) visits, excluding output-device time",
+    "space": "O(h) recursive stack; iterative search uses O(1)"
+  },
+  "bst-postorder": {
+    "id": "bst-postorder",
+    "title": "Left, right, node",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct Tree {\n    int value;\n    struct Tree *left, *right;\n} Tree;\nvoid tree_free(Tree *root) {\n    if (root) {\n        tree_free(root->left);\n        tree_free(root->right);\n        free(root);\n    }\n}\n\nvoid bst_postorder(const Tree *root) {\n    if (!root)\n        return;\n    bst_postorder(root->left);\n    bst_postorder(root->right);\n    printf(\"%d \", root->value);\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Tree {\n    int value;\n    Tree *left = nullptr, *right = nullptr;\n};\nvoid treeFree(Tree *root) {\n    if (root) {\n        treeFree(root->left);\n        treeFree(root->right);\n        delete root;\n    }\n}\n\nvoid bstPostorder(const Tree *root) {\n    if (!root)\n        return;\n    bstPostorder(root->left);\n    bstPostorder(root->right);\n    std::cout << root->value << ' ';\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Tree {\n    int value;\n    Tree left, right;\n\n    Tree(int value) {\n      this.value = value;\n    }\n  }\n\n  static void bstPostorder(Tree root) {\n    if (root == null) return;\n    bstPostorder(root.left);\n    bstPostorder(root.right);\n    System.out.print(root.value + \" \");\n  }\n}\n",
+      "Python": "class Tree:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef bst_postorder(root):\n    if root is None:\n        return\n    bst_postorder(root.left)\n    bst_postorder(root.right)\n    print(root.value, end=' ')\n",
+      "JavaScript": "class Tree {\n  constructor(value) {\n    this.value = value;\n    this.left = null;\n    this.right = null;\n  }\n}\n\nfunction bstPostorder(root) {\n  if (root === null) return;\n  bstPostorder(root.left);\n  bstPostorder(root.right);\n  console.log(root.value);\n}\n"
+    },
+    "preconditions": [
+      "Root is null/None or a strict BST; duplicate inserts are ignored."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Always assign returned roots after insertion/deletion; C/C++ callers release remaining nodes with tree_free/treeFree.",
+      "C insertion can return null if allocation fails for an empty tree."
+    ],
+    "time": "Theta(n) visits, excluding output-device time",
+    "space": "O(h) recursive stack; iterative search uses O(1)"
+  },
+  "graph-create": {
+    "id": "graph-create",
+    "title": "Create and edit an adjacency matrix",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct {\n    int n;\n    bool directed;\n    bool has[VERTICES][VERTICES];\n    int weight[VERTICES][VERTICES];\n} Graph;\n\nbool graph_create(Graph *graph, int n, bool directed) {\n    if (n < 0 || n > VERTICES)\n        return false;\n    *graph = (Graph){.n = n, .directed = directed};\n    return true;\n}\nbool graph_set_edge(Graph *graph, int from, int to, int weight) {\n    if (from < 0 || to < 0 || from >= graph->n || to >= graph->n || weight < -100000 ||\n        weight > 100000)\n        return false;\n    graph->has[from][to] = true;\n    graph->weight[from][to] = weight;\n    if (!graph->directed) {\n        graph->has[to][from] = true;\n        graph->weight[to][from] = weight;\n    }\n    return true;\n}\nbool graph_remove_edge(Graph *graph, int from, int to) {\n    if (from < 0 || to < 0 || from >= graph->n || to >= graph->n)\n        return false;\n    graph->has[from][to] = false;\n    if (!graph->directed)\n        graph->has[to][from] = false;\n    return true;\n}\nint graph_add_vertex(Graph *graph) {\n    if (graph->n == VERTICES)\n        return -1;\n    return graph->n++; /* Newly exposed row/column was cleared by creation/removal. */\n}\nbool graph_remove_vertex(Graph *graph, int at) {\n    if (at < 0 || at >= graph->n)\n        return false;\n    for (int i = at; i + 1 < graph->n; i++)\n        for (int j = 0; j < graph->n; j++) {\n            graph->has[i][j] = graph->has[i + 1][j];\n            graph->weight[i][j] = graph->weight[i + 1][j];\n        }\n    for (int j = at; j + 1 < graph->n; j++)\n        for (int i = 0; i + 1 < graph->n; i++) {\n            graph->has[i][j] = graph->has[i][j + 1];\n            graph->weight[i][j] = graph->weight[i][j + 1];\n        }\n    graph->n--;\n    for (int i = 0; i < VERTICES; i++) {\n        graph->has[graph->n][i] = graph->has[i][graph->n] = false;\n        graph->weight[graph->n][i] = graph->weight[i][graph->n] = 0;\n    }\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Graph {\n    int n;\n    bool directed;\n    vector<vector<bool>> has;\n    vector<vector<int>> weight;\n};\n\nGraph graphCreate(int n, bool directed = false) {\n    if (n < 0 || n > 16)\n        throw std::out_of_range(\"Use 0..16 vertices\");\n    return Graph{n, directed, vector<vector<bool>>(16, vector<bool>(16)),\n                 vector<vector<int>>(16, vector<int>(16))};\n}\nvoid graphSetEdge(Graph &graph, int from, int to, int weight) {\n    if (from < 0 || to < 0 || from >= graph.n || to >= graph.n || weight < -100000 ||\n        weight > 100000)\n        throw std::out_of_range(\"Invalid edge\");\n    graph.has[from][to] = true;\n    graph.weight[from][to] = weight;\n    if (!graph.directed) {\n        graph.has[to][from] = true;\n        graph.weight[to][from] = weight;\n    }\n}\nvoid graphRemoveEdge(Graph &graph, int from, int to) {\n    if (from < 0 || to < 0 || from >= graph.n || to >= graph.n)\n        throw std::out_of_range(\"Invalid endpoint\");\n    graph.has[from][to] = false;\n    if (!graph.directed)\n        graph.has[to][from] = false;\n}\nint graphAddVertex(Graph &graph) {\n    if (graph.n == 16)\n        throw std::overflow_error(\"Graph is full\");\n    return graph.n++;\n}\nvoid graphRemoveVertex(Graph &graph, int index) {\n    if (index < 0 || index >= graph.n)\n        throw std::out_of_range(\"Invalid vertex\");\n    for (int i = index; i + 1 < graph.n; i++)\n        for (int j = 0; j < graph.n; j++) {\n            graph.has[i][j] = graph.has[i + 1][j];\n            graph.weight[i][j] = graph.weight[i + 1][j];\n        }\n    for (int j = index; j + 1 < graph.n; j++)\n        for (int i = 0; i + 1 < graph.n; i++) {\n            graph.has[i][j] = graph.has[i][j + 1];\n            graph.weight[i][j] = graph.weight[i][j + 1];\n        }\n    graph.n--;\n    for (int i = 0; i < 16; i++) {\n        graph.has[graph.n][i] = graph.has[i][graph.n] = false;\n        graph.weight[graph.n][i] = graph.weight[i][graph.n] = 0;\n    }\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Graph {\n    int n;\n    boolean directed;\n    boolean[][] has = new boolean[16][16];\n    int[][] weight = new int[16][16];\n\n    Graph(int n, boolean directed) {\n      if (n < 0 || n > 16) throw new IllegalArgumentException(\"Use 0..16 vertices\");\n      this.n = n;\n      this.directed = directed;\n    }\n  }\n\n  static Graph graphCreate(int n, boolean directed) {\n    return new Graph(n, directed);\n  }\n\n  static void graphSetEdge(Graph graph, int from, int to, int weight) {\n    if (from < 0\n        || to < 0\n        || from >= graph.n\n        || to >= graph.n\n        || weight < -100000\n        || weight > 100000) throw new IllegalArgumentException(\"Invalid edge\");\n    graph.has[from][to] = true;\n    graph.weight[from][to] = weight;\n    if (!graph.directed) {\n      graph.has[to][from] = true;\n      graph.weight[to][from] = weight;\n    }\n  }\n\n  static void graphRemoveEdge(Graph graph, int from, int to) {\n    if (from < 0 || to < 0 || from >= graph.n || to >= graph.n)\n      throw new IndexOutOfBoundsException();\n    graph.has[from][to] = false;\n    if (!graph.directed) graph.has[to][from] = false;\n  }\n\n  static int graphAddVertex(Graph graph) {\n    if (graph.n == 16) throw new IllegalStateException(\"Graph is full\");\n    return graph.n++;\n  }\n\n  static void graphRemoveVertex(Graph graph, int index) {\n    if (index < 0 || index >= graph.n) throw new IndexOutOfBoundsException();\n    for (int i = index; i + 1 < graph.n; i++)\n      for (int j = 0; j < graph.n; j++) {\n        graph.has[i][j] = graph.has[i + 1][j];\n        graph.weight[i][j] = graph.weight[i + 1][j];\n      }\n    for (int j = index; j + 1 < graph.n; j++)\n      for (int i = 0; i + 1 < graph.n; i++) {\n        graph.has[i][j] = graph.has[i][j + 1];\n        graph.weight[i][j] = graph.weight[i][j + 1];\n      }\n    graph.n--;\n    for (int i = 0; i < 16; i++) {\n      graph.has[graph.n][i] = graph.has[i][graph.n] = false;\n      graph.weight[graph.n][i] = graph.weight[i][graph.n] = 0;\n    }\n  }\n}\n",
+      "Python": "class Graph:\n    def __init__(self, n, directed=False):\n        if not 0 <= n <= 16:\n            raise ValueError('Use 0..16 vertices')\n        self.n = n\n        self.directed = directed\n        self.has = [[False] * 16 for _ in range(16)]\n        self.weight = [[0] * 16 for _ in range(16)]\n\ndef graph_create(n, directed=False):\n    return Graph(n, directed)\n\ndef graph_set_edge(graph, source, target, weight):\n    if not (0 <= source < graph.n and 0 <= target < graph.n and -100000 <= weight <= 100000):\n        raise ValueError('Invalid edge')\n    graph.has[source][target], graph.weight[source][target] = True, weight\n    if not graph.directed:\n        graph.has[target][source], graph.weight[target][source] = True, weight\n\ndef graph_remove_edge(graph, source, target):\n    if not (0 <= source < graph.n and 0 <= target < graph.n):\n        raise ValueError('Invalid endpoint')\n    graph.has[source][target] = False\n    if not graph.directed:\n        graph.has[target][source] = False\n\ndef graph_add_vertex(graph):\n    if graph.n == 16:\n        raise OverflowError('Graph is full')\n    graph.n += 1\n    return graph.n - 1\n\ndef graph_remove_vertex(graph, index):\n    if not 0 <= index < graph.n:\n        raise IndexError('Invalid vertex')\n    keep = [i for i in range(graph.n) if i != index]\n    old_has, old_weight = graph.has, graph.weight\n    graph.has = [[False] * 16 for _ in range(16)]\n    graph.weight = [[0] * 16 for _ in range(16)]\n    for i, source in enumerate(keep):\n        for j, target in enumerate(keep):\n            graph.has[i][j] = old_has[source][target]\n            graph.weight[i][j] = old_weight[source][target]\n    graph.n -= 1\n",
+      "JavaScript": "class Graph {\n  constructor(n, directed = false) {\n    if (!Number.isInteger(n) || n < 0 || n > 16)\n      throw new RangeError(\"Use 0..16 vertices\");\n    this.n = n;\n    this.directed = directed;\n    this.has = Array.from({ length: 16 }, () => Array(16).fill(false));\n    this.weight = Array.from({ length: 16 }, () => Array(16).fill(0));\n  }\n}\n\nfunction graphCreate(n, directed = false) {\n  return new Graph(n, directed);\n}\nfunction graphSetEdge(graph, from, to, weight) {\n  if (\n    !Number.isInteger(from) ||\n    !Number.isInteger(to) ||\n    !Number.isInteger(weight) ||\n    from < 0 ||\n    to < 0 ||\n    from >= graph.n ||\n    to >= graph.n ||\n    Math.abs(weight) > 100000\n  )\n    throw new RangeError(\"Invalid edge\");\n  graph.has[from][to] = true;\n  graph.weight[from][to] = weight;\n  if (!graph.directed) {\n    graph.has[to][from] = true;\n    graph.weight[to][from] = weight;\n  }\n}\nfunction graphRemoveEdge(graph, from, to) {\n  if (from < 0 || to < 0 || from >= graph.n || to >= graph.n)\n    throw new RangeError(\"Invalid endpoint\");\n  graph.has[from][to] = false;\n  if (!graph.directed) graph.has[to][from] = false;\n}\nfunction graphAddVertex(graph) {\n  if (graph.n === 16) throw new RangeError(\"Graph is full\");\n  return graph.n++;\n}\nfunction graphRemoveVertex(graph, index) {\n  if (!Number.isInteger(index) || index < 0 || index >= graph.n)\n    throw new RangeError(\"Invalid vertex\");\n  for (let i = index; i + 1 < graph.n; i++)\n    for (let j = 0; j < graph.n; j++) {\n      graph.has[i][j] = graph.has[i + 1][j];\n      graph.weight[i][j] = graph.weight[i + 1][j];\n    }\n  for (let j = index; j + 1 < graph.n; j++)\n    for (let i = 0; i + 1 < graph.n; i++) {\n      graph.has[i][j] = graph.has[i][j + 1];\n      graph.weight[i][j] = graph.weight[i][j + 1];\n    }\n  graph.n--;\n  for (let i = 0; i < 16; i++) {\n    graph.has[graph.n][i] = graph.has[i][graph.n] = false;\n    graph.weight[graph.n][i] = graph.weight[i][graph.n] = 0;\n  }\n}\n"
+    },
+    "preconditions": [
+      "Use at most 16 vertices and integer weights between -100000 and 100000. Matrix examples use indices 0..V-1, distinct from diagram labels."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Matrix presence and weight are separate, so zero weights are valid. Graph construction/setup is shown with the example.",
+      "Removing a matrix vertex shifts indices. Diagram labels remain conceptual vertex identities."
+    ],
+    "time": "O(V²) matrix work",
+    "space": "O(V²) graph storage"
+  },
+  "bfs": {
+    "id": "bfs",
+    "title": "Breadth-first traversal with a matrix",
+    "alternatives": [
+      "bfs-list"
+    ],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct {\n    int n;\n    bool directed;\n    bool has[VERTICES][VERTICES];\n    int weight[VERTICES][VERTICES];\n} Graph;\n\nint bfs(const Graph *graph, int source, int order[]) {\n    if (source < 0 || source >= graph->n)\n        return -1;\n    bool seen[VERTICES] = {false};\n    int queue[VERTICES], head = 0, tail = 0, count = 0;\n    queue[tail++] = source;\n    seen[source] = true;\n    while (head < tail) {\n        int from = queue[head++];\n        order[count++] = from;\n        for (int to = 0; to < graph->n; to++)\n            if (graph->has[from][to] && !seen[to]) {\n                seen[to] = true;\n                queue[tail++] = to;\n            }\n    }\n    return count;\n}\n\nbool graph_create(Graph *graph, int n, bool directed) {\n    if (n < 0 || n > VERTICES)\n        return false;\n    *graph = (Graph){.n = n, .directed = directed};\n    return true;\n}\nbool graph_set_edge(Graph *graph, int from, int to, int weight) {\n    if (from < 0 || to < 0 || from >= graph->n || to >= graph->n || weight < -100000 ||\n        weight > 100000)\n        return false;\n    graph->has[from][to] = true;\n    graph->weight[from][to] = weight;\n    if (!graph->directed) {\n        graph->has[to][from] = true;\n        graph->weight[to][from] = weight;\n    }\n    return true;\n}\nbool graph_remove_edge(Graph *graph, int from, int to) {\n    if (from < 0 || to < 0 || from >= graph->n || to >= graph->n)\n        return false;\n    graph->has[from][to] = false;\n    if (!graph->directed)\n        graph->has[to][from] = false;\n    return true;\n}\nint graph_add_vertex(Graph *graph) {\n    if (graph->n == VERTICES)\n        return -1;\n    return graph->n++; /* Newly exposed row/column was cleared by creation/removal. */\n}\nbool graph_remove_vertex(Graph *graph, int at) {\n    if (at < 0 || at >= graph->n)\n        return false;\n    for (int i = at; i + 1 < graph->n; i++)\n        for (int j = 0; j < graph->n; j++) {\n            graph->has[i][j] = graph->has[i + 1][j];\n            graph->weight[i][j] = graph->weight[i + 1][j];\n        }\n    for (int j = at; j + 1 < graph->n; j++)\n        for (int i = 0; i + 1 < graph->n; i++) {\n            graph->has[i][j] = graph->has[i][j + 1];\n            graph->weight[i][j] = graph->weight[i][j + 1];\n        }\n    graph->n--;\n    for (int i = 0; i < VERTICES; i++) {\n        graph->has[graph->n][i] = graph->has[i][graph->n] = false;\n        graph->weight[graph->n][i] = graph->weight[i][graph->n] = 0;\n    }\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Graph {\n    int n;\n    bool directed;\n    vector<vector<bool>> has;\n    vector<vector<int>> weight;\n};\n\nvector<int> bfs(const Graph &graph, int source) {\n    if (source < 0 || source >= graph.n)\n        throw std::out_of_range(\"Invalid source\");\n    vector<bool> seen(graph.n);\n    vector<int> queue{source}, order;\n    seen[source] = true;\n    for (size_t head = 0; head < queue.size(); head++) {\n        int from = queue[head];\n        order.push_back(from);\n        for (int to = 0; to < graph.n; to++)\n            if (graph.has[from][to] && !seen[to]) {\n                seen[to] = true;\n                queue.push_back(to);\n            }\n    }\n    return order;\n}\n\nGraph graphCreate(int n, bool directed = false) {\n    if (n < 0 || n > 16)\n        throw std::out_of_range(\"Use 0..16 vertices\");\n    return Graph{n, directed, vector<vector<bool>>(16, vector<bool>(16)),\n                 vector<vector<int>>(16, vector<int>(16))};\n}\nvoid graphSetEdge(Graph &graph, int from, int to, int weight) {\n    if (from < 0 || to < 0 || from >= graph.n || to >= graph.n || weight < -100000 ||\n        weight > 100000)\n        throw std::out_of_range(\"Invalid edge\");\n    graph.has[from][to] = true;\n    graph.weight[from][to] = weight;\n    if (!graph.directed) {\n        graph.has[to][from] = true;\n        graph.weight[to][from] = weight;\n    }\n}\nvoid graphRemoveEdge(Graph &graph, int from, int to) {\n    if (from < 0 || to < 0 || from >= graph.n || to >= graph.n)\n        throw std::out_of_range(\"Invalid endpoint\");\n    graph.has[from][to] = false;\n    if (!graph.directed)\n        graph.has[to][from] = false;\n}\nint graphAddVertex(Graph &graph) {\n    if (graph.n == 16)\n        throw std::overflow_error(\"Graph is full\");\n    return graph.n++;\n}\nvoid graphRemoveVertex(Graph &graph, int index) {\n    if (index < 0 || index >= graph.n)\n        throw std::out_of_range(\"Invalid vertex\");\n    for (int i = index; i + 1 < graph.n; i++)\n        for (int j = 0; j < graph.n; j++) {\n            graph.has[i][j] = graph.has[i + 1][j];\n            graph.weight[i][j] = graph.weight[i + 1][j];\n        }\n    for (int j = index; j + 1 < graph.n; j++)\n        for (int i = 0; i + 1 < graph.n; i++) {\n            graph.has[i][j] = graph.has[i][j + 1];\n            graph.weight[i][j] = graph.weight[i][j + 1];\n        }\n    graph.n--;\n    for (int i = 0; i < 16; i++) {\n        graph.has[graph.n][i] = graph.has[i][graph.n] = false;\n        graph.weight[graph.n][i] = graph.weight[i][graph.n] = 0;\n    }\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Graph {\n    int n;\n    boolean directed;\n    boolean[][] has = new boolean[16][16];\n    int[][] weight = new int[16][16];\n\n    Graph(int n, boolean directed) {\n      if (n < 0 || n > 16) throw new IllegalArgumentException(\"Use 0..16 vertices\");\n      this.n = n;\n      this.directed = directed;\n    }\n  }\n\n  static List<Integer> bfs(Graph graph, int source) {\n    if (source < 0 || source >= graph.n) throw new IndexOutOfBoundsException();\n    boolean[] seen = new boolean[graph.n];\n    List<Integer> queue = new ArrayList<>(), order = new ArrayList<>();\n    queue.add(source);\n    seen[source] = true;\n    for (int head = 0; head < queue.size(); head++) {\n      int from = queue.get(head);\n      order.add(from);\n      for (int to = 0; to < graph.n; to++)\n        if (graph.has[from][to] && !seen[to]) {\n          seen[to] = true;\n          queue.add(to);\n        }\n    }\n    return order;\n  }\n\n  static Graph graphCreate(int n, boolean directed) {\n    return new Graph(n, directed);\n  }\n\n  static void graphSetEdge(Graph graph, int from, int to, int weight) {\n    if (from < 0\n        || to < 0\n        || from >= graph.n\n        || to >= graph.n\n        || weight < -100000\n        || weight > 100000) throw new IllegalArgumentException(\"Invalid edge\");\n    graph.has[from][to] = true;\n    graph.weight[from][to] = weight;\n    if (!graph.directed) {\n      graph.has[to][from] = true;\n      graph.weight[to][from] = weight;\n    }\n  }\n\n  static void graphRemoveEdge(Graph graph, int from, int to) {\n    if (from < 0 || to < 0 || from >= graph.n || to >= graph.n)\n      throw new IndexOutOfBoundsException();\n    graph.has[from][to] = false;\n    if (!graph.directed) graph.has[to][from] = false;\n  }\n\n  static int graphAddVertex(Graph graph) {\n    if (graph.n == 16) throw new IllegalStateException(\"Graph is full\");\n    return graph.n++;\n  }\n\n  static void graphRemoveVertex(Graph graph, int index) {\n    if (index < 0 || index >= graph.n) throw new IndexOutOfBoundsException();\n    for (int i = index; i + 1 < graph.n; i++)\n      for (int j = 0; j < graph.n; j++) {\n        graph.has[i][j] = graph.has[i + 1][j];\n        graph.weight[i][j] = graph.weight[i + 1][j];\n      }\n    for (int j = index; j + 1 < graph.n; j++)\n      for (int i = 0; i + 1 < graph.n; i++) {\n        graph.has[i][j] = graph.has[i][j + 1];\n        graph.weight[i][j] = graph.weight[i][j + 1];\n      }\n    graph.n--;\n    for (int i = 0; i < 16; i++) {\n      graph.has[graph.n][i] = graph.has[i][graph.n] = false;\n      graph.weight[graph.n][i] = graph.weight[i][graph.n] = 0;\n    }\n  }\n}\n",
+      "Python": "class Graph:\n    def __init__(self, n, directed=False):\n        if not 0 <= n <= 16:\n            raise ValueError('Use 0..16 vertices')\n        self.n = n\n        self.directed = directed\n        self.has = [[False] * 16 for _ in range(16)]\n        self.weight = [[0] * 16 for _ in range(16)]\n\ndef bfs(graph, source):\n    if not 0 <= source < graph.n:\n        raise IndexError('Invalid source')\n    seen, queue, order = [False] * graph.n, [source], []\n    seen[source] = True\n    head = 0\n    while head < len(queue):\n        current = queue[head]\n        head += 1\n        order.append(current)\n        for neighbor in range(graph.n):\n            if graph.has[current][neighbor] and not seen[neighbor]:\n                seen[neighbor] = True\n                queue.append(neighbor)\n    return order\n\ndef graph_create(n, directed=False):\n    return Graph(n, directed)\n\ndef graph_set_edge(graph, source, target, weight):\n    if not (0 <= source < graph.n and 0 <= target < graph.n and -100000 <= weight <= 100000):\n        raise ValueError('Invalid edge')\n    graph.has[source][target], graph.weight[source][target] = True, weight\n    if not graph.directed:\n        graph.has[target][source], graph.weight[target][source] = True, weight\n\ndef graph_remove_edge(graph, source, target):\n    if not (0 <= source < graph.n and 0 <= target < graph.n):\n        raise ValueError('Invalid endpoint')\n    graph.has[source][target] = False\n    if not graph.directed:\n        graph.has[target][source] = False\n\ndef graph_add_vertex(graph):\n    if graph.n == 16:\n        raise OverflowError('Graph is full')\n    graph.n += 1\n    return graph.n - 1\n\ndef graph_remove_vertex(graph, index):\n    if not 0 <= index < graph.n:\n        raise IndexError('Invalid vertex')\n    keep = [i for i in range(graph.n) if i != index]\n    old_has, old_weight = graph.has, graph.weight\n    graph.has = [[False] * 16 for _ in range(16)]\n    graph.weight = [[0] * 16 for _ in range(16)]\n    for i, source in enumerate(keep):\n        for j, target in enumerate(keep):\n            graph.has[i][j] = old_has[source][target]\n            graph.weight[i][j] = old_weight[source][target]\n    graph.n -= 1\n",
+      "JavaScript": "class Graph {\n  constructor(n, directed = false) {\n    if (!Number.isInteger(n) || n < 0 || n > 16)\n      throw new RangeError(\"Use 0..16 vertices\");\n    this.n = n;\n    this.directed = directed;\n    this.has = Array.from({ length: 16 }, () => Array(16).fill(false));\n    this.weight = Array.from({ length: 16 }, () => Array(16).fill(0));\n  }\n}\n\nfunction bfs(graph, source) {\n  if (!Number.isInteger(source) || source < 0 || source >= graph.n)\n    throw new RangeError(\"Invalid source\");\n  const seen = Array(graph.n).fill(false),\n    queue = [source],\n    order = [];\n  seen[source] = true;\n  for (let head = 0; head < queue.length; head++) {\n    const from = queue[head];\n    order.push(from);\n    for (let to = 0; to < graph.n; to++)\n      if (graph.has[from][to] && !seen[to]) {\n        seen[to] = true;\n        queue.push(to);\n      }\n  }\n  return order;\n}\n\nfunction graphCreate(n, directed = false) {\n  return new Graph(n, directed);\n}\nfunction graphSetEdge(graph, from, to, weight) {\n  if (\n    !Number.isInteger(from) ||\n    !Number.isInteger(to) ||\n    !Number.isInteger(weight) ||\n    from < 0 ||\n    to < 0 ||\n    from >= graph.n ||\n    to >= graph.n ||\n    Math.abs(weight) > 100000\n  )\n    throw new RangeError(\"Invalid edge\");\n  graph.has[from][to] = true;\n  graph.weight[from][to] = weight;\n  if (!graph.directed) {\n    graph.has[to][from] = true;\n    graph.weight[to][from] = weight;\n  }\n}\nfunction graphRemoveEdge(graph, from, to) {\n  if (from < 0 || to < 0 || from >= graph.n || to >= graph.n)\n    throw new RangeError(\"Invalid endpoint\");\n  graph.has[from][to] = false;\n  if (!graph.directed) graph.has[to][from] = false;\n}\nfunction graphAddVertex(graph) {\n  if (graph.n === 16) throw new RangeError(\"Graph is full\");\n  return graph.n++;\n}\nfunction graphRemoveVertex(graph, index) {\n  if (!Number.isInteger(index) || index < 0 || index >= graph.n)\n    throw new RangeError(\"Invalid vertex\");\n  for (let i = index; i + 1 < graph.n; i++)\n    for (let j = 0; j < graph.n; j++) {\n      graph.has[i][j] = graph.has[i + 1][j];\n      graph.weight[i][j] = graph.weight[i + 1][j];\n    }\n  for (let j = index; j + 1 < graph.n; j++)\n    for (let i = 0; i + 1 < graph.n; i++) {\n      graph.has[i][j] = graph.has[i][j + 1];\n      graph.weight[i][j] = graph.weight[i][j + 1];\n    }\n  graph.n--;\n  for (let i = 0; i < 16; i++) {\n    graph.has[graph.n][i] = graph.has[i][graph.n] = false;\n    graph.weight[graph.n][i] = graph.weight[i][graph.n] = 0;\n  }\n}\n"
+    },
+    "preconditions": [
+      "Use at most 16 vertices and integer weights between -100000 and 100000. Matrix examples use indices 0..V-1, distinct from diagram labels."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Matrix presence and weight are separate, so zero weights are valid. Graph construction/setup is shown with the example."
+    ],
+    "time": "O(V²) matrix work",
+    "space": "O(V) traversal storage beyond the graph; the matrix itself is O(V²)"
+  },
+  "bfs-list": {
+    "id": "bfs-list",
+    "title": "Breadth-first traversal with lists",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\nint bfs_list(const int neighbors[VERTICES][VERTICES], const int degrees[], int n, int source,\n             int order[]) {\n    if (n < 0 || n > VERTICES || source < 0 || source >= n)\n        return -1;\n    bool seen[VERTICES] = {false};\n    int queue[VERTICES], head = 0, tail = 0, count = 0;\n    queue[tail++] = source;\n    seen[source] = true;\n    while (head < tail) {\n        int from = queue[head++];\n        order[count++] = from;\n        for (int j = 0; j < degrees[from]; j++) {\n            int to = neighbors[from][j];\n            if (!seen[to]) {\n                seen[to] = true;\n                queue[tail++] = to;\n            }\n        }\n    }\n    return count;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nvector<int> bfsList(const vector<vector<int>> &neighbors, int source) {\n    if (source < 0 || source >= static_cast<int>(neighbors.size()))\n        throw std::out_of_range(\"Invalid source\");\n    vector<bool> seen(neighbors.size());\n    vector<int> queue{source}, order;\n    seen[source] = true;\n    for (size_t head = 0; head < queue.size(); head++) {\n        int from = queue[head];\n        order.push_back(from);\n        for (int to : neighbors[from])\n            if (!seen[to]) {\n                seen[to] = true;\n                queue.push_back(to);\n            }\n    }\n    return order;\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static List<Integer> bfsList(List<List<Integer>> neighbors, int source) {\n    if (source < 0 || source >= neighbors.size()) throw new IndexOutOfBoundsException();\n    boolean[] seen = new boolean[neighbors.size()];\n    List<Integer> queue = new ArrayList<>(), order = new ArrayList<>();\n    queue.add(source);\n    seen[source] = true;\n    for (int head = 0; head < queue.size(); head++) {\n      int from = queue.get(head);\n      order.add(from);\n      for (int to : neighbors.get(from))\n        if (!seen[to]) {\n          seen[to] = true;\n          queue.add(to);\n        }\n    }\n    return order;\n  }\n}\n",
+      "Python": "def bfs_list(neighbors, source):\n    if not 0 <= source < len(neighbors):\n        raise IndexError('Invalid source')\n    seen, queue, order = {source}, [source], []\n    head = 0\n    while head < len(queue):\n        current = queue[head]\n        head += 1\n        order.append(current)\n        for neighbor in neighbors[current]:\n            if neighbor not in seen:\n                seen.add(neighbor)\n                queue.append(neighbor)\n    return order\n",
+      "JavaScript": "function bfsList(neighbors, source) {\n  if (!Number.isInteger(source) || source < 0 || source >= neighbors.length)\n    throw new RangeError(\"Invalid source\");\n  const seen = new Set([source]),\n    queue = [source],\n    order = [];\n  for (let head = 0; head < queue.length; head++) {\n    const from = queue[head];\n    order.push(from);\n    for (const to of neighbors[from])\n      if (!seen.has(to)) {\n        seen.add(to);\n        queue.push(to);\n      }\n  }\n  return order;\n}\n"
+    },
+    "preconditions": [
+      "Use at most 16 vertices and integer weights between -100000 and 100000. Matrix examples use indices 0..V-1, distinct from diagram labels.",
+      "All neighbor indices must be in range; C degree counts must be between 0 and V."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Matrix presence and weight are separate, so zero weights are valid. Graph construction/setup is shown with the example.",
+      "Adjacency-list setup: one neighbor collection per vertex; use outgoing neighbors for directed graphs."
+    ],
+    "time": "O(V+E) adjacency-list traversal",
+    "space": "O(V) traversal storage beyond the graph; the matrix itself is O(V²)"
+  },
+  "dfs": {
+    "id": "dfs",
+    "title": "Explicit-path depth-first traversal",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct {\n    int n;\n    bool directed;\n    bool has[VERTICES][VERTICES];\n    int weight[VERTICES][VERTICES];\n} Graph;\n\nint dfs(const Graph *graph, int source, int order[]) {\n    if (source < 0 || source >= graph->n)\n        return -1;\n    bool seen[VERTICES] = {false};\n    int path[VERTICES], next[VERTICES] = {0}, size = 0, count = 0;\n    path[size++] = source;\n    seen[source] = true;\n    order[count++] = source;\n    while (size) {\n        int from = path[size - 1];\n        while (next[from] < graph->n && (!graph->has[from][next[from]] || seen[next[from]]))\n            next[from]++;\n        if (next[from] == graph->n)\n            size--;\n        else {\n            int to = next[from]++;\n            seen[to] = true;\n            order[count++] = to;\n            path[size++] = to;\n        }\n    }\n    return count;\n}\n\nbool graph_create(Graph *graph, int n, bool directed) {\n    if (n < 0 || n > VERTICES)\n        return false;\n    *graph = (Graph){.n = n, .directed = directed};\n    return true;\n}\nbool graph_set_edge(Graph *graph, int from, int to, int weight) {\n    if (from < 0 || to < 0 || from >= graph->n || to >= graph->n || weight < -100000 ||\n        weight > 100000)\n        return false;\n    graph->has[from][to] = true;\n    graph->weight[from][to] = weight;\n    if (!graph->directed) {\n        graph->has[to][from] = true;\n        graph->weight[to][from] = weight;\n    }\n    return true;\n}\nbool graph_remove_edge(Graph *graph, int from, int to) {\n    if (from < 0 || to < 0 || from >= graph->n || to >= graph->n)\n        return false;\n    graph->has[from][to] = false;\n    if (!graph->directed)\n        graph->has[to][from] = false;\n    return true;\n}\nint graph_add_vertex(Graph *graph) {\n    if (graph->n == VERTICES)\n        return -1;\n    return graph->n++; /* Newly exposed row/column was cleared by creation/removal. */\n}\nbool graph_remove_vertex(Graph *graph, int at) {\n    if (at < 0 || at >= graph->n)\n        return false;\n    for (int i = at; i + 1 < graph->n; i++)\n        for (int j = 0; j < graph->n; j++) {\n            graph->has[i][j] = graph->has[i + 1][j];\n            graph->weight[i][j] = graph->weight[i + 1][j];\n        }\n    for (int j = at; j + 1 < graph->n; j++)\n        for (int i = 0; i + 1 < graph->n; i++) {\n            graph->has[i][j] = graph->has[i][j + 1];\n            graph->weight[i][j] = graph->weight[i][j + 1];\n        }\n    graph->n--;\n    for (int i = 0; i < VERTICES; i++) {\n        graph->has[graph->n][i] = graph->has[i][graph->n] = false;\n        graph->weight[graph->n][i] = graph->weight[i][graph->n] = 0;\n    }\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Graph {\n    int n;\n    bool directed;\n    vector<vector<bool>> has;\n    vector<vector<int>> weight;\n};\n\nvector<int> dfs(const Graph &graph, int source) {\n    if (source < 0 || source >= graph.n)\n        throw std::out_of_range(\"Invalid source\");\n    vector<bool> seen(graph.n);\n    vector<int> path{source}, next(graph.n), order{source};\n    seen[source] = true;\n    while (!path.empty()) {\n        int from = path.back();\n        while (next[from] < graph.n && (!graph.has[from][next[from]] || seen[next[from]]))\n            next[from]++;\n        if (next[from] == graph.n)\n            path.pop_back();\n        else {\n            int to = next[from]++;\n            seen[to] = true;\n            order.push_back(to);\n            path.push_back(to);\n        }\n    }\n    return order;\n}\n\nGraph graphCreate(int n, bool directed = false) {\n    if (n < 0 || n > 16)\n        throw std::out_of_range(\"Use 0..16 vertices\");\n    return Graph{n, directed, vector<vector<bool>>(16, vector<bool>(16)),\n                 vector<vector<int>>(16, vector<int>(16))};\n}\nvoid graphSetEdge(Graph &graph, int from, int to, int weight) {\n    if (from < 0 || to < 0 || from >= graph.n || to >= graph.n || weight < -100000 ||\n        weight > 100000)\n        throw std::out_of_range(\"Invalid edge\");\n    graph.has[from][to] = true;\n    graph.weight[from][to] = weight;\n    if (!graph.directed) {\n        graph.has[to][from] = true;\n        graph.weight[to][from] = weight;\n    }\n}\nvoid graphRemoveEdge(Graph &graph, int from, int to) {\n    if (from < 0 || to < 0 || from >= graph.n || to >= graph.n)\n        throw std::out_of_range(\"Invalid endpoint\");\n    graph.has[from][to] = false;\n    if (!graph.directed)\n        graph.has[to][from] = false;\n}\nint graphAddVertex(Graph &graph) {\n    if (graph.n == 16)\n        throw std::overflow_error(\"Graph is full\");\n    return graph.n++;\n}\nvoid graphRemoveVertex(Graph &graph, int index) {\n    if (index < 0 || index >= graph.n)\n        throw std::out_of_range(\"Invalid vertex\");\n    for (int i = index; i + 1 < graph.n; i++)\n        for (int j = 0; j < graph.n; j++) {\n            graph.has[i][j] = graph.has[i + 1][j];\n            graph.weight[i][j] = graph.weight[i + 1][j];\n        }\n    for (int j = index; j + 1 < graph.n; j++)\n        for (int i = 0; i + 1 < graph.n; i++) {\n            graph.has[i][j] = graph.has[i][j + 1];\n            graph.weight[i][j] = graph.weight[i][j + 1];\n        }\n    graph.n--;\n    for (int i = 0; i < 16; i++) {\n        graph.has[graph.n][i] = graph.has[i][graph.n] = false;\n        graph.weight[graph.n][i] = graph.weight[i][graph.n] = 0;\n    }\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Graph {\n    int n;\n    boolean directed;\n    boolean[][] has = new boolean[16][16];\n    int[][] weight = new int[16][16];\n\n    Graph(int n, boolean directed) {\n      if (n < 0 || n > 16) throw new IllegalArgumentException(\"Use 0..16 vertices\");\n      this.n = n;\n      this.directed = directed;\n    }\n  }\n\n  static List<Integer> dfs(Graph graph, int source) {\n    if (source < 0 || source >= graph.n) throw new IndexOutOfBoundsException();\n    boolean[] seen = new boolean[graph.n];\n    int[] next = new int[graph.n];\n    ArrayList<Integer> path = new ArrayList<>(), order = new ArrayList<>();\n    path.add(source);\n    order.add(source);\n    seen[source] = true;\n    while (!path.isEmpty()) {\n      int from = path.get(path.size() - 1);\n      while (next[from] < graph.n && (!graph.has[from][next[from]] || seen[next[from]]))\n        next[from]++;\n      if (next[from] == graph.n) path.remove(path.size() - 1);\n      else {\n        int to = next[from]++;\n        seen[to] = true;\n        order.add(to);\n        path.add(to);\n      }\n    }\n    return order;\n  }\n\n  static Graph graphCreate(int n, boolean directed) {\n    return new Graph(n, directed);\n  }\n\n  static void graphSetEdge(Graph graph, int from, int to, int weight) {\n    if (from < 0\n        || to < 0\n        || from >= graph.n\n        || to >= graph.n\n        || weight < -100000\n        || weight > 100000) throw new IllegalArgumentException(\"Invalid edge\");\n    graph.has[from][to] = true;\n    graph.weight[from][to] = weight;\n    if (!graph.directed) {\n      graph.has[to][from] = true;\n      graph.weight[to][from] = weight;\n    }\n  }\n\n  static void graphRemoveEdge(Graph graph, int from, int to) {\n    if (from < 0 || to < 0 || from >= graph.n || to >= graph.n)\n      throw new IndexOutOfBoundsException();\n    graph.has[from][to] = false;\n    if (!graph.directed) graph.has[to][from] = false;\n  }\n\n  static int graphAddVertex(Graph graph) {\n    if (graph.n == 16) throw new IllegalStateException(\"Graph is full\");\n    return graph.n++;\n  }\n\n  static void graphRemoveVertex(Graph graph, int index) {\n    if (index < 0 || index >= graph.n) throw new IndexOutOfBoundsException();\n    for (int i = index; i + 1 < graph.n; i++)\n      for (int j = 0; j < graph.n; j++) {\n        graph.has[i][j] = graph.has[i + 1][j];\n        graph.weight[i][j] = graph.weight[i + 1][j];\n      }\n    for (int j = index; j + 1 < graph.n; j++)\n      for (int i = 0; i + 1 < graph.n; i++) {\n        graph.has[i][j] = graph.has[i][j + 1];\n        graph.weight[i][j] = graph.weight[i][j + 1];\n      }\n    graph.n--;\n    for (int i = 0; i < 16; i++) {\n      graph.has[graph.n][i] = graph.has[i][graph.n] = false;\n      graph.weight[graph.n][i] = graph.weight[i][graph.n] = 0;\n    }\n  }\n}\n",
+      "Python": "class Graph:\n    def __init__(self, n, directed=False):\n        if not 0 <= n <= 16:\n            raise ValueError('Use 0..16 vertices')\n        self.n = n\n        self.directed = directed\n        self.has = [[False] * 16 for _ in range(16)]\n        self.weight = [[0] * 16 for _ in range(16)]\n\ndef dfs(graph, source):\n    if not 0 <= source < graph.n:\n        raise IndexError('Invalid source')\n    seen, path, next_neighbor, order = [False] * graph.n, [source], [0] * graph.n, [source]\n    seen[source] = True\n    while path:\n        current = path[-1]\n        neighbor = next_neighbor[current]\n        while neighbor < graph.n and (not graph.has[current][neighbor] or seen[neighbor]):\n            neighbor += 1\n        next_neighbor[current] = neighbor\n        if neighbor == graph.n:\n            path.pop()\n        else:\n            next_neighbor[current] += 1\n            seen[neighbor] = True\n            order.append(neighbor)\n            path.append(neighbor)\n    return order\n\ndef graph_create(n, directed=False):\n    return Graph(n, directed)\n\ndef graph_set_edge(graph, source, target, weight):\n    if not (0 <= source < graph.n and 0 <= target < graph.n and -100000 <= weight <= 100000):\n        raise ValueError('Invalid edge')\n    graph.has[source][target], graph.weight[source][target] = True, weight\n    if not graph.directed:\n        graph.has[target][source], graph.weight[target][source] = True, weight\n\ndef graph_remove_edge(graph, source, target):\n    if not (0 <= source < graph.n and 0 <= target < graph.n):\n        raise ValueError('Invalid endpoint')\n    graph.has[source][target] = False\n    if not graph.directed:\n        graph.has[target][source] = False\n\ndef graph_add_vertex(graph):\n    if graph.n == 16:\n        raise OverflowError('Graph is full')\n    graph.n += 1\n    return graph.n - 1\n\ndef graph_remove_vertex(graph, index):\n    if not 0 <= index < graph.n:\n        raise IndexError('Invalid vertex')\n    keep = [i for i in range(graph.n) if i != index]\n    old_has, old_weight = graph.has, graph.weight\n    graph.has = [[False] * 16 for _ in range(16)]\n    graph.weight = [[0] * 16 for _ in range(16)]\n    for i, source in enumerate(keep):\n        for j, target in enumerate(keep):\n            graph.has[i][j] = old_has[source][target]\n            graph.weight[i][j] = old_weight[source][target]\n    graph.n -= 1\n",
+      "JavaScript": "class Graph {\n  constructor(n, directed = false) {\n    if (!Number.isInteger(n) || n < 0 || n > 16)\n      throw new RangeError(\"Use 0..16 vertices\");\n    this.n = n;\n    this.directed = directed;\n    this.has = Array.from({ length: 16 }, () => Array(16).fill(false));\n    this.weight = Array.from({ length: 16 }, () => Array(16).fill(0));\n  }\n}\n\nfunction dfs(graph, source) {\n  if (!Number.isInteger(source) || source < 0 || source >= graph.n)\n    throw new RangeError(\"Invalid source\");\n  const seen = Array(graph.n).fill(false),\n    path = [source],\n    next = Array(graph.n).fill(0),\n    order = [source];\n  seen[source] = true;\n  while (path.length) {\n    const from = path[path.length - 1];\n    while (\n      next[from] < graph.n &&\n      (!graph.has[from][next[from]] || seen[next[from]])\n    )\n      next[from]++;\n    if (next[from] === graph.n) path.pop();\n    else {\n      const to = next[from]++;\n      seen[to] = true;\n      order.push(to);\n      path.push(to);\n    }\n  }\n  return order;\n}\n\nfunction graphCreate(n, directed = false) {\n  return new Graph(n, directed);\n}\nfunction graphSetEdge(graph, from, to, weight) {\n  if (\n    !Number.isInteger(from) ||\n    !Number.isInteger(to) ||\n    !Number.isInteger(weight) ||\n    from < 0 ||\n    to < 0 ||\n    from >= graph.n ||\n    to >= graph.n ||\n    Math.abs(weight) > 100000\n  )\n    throw new RangeError(\"Invalid edge\");\n  graph.has[from][to] = true;\n  graph.weight[from][to] = weight;\n  if (!graph.directed) {\n    graph.has[to][from] = true;\n    graph.weight[to][from] = weight;\n  }\n}\nfunction graphRemoveEdge(graph, from, to) {\n  if (from < 0 || to < 0 || from >= graph.n || to >= graph.n)\n    throw new RangeError(\"Invalid endpoint\");\n  graph.has[from][to] = false;\n  if (!graph.directed) graph.has[to][from] = false;\n}\nfunction graphAddVertex(graph) {\n  if (graph.n === 16) throw new RangeError(\"Graph is full\");\n  return graph.n++;\n}\nfunction graphRemoveVertex(graph, index) {\n  if (!Number.isInteger(index) || index < 0 || index >= graph.n)\n    throw new RangeError(\"Invalid vertex\");\n  for (let i = index; i + 1 < graph.n; i++)\n    for (let j = 0; j < graph.n; j++) {\n      graph.has[i][j] = graph.has[i + 1][j];\n      graph.weight[i][j] = graph.weight[i + 1][j];\n    }\n  for (let j = index; j + 1 < graph.n; j++)\n    for (let i = 0; i + 1 < graph.n; i++) {\n      graph.has[i][j] = graph.has[i][j + 1];\n      graph.weight[i][j] = graph.weight[i][j + 1];\n    }\n  graph.n--;\n  for (let i = 0; i < 16; i++) {\n    graph.has[graph.n][i] = graph.has[i][graph.n] = false;\n    graph.weight[graph.n][i] = graph.weight[i][graph.n] = 0;\n  }\n}\n"
+    },
+    "preconditions": [
+      "Use at most 16 vertices and integer weights between -100000 and 100000. Matrix examples use indices 0..V-1, distinct from diagram labels."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Matrix presence and weight are separate, so zero weights are valid. Graph construction/setup is shown with the example."
+    ],
+    "time": "O(V²) matrix work",
+    "space": "O(V) traversal storage beyond the graph; the matrix itself is O(V²)"
+  },
+  "dijkstra": {
+    "id": "dijkstra",
+    "title": "Nonnegative weighted distances",
+    "alternatives": [],
+    "codes": {
+      "C": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n#include <stdlib.h>\n#define CAPACITY 32\n#define VERTICES 16\ntypedef struct {\n    int n;\n    bool directed;\n    bool has[VERTICES][VERTICES];\n    int weight[VERTICES][VERTICES];\n} Graph;\n\nbool dijkstra(const Graph *graph, int source, int distance[]) {\n    if (source < 0 || source >= graph->n)\n        return false;\n    for (int i = 0; i < graph->n; i++)\n        for (int j = 0; j < graph->n; j++)\n            if (graph->has[i][j] && graph->weight[i][j] < 0)\n                return false;\n    bool settled[VERTICES] = {false};\n    for (int i = 0; i < graph->n; i++)\n        distance[i] = INT_MAX;\n    distance[source] = 0;\n    for (int step = 0; step < graph->n; step++) {\n        int from = -1;\n        for (int i = 0; i < graph->n; i++)\n            if (!settled[i] && distance[i] != INT_MAX &&\n                (from < 0 || distance[i] < distance[from]))\n                from = i;\n        if (from < 0)\n            break;\n        settled[from] = true;\n        for (int to = 0; to < graph->n; to++)\n            if (graph->has[from][to] && !settled[to]) {\n                int candidate = distance[from] + graph->weight[from][to];\n                if (candidate < distance[to])\n                    distance[to] = candidate;\n            }\n    }\n    return true;\n}\n\nbool graph_create(Graph *graph, int n, bool directed) {\n    if (n < 0 || n > VERTICES)\n        return false;\n    *graph = (Graph){.n = n, .directed = directed};\n    return true;\n}\nbool graph_set_edge(Graph *graph, int from, int to, int weight) {\n    if (from < 0 || to < 0 || from >= graph->n || to >= graph->n || weight < -100000 ||\n        weight > 100000)\n        return false;\n    graph->has[from][to] = true;\n    graph->weight[from][to] = weight;\n    if (!graph->directed) {\n        graph->has[to][from] = true;\n        graph->weight[to][from] = weight;\n    }\n    return true;\n}\nbool graph_remove_edge(Graph *graph, int from, int to) {\n    if (from < 0 || to < 0 || from >= graph->n || to >= graph->n)\n        return false;\n    graph->has[from][to] = false;\n    if (!graph->directed)\n        graph->has[to][from] = false;\n    return true;\n}\nint graph_add_vertex(Graph *graph) {\n    if (graph->n == VERTICES)\n        return -1;\n    return graph->n++; /* Newly exposed row/column was cleared by creation/removal. */\n}\nbool graph_remove_vertex(Graph *graph, int at) {\n    if (at < 0 || at >= graph->n)\n        return false;\n    for (int i = at; i + 1 < graph->n; i++)\n        for (int j = 0; j < graph->n; j++) {\n            graph->has[i][j] = graph->has[i + 1][j];\n            graph->weight[i][j] = graph->weight[i + 1][j];\n        }\n    for (int j = at; j + 1 < graph->n; j++)\n        for (int i = 0; i + 1 < graph->n; i++) {\n            graph->has[i][j] = graph->has[i][j + 1];\n            graph->weight[i][j] = graph->weight[i][j + 1];\n        }\n    graph->n--;\n    for (int i = 0; i < VERTICES; i++) {\n        graph->has[graph->n][i] = graph->has[i][graph->n] = false;\n        graph->weight[graph->n][i] = graph->weight[i][graph->n] = 0;\n    }\n    return true;\n}\n",
+      "C++": "#include <algorithm>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\nusing std::vector;\nstruct Graph {\n    int n;\n    bool directed;\n    vector<vector<bool>> has;\n    vector<vector<int>> weight;\n};\n\nvector<int> dijkstra(const Graph &graph, int source) {\n    if (source < 0 || source >= graph.n)\n        throw std::out_of_range(\"Invalid source\");\n    for (int i = 0; i < graph.n; i++)\n        for (int j = 0; j < graph.n; j++)\n            if (graph.has[i][j] && graph.weight[i][j] < 0)\n                throw std::invalid_argument(\"Negative weights are not allowed\");\n    const int infinity = std::numeric_limits<int>::max();\n    vector<int> distance(graph.n, infinity);\n    vector<bool> settled(graph.n);\n    distance[source] = 0;\n    for (int step = 0; step < graph.n; step++) {\n        int from = -1;\n        for (int i = 0; i < graph.n; i++)\n            if (!settled[i] && distance[i] != infinity &&\n                (from < 0 || distance[i] < distance[from]))\n                from = i;\n        if (from < 0)\n            break;\n        settled[from] = true;\n        for (int to = 0; to < graph.n; to++)\n            if (graph.has[from][to] && !settled[to]) {\n                int candidate = distance[from] + graph.weight[from][to];\n                if (candidate < distance[to])\n                    distance[to] = candidate;\n            }\n    }\n    return distance;\n}\n\nGraph graphCreate(int n, bool directed = false) {\n    if (n < 0 || n > 16)\n        throw std::out_of_range(\"Use 0..16 vertices\");\n    return Graph{n, directed, vector<vector<bool>>(16, vector<bool>(16)),\n                 vector<vector<int>>(16, vector<int>(16))};\n}\nvoid graphSetEdge(Graph &graph, int from, int to, int weight) {\n    if (from < 0 || to < 0 || from >= graph.n || to >= graph.n || weight < -100000 ||\n        weight > 100000)\n        throw std::out_of_range(\"Invalid edge\");\n    graph.has[from][to] = true;\n    graph.weight[from][to] = weight;\n    if (!graph.directed) {\n        graph.has[to][from] = true;\n        graph.weight[to][from] = weight;\n    }\n}\nvoid graphRemoveEdge(Graph &graph, int from, int to) {\n    if (from < 0 || to < 0 || from >= graph.n || to >= graph.n)\n        throw std::out_of_range(\"Invalid endpoint\");\n    graph.has[from][to] = false;\n    if (!graph.directed)\n        graph.has[to][from] = false;\n}\nint graphAddVertex(Graph &graph) {\n    if (graph.n == 16)\n        throw std::overflow_error(\"Graph is full\");\n    return graph.n++;\n}\nvoid graphRemoveVertex(Graph &graph, int index) {\n    if (index < 0 || index >= graph.n)\n        throw std::out_of_range(\"Invalid vertex\");\n    for (int i = index; i + 1 < graph.n; i++)\n        for (int j = 0; j < graph.n; j++) {\n            graph.has[i][j] = graph.has[i + 1][j];\n            graph.weight[i][j] = graph.weight[i + 1][j];\n        }\n    for (int j = index; j + 1 < graph.n; j++)\n        for (int i = 0; i + 1 < graph.n; i++) {\n            graph.has[i][j] = graph.has[i][j + 1];\n            graph.weight[i][j] = graph.weight[i][j + 1];\n        }\n    graph.n--;\n    for (int i = 0; i < 16; i++) {\n        graph.has[graph.n][i] = graph.has[i][graph.n] = false;\n        graph.weight[graph.n][i] = graph.weight[i][graph.n] = 0;\n    }\n}\n",
+      "Java": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class Example {\n\n  static class Graph {\n    int n;\n    boolean directed;\n    boolean[][] has = new boolean[16][16];\n    int[][] weight = new int[16][16];\n\n    Graph(int n, boolean directed) {\n      if (n < 0 || n > 16) throw new IllegalArgumentException(\"Use 0..16 vertices\");\n      this.n = n;\n      this.directed = directed;\n    }\n  }\n\n  static int[] dijkstra(Graph graph, int source) {\n    if (source < 0 || source >= graph.n) throw new IndexOutOfBoundsException();\n    for (int i = 0; i < graph.n; i++)\n      for (int j = 0; j < graph.n; j++)\n        if (graph.has[i][j] && graph.weight[i][j] < 0)\n          throw new IllegalArgumentException(\"Negative weights are not allowed\");\n    int[] distance = new int[graph.n];\n    Arrays.fill(distance, Integer.MAX_VALUE);\n    boolean[] settled = new boolean[graph.n];\n    distance[source] = 0;\n    for (int step = 0; step < graph.n; step++) {\n      int from = -1;\n      for (int i = 0; i < graph.n; i++)\n        if (!settled[i]\n            && distance[i] != Integer.MAX_VALUE\n            && (from < 0 || distance[i] < distance[from])) from = i;\n      if (from < 0) break;\n      settled[from] = true;\n      for (int to = 0; to < graph.n; to++)\n        if (graph.has[from][to] && !settled[to]) {\n          int candidate = distance[from] + graph.weight[from][to];\n          if (candidate < distance[to]) distance[to] = candidate;\n        }\n    }\n    return distance;\n  }\n\n  static Graph graphCreate(int n, boolean directed) {\n    return new Graph(n, directed);\n  }\n\n  static void graphSetEdge(Graph graph, int from, int to, int weight) {\n    if (from < 0\n        || to < 0\n        || from >= graph.n\n        || to >= graph.n\n        || weight < -100000\n        || weight > 100000) throw new IllegalArgumentException(\"Invalid edge\");\n    graph.has[from][to] = true;\n    graph.weight[from][to] = weight;\n    if (!graph.directed) {\n      graph.has[to][from] = true;\n      graph.weight[to][from] = weight;\n    }\n  }\n\n  static void graphRemoveEdge(Graph graph, int from, int to) {\n    if (from < 0 || to < 0 || from >= graph.n || to >= graph.n)\n      throw new IndexOutOfBoundsException();\n    graph.has[from][to] = false;\n    if (!graph.directed) graph.has[to][from] = false;\n  }\n\n  static int graphAddVertex(Graph graph) {\n    if (graph.n == 16) throw new IllegalStateException(\"Graph is full\");\n    return graph.n++;\n  }\n\n  static void graphRemoveVertex(Graph graph, int index) {\n    if (index < 0 || index >= graph.n) throw new IndexOutOfBoundsException();\n    for (int i = index; i + 1 < graph.n; i++)\n      for (int j = 0; j < graph.n; j++) {\n        graph.has[i][j] = graph.has[i + 1][j];\n        graph.weight[i][j] = graph.weight[i + 1][j];\n      }\n    for (int j = index; j + 1 < graph.n; j++)\n      for (int i = 0; i + 1 < graph.n; i++) {\n        graph.has[i][j] = graph.has[i][j + 1];\n        graph.weight[i][j] = graph.weight[i][j + 1];\n      }\n    graph.n--;\n    for (int i = 0; i < 16; i++) {\n      graph.has[graph.n][i] = graph.has[i][graph.n] = false;\n      graph.weight[graph.n][i] = graph.weight[i][graph.n] = 0;\n    }\n  }\n}\n",
+      "Python": "class Graph:\n    def __init__(self, n, directed=False):\n        if not 0 <= n <= 16:\n            raise ValueError('Use 0..16 vertices')\n        self.n = n\n        self.directed = directed\n        self.has = [[False] * 16 for _ in range(16)]\n        self.weight = [[0] * 16 for _ in range(16)]\n\ndef dijkstra(graph, source):\n    if not 0 <= source < graph.n:\n        raise IndexError('Invalid source')\n    if any(graph.has[i][j] and graph.weight[i][j] < 0 for i in range(graph.n) for j in range(graph.n)):\n        raise ValueError('Negative weights are not allowed')\n    distance, settled = [float('inf')] * graph.n, [False] * graph.n\n    distance[source] = 0\n    for _ in range(graph.n):\n        current = -1\n        for i in range(graph.n):\n            if not settled[i] and distance[i] != float('inf') and (current < 0 or distance[i] < distance[current]):\n                current = i\n        if current < 0:\n            break\n        settled[current] = True\n        for neighbor in range(graph.n):\n            if graph.has[current][neighbor] and not settled[neighbor]:\n                candidate = distance[current] + graph.weight[current][neighbor]\n                if candidate < distance[neighbor]:\n                    distance[neighbor] = candidate\n    return distance\n\ndef graph_create(n, directed=False):\n    return Graph(n, directed)\n\ndef graph_set_edge(graph, source, target, weight):\n    if not (0 <= source < graph.n and 0 <= target < graph.n and -100000 <= weight <= 100000):\n        raise ValueError('Invalid edge')\n    graph.has[source][target], graph.weight[source][target] = True, weight\n    if not graph.directed:\n        graph.has[target][source], graph.weight[target][source] = True, weight\n\ndef graph_remove_edge(graph, source, target):\n    if not (0 <= source < graph.n and 0 <= target < graph.n):\n        raise ValueError('Invalid endpoint')\n    graph.has[source][target] = False\n    if not graph.directed:\n        graph.has[target][source] = False\n\ndef graph_add_vertex(graph):\n    if graph.n == 16:\n        raise OverflowError('Graph is full')\n    graph.n += 1\n    return graph.n - 1\n\ndef graph_remove_vertex(graph, index):\n    if not 0 <= index < graph.n:\n        raise IndexError('Invalid vertex')\n    keep = [i for i in range(graph.n) if i != index]\n    old_has, old_weight = graph.has, graph.weight\n    graph.has = [[False] * 16 for _ in range(16)]\n    graph.weight = [[0] * 16 for _ in range(16)]\n    for i, source in enumerate(keep):\n        for j, target in enumerate(keep):\n            graph.has[i][j] = old_has[source][target]\n            graph.weight[i][j] = old_weight[source][target]\n    graph.n -= 1\n",
+      "JavaScript": "class Graph {\n  constructor(n, directed = false) {\n    if (!Number.isInteger(n) || n < 0 || n > 16)\n      throw new RangeError(\"Use 0..16 vertices\");\n    this.n = n;\n    this.directed = directed;\n    this.has = Array.from({ length: 16 }, () => Array(16).fill(false));\n    this.weight = Array.from({ length: 16 }, () => Array(16).fill(0));\n  }\n}\n\nfunction dijkstra(graph, source) {\n  if (!Number.isInteger(source) || source < 0 || source >= graph.n)\n    throw new RangeError(\"Invalid source\");\n  for (let i = 0; i < graph.n; i++)\n    for (let j = 0; j < graph.n; j++)\n      if (graph.has[i][j] && graph.weight[i][j] < 0)\n        throw new RangeError(\"Negative weights are not allowed\");\n  const distance = Array(graph.n).fill(Infinity),\n    settled = Array(graph.n).fill(false);\n  distance[source] = 0;\n  for (let step = 0; step < graph.n; step++) {\n    let from = -1;\n    for (let i = 0; i < graph.n; i++)\n      if (\n        !settled[i] &&\n        distance[i] !== Infinity &&\n        (from < 0 || distance[i] < distance[from])\n      )\n        from = i;\n    if (from < 0) break;\n    settled[from] = true;\n    for (let to = 0; to < graph.n; to++)\n      if (graph.has[from][to] && !settled[to]) {\n        const candidate = distance[from] + graph.weight[from][to];\n        if (candidate < distance[to]) distance[to] = candidate;\n      }\n  }\n  return distance;\n}\n\nfunction graphCreate(n, directed = false) {\n  return new Graph(n, directed);\n}\nfunction graphSetEdge(graph, from, to, weight) {\n  if (\n    !Number.isInteger(from) ||\n    !Number.isInteger(to) ||\n    !Number.isInteger(weight) ||\n    from < 0 ||\n    to < 0 ||\n    from >= graph.n ||\n    to >= graph.n ||\n    Math.abs(weight) > 100000\n  )\n    throw new RangeError(\"Invalid edge\");\n  graph.has[from][to] = true;\n  graph.weight[from][to] = weight;\n  if (!graph.directed) {\n    graph.has[to][from] = true;\n    graph.weight[to][from] = weight;\n  }\n}\nfunction graphRemoveEdge(graph, from, to) {\n  if (from < 0 || to < 0 || from >= graph.n || to >= graph.n)\n    throw new RangeError(\"Invalid endpoint\");\n  graph.has[from][to] = false;\n  if (!graph.directed) graph.has[to][from] = false;\n}\nfunction graphAddVertex(graph) {\n  if (graph.n === 16) throw new RangeError(\"Graph is full\");\n  return graph.n++;\n}\nfunction graphRemoveVertex(graph, index) {\n  if (!Number.isInteger(index) || index < 0 || index >= graph.n)\n    throw new RangeError(\"Invalid vertex\");\n  for (let i = index; i + 1 < graph.n; i++)\n    for (let j = 0; j < graph.n; j++) {\n      graph.has[i][j] = graph.has[i + 1][j];\n      graph.weight[i][j] = graph.weight[i + 1][j];\n    }\n  for (let j = index; j + 1 < graph.n; j++)\n    for (let i = 0; i + 1 < graph.n; i++) {\n      graph.has[i][j] = graph.has[i][j + 1];\n      graph.weight[i][j] = graph.weight[i][j + 1];\n    }\n  graph.n--;\n  for (let i = 0; i < 16; i++) {\n    graph.has[graph.n][i] = graph.has[i][graph.n] = false;\n    graph.weight[graph.n][i] = graph.weight[i][graph.n] = 0;\n  }\n}\n"
+    },
+    "preconditions": [
+      "Use at most 16 vertices and integer weights between -100000 and 100000. Matrix examples use indices 0..V-1, distinct from diagram labels.",
+      "All present edges must be nonnegative; the function rejects negative weights before traversal."
+    ],
+    "notes": [
+      "These are complete example functions, not instructions highlighted as they execute.",
+      "Matrix presence and weight are separate, so zero weights are valid. Graph construction/setup is shown with the example.",
+      "Infinity means unreachable: INT_MAX in C, maximum int in C++/Java, infinity in Python/JavaScript. The stated graph limits prevent finite-distance integer overflow."
+    ],
+    "time": "O(V²) matrix work",
+    "space": "O(V) traversal storage beyond the graph; the matrix itself is O(V²)"
+  }
+}

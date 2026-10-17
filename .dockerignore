@@ -1,0 +1,12 @@
+.git
+**/node_modules
+**/target
+.tools
+.m2
+.build
+**/dist
+**/test-results
+**/playwright-report
+.env
+.env.local
+*.log
