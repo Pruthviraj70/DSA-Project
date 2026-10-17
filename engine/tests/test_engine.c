@@ -289,6 +289,11 @@ int main(void) {
     assert(!engine_next());
     assert(strstr(engine_error(), "budget"));
     cases++;
+    int traversal[] = {100000, -2, 100000};
+    run(ARRAY, 5, traversal, 3, 0, 0);
+    assert(e.visits == 3 && e.data[0] == 100000 && e.data[2] == 100000);
+    run(ARRAY, 5, traversal, 0, 0, 0);
+    assert(e.visits == 0);
     engine_free();
     assert(e.started == 0 && e.node_count == 0);
     printf("Native C: %d cases passed (randomized sorts, structures, BST deletion, graphs, reset, limits, cleanup)\n", cases);

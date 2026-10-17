@@ -60,6 +60,7 @@ public class SecurityConfig {
                         "/api/auth/register",
                         "/api/auth/me",
                         "/api/modules/**",
+                        "/api/lessons",
                         "/error")
                     .permitAll()
                     .requestMatchers("/api/reports/**")

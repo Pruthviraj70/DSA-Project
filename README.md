@@ -1,6 +1,8 @@
 # DSA-Project — DSA Learning Lab
 
-A browser-based DSA learning platform powered by **actual portable C17**, compiled to WebAssembly and executed in a Web Worker. Inspect state changes, step through synchronized SVG/source views, predict the next operation, compare sorts, and save learning checkpoints. Guests can explore immediately; accounts provide synchronized progress, saved experiments and server-graded assessments.
+An interactive learning platform with a tile-based topic catalog, slide lessons, visual experiments, prediction exercises and quizzes. Start with Foundations, then explore data structures and algorithms at your own pace. Guests keep their place locally; accounts synchronize page progress and experiments and record server-graded quizzes.
+
+The nine learning modules contain **87 stable pages**, **71 concepts**, **38 example implementations in five languages**, and separate practice and recorded question banks. C, C++, Java, Python and JavaScript selections change the educational example only. The underlying C17/WebAssembly worker remains responsible for every algorithm visualization.
 
 ## Run
 
@@ -28,11 +30,23 @@ npm --prefix frontend run dev
 
 The development UI uses port 5173 and proxies `/api` to port 8080. Environment example files contain placeholders only. Never expose DB credentials to frontend code.
 
-## Released modules
+## Learning modules
+
+Foundations appears above two responsive catalog columns; no persistent navigation sidebar is used. The application name always returns home. Each module has Previous/Next controls, a contents selector, a shareable/restorable URL, module-specific FAQs and a final quiz.
+
+| Section | Lessons |
+|---|---|
+| Start here | Foundations: correctness, pseudocode, memory, input size, counts, time/space, asymptotic bounds, cases, growth, loops and recursion |
+| Data Structures | Arrays, Singly linked list, Stack, Queue, Binary search tree, Graphs |
+| Algorithms | Searching (linear/binary), Sorting (insertion/merge/quicksort and comparison) |
+
+Foundations is a recorded recommended prerequisite. Exploration is open; unmet prerequisites and the knowledge assumed by quizzes are shown explicitly. See [lesson and content authoring](docs/lessons.md).
+
+## Algorithm implementations
 
 | Module | Implemented operations / policy |
 |---|---|
-| Arrays | create, access, update, insert, delete; zero-based indices |
+| Arrays | create, access, update, traversal, insert, delete; zero-based indices |
 | Linear search | first matching index; duplicates allowed |
 | Binary search | sorted ascending input required; any matching duplicate |
 | Insertion sort | stable sorted-prefix insertion |
@@ -51,19 +65,21 @@ Inputs are bounded at **32** sequence values / **16** graph vertices. Graph IDs 
 
 ## Learning workflow
 
-Search the catalog, read objectives/prerequisites/invariants and worked examples, then initialize an editable or curated input. Use play/pause, single-step, backward step, reset and pace controls. Source highlights are extracted from the **same C file that is compiled**, using stable `@loc` identifiers. Relevant state/variables and operation counters follow the selected event; playback duration is a presentation choice.
+Choose a tile and move through one coherent lesson. Operation slides pair explanations and complete example functions with the relevant visualization and controls. The first array page includes values, indices, illustrative contiguous addresses, element size and the address formula. Foundations adds interactive operation counts, growth comparisons and a call-stack illustration.
 
-Prediction checkpoints hide the next event until the learner answers. The comparison view runs insertion/merge/quicksort with identical input in separate workers. Native controls, labels, keyboard operation, responsive layouts and contrast support accessible exploration.
+Use Run, Play/Pause, Step, Back, Reset and pace controls. Predictions hide the next action until answered. Sorting comparison uses identical inputs. Counts describe algorithmic actions separately from animation duration. Educational examples have syntax highlighting, alternatives, preconditions, complexity and a copy button; language preference persists locally. They have no misleading execution-line highlights.
 
-IndexedDB stores guest experiments and pending checkpoints. Login merges progress by maximum completion; failed requests retain newer local progress. Local experiments upload only on an explicit action. Saves happen at completion/checkpoints, not on each animation frame. Guest practice is public formative feedback; official attempts are graded and stored transactionally on the server. Guest activity completion is distinct from official scores.
+A page completes when marked explicitly or when Next is used; submitting a quiz completes its participation page regardless of score. The result records understanding separately. Guest practice is local and distinct from recorded assessments. Unlimited retries create separate recorded attempts; feedback explains answers and links to teaching slides. Official keys are supplied only after submission and never bundled in frontend assets.
+
+IndexedDB upgrades preserve earlier experiments and checkpoints. Login unions explicit slide completions; a guest resume position only seeds an account without a position for that lesson. Existing account positions win. Legacy percentages remain prior activity and never automatically complete newly authored slides. Save points occur at page/checkpoint boundaries, with no HTTP calls for playback actions. See [compatibility and progress rules](docs/database.md).
 
 ## Architecture and repository
 
 - **frontend/** — React 19.3.1, TypeScript 5.9.3, Vite 8.3.4, SVG, IndexedDB, Wasm worker and bounded snapshot playback.
 - **engine/** — C17 state machines, all algorithm mutations, typed event emission, native correctness/sanitizer tests. Browser glue stays in the worker.
 - **backend/** — Spring Boot 3.5.16 on Java 21, Maven wrapper, BCrypt/session/CSRF authentication, Spring Data JPA, explicit transactional SQL, Flyway/MySQL.
-- **content/** — versioned registry for all 14 modules, schemas, objectives, adapters, examples and assessments.
-- **scripts/** — native/Wasm builds, source extraction, native replay fixtures and seed generation.
+- **content/** — runtime registry for 14 implementations; curriculum registry for nine lessons; tested example libraries; separate public practice and private recorded questions.
+- **scripts/** — native/Wasm builds, internal source diagnostics, native replay fixtures, content validation and example checks.
 - **docs/** — architecture, contracts, database/coursework, setup, extension guide, roadmap and research proposal.
 - **.github/workflows/** — native, Wasm, frontend, backend/MySQL and browser verification.
 
@@ -74,23 +90,28 @@ The worker advances at most 32 events per request. The UI caps history at 4096 f
 ## Verification
 
 ```sh
+python3 scripts/validate-content.py
+python3 scripts/test-content.py
+python3 scripts/test-examples.py  # gcc, g++, JDK 21, Python 3 and Node required
 scripts/test-native.sh
 python3 scripts/generate-engine-fixtures.py
 scripts/build-wasm.sh
 npm --prefix frontend test
 npm --prefix frontend run build
+python3 scripts/check-public-assets.py
 (cd backend && ./mvnw verify)
 # With backend + MySQL running and Playwright Chromium installed:
 INTEGRATED=1 npm --prefix frontend run test:e2e
 ```
 
-See [verification record](docs/verification.md) for executed results and limitations, [release checklist](docs/release-status.md) for milestone evidence, and [setup](docs/setup.md) for test prerequisites. GitHub Actions runs the same relevant checks, including actual MySQL and actual browser Wasm execution. No performance superiority or educational benefit is claimed without measurement.
+See [update verification](docs/verification-update.md) and the [original verification record](docs/verification.md) for executed results and limitations, [release checklist](docs/release-status.md) for milestone evidence, and [setup](docs/setup.md) for test prerequisites. GitHub Actions runs the same relevant checks, including actual MySQL and actual browser Wasm execution. No performance superiority or educational benefit is claimed without measurement.
 
 ## Documentation
 
 - [Database ER diagram, dictionary and persistence rules](docs/database.md)
 - [SQL coursework: joins, aggregation, report view, indexes and transactions](docs/sql-examples.sql)
 - [REST API, authentication and errors](docs/api.md)
+- [Lesson structure, multilingual examples and concept validation](docs/lessons.md)
 - [Adding a module](docs/adding-a-module.md)
 - [Future undergraduate curriculum](docs/roadmap.md)
 - [Research proposal: prediction versus passive animation](docs/research-note.md)

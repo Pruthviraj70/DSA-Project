@@ -27,7 +27,7 @@ export function Account({
       );
       setPassword("");
       await onUser(u);
-      setMessage("Signed in. Guest checkpoints have been merged.");
+      setMessage("Signed in. Your saved place will synchronize automatically.");
     } catch (e) {
       setMessage((e as Error).message);
     } finally {

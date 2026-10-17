@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Input } from "./protocol";
+import { learnerMessage } from "./learner-messages";
 import { EngineClient } from "./engine-client";
 export function GraphEditor({
   input,
@@ -47,9 +48,9 @@ export function GraphEditor({
           weight: e.weight,
         })),
       });
-      setMessage(`C graph edit complete: ${event.kind}.`);
+      setMessage("Graph updated.");
     } catch (e) {
-      setMessage((e as Error).message);
+      setMessage(learnerMessage(e));
     } finally {
       client.close();
       setBusy(false);
@@ -57,7 +58,7 @@ export function GraphEditor({
   }
   return (
     <fieldset disabled={busy} className="graph-editor">
-      <legend>Graph editor · edits execute in C</legend>
+      <legend>Edit the graph</legend>
       <label className="check">
         <input
           type="checkbox"
@@ -121,7 +122,7 @@ export function GraphEditor({
           )
           .join(", ") || "none"}
       </p>
-      <p role="status">{busy ? "Applying bounded C operation…" : message}</p>
+      <p role="status">{busy ? "Updating the graph…" : message}</p>
     </fieldset>
   );
 }

@@ -50,3 +50,30 @@ SELECT a.id,l.slug,aa.prompt_snapshot,aa.selected_snapshot,aa.correct_snapshot,
 FROM attempts a JOIN lessons l ON l.id=a.lesson_id
 JOIN attempt_answers aa ON aa.attempt_id=a.id
 WHERE a.user_id=1 ORDER BY a.created_at DESC,aa.id;
+
+
+-- New curriculum: find the slides that teach a recorded question's concepts.
+SELECT q.stable_key, qc.concept_id, l.slug AS module_id, s.slide_key, s.title
+FROM questions q JOIN question_revisions qr ON qr.question_id=q.id
+JOIN question_concepts qc ON qc.revision_id=qr.id
+JOIN slide_concepts sc ON sc.concept_id=qc.concept_id
+JOIN lesson_slides s ON s.id=sc.slide_id JOIN lessons l ON l.id=s.lesson_id
+WHERE q.stable_key='arrays.index' ORDER BY l.slug,s.ordinal;
+
+-- Page completion counts remain separate from legacy percentages and quiz scores.
+SELECT l.slug, COUNT(s.id) AS pages,
+       SUM(CASE WHEN p.completed=1 THEN 1 ELSE 0 END) AS completed_pages
+FROM lessons l JOIN lesson_slides s ON s.lesson_id=l.id
+LEFT JOIN lesson_slide_progress p ON p.slide_id=s.id AND p.user_id=@student_id
+GROUP BY l.id,l.slug;
+
+-- Atomic completion and position at a checkpoint (both IDs resolved/validated server-side).
+START TRANSACTION;
+INSERT INTO lesson_slide_progress(user_id,slide_id,completed)
+VALUES (@student_id,@slide_id,TRUE)
+ON DUPLICATE KEY UPDATE completed=GREATEST(completed,TRUE),updated_at=CURRENT_TIMESTAMP(6);
+INSERT INTO lesson_positions(user_id,lesson_id,slide_id)
+VALUES (@student_id,@lesson_id,@slide_id)
+ON DUPLICATE KEY UPDATE slide_id=@slide_id,updated_at=CURRENT_TIMESTAMP(6);
+COMMIT;
+-- The composite slide/lesson FK rejects a position in another lesson.

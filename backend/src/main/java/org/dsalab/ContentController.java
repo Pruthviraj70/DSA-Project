@@ -40,7 +40,8 @@ public class ContentController {
             "SELECT a.slug AS moduleId,a.title,av.version,av.engine_version AS"
                 + " engineVersion,av.complexity,av.invariants,l.body FROM algorithms a JOIN"
                 + " algorithm_versions av ON av.algorithm_id=a.id JOIN lessons l ON"
-                + " l.id=a.lesson_id ORDER BY a.id LIMIT ? OFFSET ?",
+                + " l.id=a.lesson_id WHERE av.id=(SELECT MAX(latest.id) FROM algorithm_versions"
+                + " latest WHERE latest.algorithm_id=a.id) ORDER BY a.id LIMIT ? OFFSET ?",
             size,
             offset),
         "total",
@@ -51,17 +52,40 @@ public class ContentController {
         size);
   }
 
+  List<Long> currentRevisions(long lesson) {
+    var revisions =
+        jdbc.queryForList(
+            "SELECT revision_id FROM curriculum_questions WHERE lesson_id=? ORDER BY ordinal",
+            Long.class,
+            lesson);
+    if (!revisions.isEmpty()) return revisions;
+    return jdbc.queryForList(
+        "SELECT qr.id FROM questions q JOIN question_revisions qr ON qr.question_id=q.id WHERE"
+            + " q.lesson_id=? AND qr.revision=(SELECT MAX(r.revision) FROM question_revisions r"
+            + " WHERE r.question_id=q.id) ORDER BY q.id",
+        Long.class,
+        lesson);
+  }
+
+  List<Map<String, Object>> reviewLinks(long revision) {
+    return jdbc.queryForList(
+        "SELECT DISTINCT l.slug AS moduleId,s.slide_key AS slideId,s.title FROM question_concepts"
+            + " qc JOIN slide_concepts sc ON sc.concept_id=qc.concept_id JOIN lesson_slides s ON"
+            + " s.id=sc.slide_id JOIN lessons l ON l.id=s.lesson_id WHERE qc.revision_id=? ORDER BY"
+            + " l.slug,s.slide_key",
+        revision);
+  }
+
   @GetMapping("/{slug}/questions")
   Object questions(@PathVariable String slug) {
     long lesson = lesson(slug);
-    return jdbc
-        .queryForList(
-            "SELECT qr.id AS revisionId,q.id AS questionId,qr.revision,qr.prompt FROM questions q"
-                + " JOIN question_revisions qr ON qr.question_id=q.id WHERE q.lesson_id=? AND"
-                + " qr.revision=(SELECT MAX(r.revision) FROM question_revisions r WHERE"
-                + " r.question_id=q.id) ORDER BY q.id",
-            lesson)
-        .stream()
+    return currentRevisions(lesson).stream()
+        .map(
+            revision ->
+                jdbc.queryForMap(
+                    "SELECT qr.id AS revisionId,qr.question_id AS questionId,qr.revision,qr.prompt"
+                        + " FROM question_revisions qr WHERE qr.id=?",
+                    revision))
         .map(
             row -> {
               var result = new LinkedHashMap<>(row);
@@ -69,6 +93,13 @@ public class ContentController {
                   "options",
                   jdbc.queryForList(
                       "SELECT id,text FROM answer_options WHERE revision_id=? ORDER BY ordinal",
+                      row.get("revisionId")));
+              result.put(
+                  "concepts",
+                  jdbc.queryForList(
+                      "SELECT concept_id FROM question_concepts WHERE revision_id=? ORDER BY"
+                          + " concept_id",
+                      String.class,
                       row.get("revisionId")));
               return result;
             })

@@ -43,7 +43,7 @@ public class LearningController {
       @NotBlank @Size(max = 120) String title,
       @NotNull JsonNode input,
       @NotNull JsonNode configuration,
-      @Pattern(regexp = "1\\.0\\.0") @NotBlank String engineVersion) {}
+      @Pattern(regexp = "1\\.[01]\\.0") @NotBlank String engineVersion) {}
 
   record Answer(@NotNull @Positive Long revisionId, @NotNull @Positive Long optionId) {}
 
@@ -148,10 +148,11 @@ public class LearningController {
       throw new ApiException(400, "validation", "Experiment payload must be a small JSON object");
     var versions =
         jdbc.queryForList(
-            "SELECT av.id FROM algorithm_versions av JOIN algorithms al ON al.id=av.algorithm_id"
-                + " WHERE al.slug=? AND av.version='1.0.0'",
-            Long.class,
-            input.moduleId());
+            "SELECT av.id,al.id AS module_id FROM algorithm_versions av JOIN algorithms al ON"
+                + " al.id=av.algorithm_id WHERE al.slug=? AND av.engine_version=? AND av.version=?",
+            input.moduleId(),
+            input.engineVersion(),
+            input.engineVersion());
     if (versions.isEmpty()) throw ApiException.missing();
     if (input.configuration().size() != 1
         || !input.configuration().has("speed")
@@ -161,10 +162,15 @@ public class LearningController {
         || input.configuration().get("speed").asInt() > 1000)
       throw new ApiException(
           400, "validation", "Playback configuration requires a speed in 30..1000 ms");
-    validateInput(input.input(), versions.getFirst().intValue());
+    validateInput(input.input(), ((Number) versions.getFirst().get("module_id")).intValue());
+    if (input.engineVersion().equals("1.0.0")
+        && input.input().path("module").asInt() == 1
+        && input.input().path("op").asInt() == 5)
+      throw new ApiException(
+          400, "validation", "This operation requires the current saved-input format");
     var x = new Experiment();
     x.setUserId(auth.find(a).getId());
-    x.setAlgorithmVersionId(versions.getFirst());
+    x.setAlgorithmVersionId(((Number) versions.getFirst().get("id")).longValue());
     x.setTitle(input.title().trim());
     x.setInputJson(input.input().toString());
     x.setConfigurationJson(input.configuration().toString());
@@ -188,7 +194,7 @@ public class LearningController {
           || !input.get(name).isIntegralNumber()
           || !input.get(name).canConvertToInt())
         throw new ApiException(400, "validation", "Engine parameters must be integers");
-    int[] operations = {0, 5, 1, 1, 1, 1, 1, 4, 3, 3, 6, 5, 1, 1, 1};
+    int[] operations = {0, 6, 1, 1, 1, 1, 1, 4, 3, 3, 6, 5, 1, 1, 1};
     if (input.get("module").asInt() != module
         || input.get("op").asInt() < 0
         || input.get("op").asInt() >= operations[module]
@@ -250,13 +256,7 @@ public class LearningController {
   @Transactional
   Object submit(Authentication a, @Valid @RequestBody Submission input) {
     long lesson = content.lesson(input.moduleId());
-    var expected =
-        jdbc.queryForList(
-            "SELECT qr.id FROM questions q JOIN question_revisions qr ON qr.question_id=q.id WHERE"
-                + " q.lesson_id=? AND qr.revision=(SELECT MAX(r.revision) FROM question_revisions r"
-                + " WHERE r.question_id=q.id)",
-            Long.class,
-            lesson);
+    var expected = content.currentRevisions(lesson);
     var received = input.answers().stream().map(Answer::revisionId).toList();
     if (expected.isEmpty()
         || !new HashSet<>(expected).equals(new HashSet<>(received))
@@ -323,7 +323,9 @@ public class LearningController {
               "correctAnswer",
               correctText,
               "explanation",
-              row.get("explanation")));
+              row.get("explanation"),
+              "review",
+              content.reviewLinks(answer.revisionId())));
     }
     jdbc.update("UPDATE attempts SET score=? WHERE id=?", score, attempt);
     return Map.of("id", attempt, "score", score, "total", expected.size(), "feedback", feedback);

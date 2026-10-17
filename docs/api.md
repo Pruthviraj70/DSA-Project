@@ -1,6 +1,6 @@
 # REST API v1
 
-Base `/api`. JSON requests reject unknown fields. All list endpoints use `page` (zero-based) and `size` (1..100); page is bounded at 100000. Public curriculum has 14 modules in release 1. Passwords and correctness flags are never included in content or user responses.
+Base `/api`. JSON requests reject unknown fields. Paginated private lists and the runtime catalog use `page` (zero-based) and `size` (1..100); page is bounded at 100000. The public runtime catalog has 14 implementations, returning the latest registered version once per implementation. The bounded lesson catalog contains nine teaching modules. Passwords and correctness flags are never included in content or user responses.
 
 Authentication uses an HttpOnly SameSite=Lax session cookie, not browser-stored bearer tokens. Fetch `GET /auth/csrf`; use the returned `headerName` and `token` on each mutation, including registration/login/logout. The frontend obtains a fresh token before mutations. The backend does not grant cross-origin CORS access. Development uses Vite's `/api` proxy; Compose uses Nginx. Set `COOKIE_SECURE=true` behind HTTPS. Production operators should terminate TLS, rate-limit authentication at the ingress, use secret management and backups. This release does not provide email verification, password recovery, or OAuth.
 
@@ -12,16 +12,20 @@ Authentication uses an HttpOnly SameSite=Lax session cookie, not browser-stored 
 | POST /auth/login | public + CSRF | `{email,password}`; rotates session ID |
 | POST /auth/logout | session + CSRF | 204, invalidate session |
 | GET /modules | public | paginated module/lesson/version/complexity content |
-| GET /modules/{slug}/questions | public | current question revisions/options; no answers or explanations |
+| GET /modules/{slug}/questions | public | current aligned question revisions/options/concept IDs; no answers or explanations |
+| GET /lessons | public | bounded catalog of nine lesson IDs/titles/slide counts |
+| GET /learning/progress | session | own paginated `{moduleId,slideId,completed,updatedAt}` rows |
+| GET /learning/positions | session | own bounded resume positions, one per authored lesson |
+| POST /learning/checkpoints | session + CSRF | `{moduleId,slideId,completed,position,seedPosition}`; stable IDs, monotonic completion; seedPosition only fills a missing position |
 | GET /progress | session | own paginated checkpoints |
 | POST /progress/checkpoints | session + CSRF | `{moduleId,completion}`; returns monotonic stored completion |
 | GET /experiments | session | own paginated records |
 | POST /experiments | session + CSRF | `{moduleId,title,input,configuration,engineVersion}`; bounded typed engine input; returns record |
 | GET /experiments/{id} | owner | record including input/configuration, no frames |
 | DELETE /experiments/{id} | owner + CSRF | 204 |
-| POST /attempts | session + CSRF | `{moduleId,answers:[{revisionId,optionId}]}`; server computes `{id,score,total,feedback}` |
+| POST /attempts | session + CSRF | `{moduleId,answers:[{revisionId,optionId}]}`; server computes `{id,score,total,feedback}`; feedback includes answer explanation and concept teaching-slide review links |
 | GET /attempts | session | own paginated attempt summaries |
 | GET /attempts/{id} | owner | historical answer snapshots |
 | GET /reports/difficult-topics | INSTRUCTOR | paginated revision-level difficult-question report |
 
-Errors use `{code,message}` with 400 validation, 401 authentication, 403 authorization/CSRF, 404 missing or non-owned record, 409 uniqueness/relationship conflict. Unexpected server errors use a generic 500 response without stack traces. Ownership queries include the current user ID, never a client-provided owner ID. Official submission does not accept a `score` field. Correct answers in the shipped guest practice bundle are intentionally public; they are not a secret examination bank. A future high-stakes assessment system would need separate private questions and additional integrity controls.
+Errors use `{code,message}` with 400 validation, 401 authentication, 403 authorization/CSRF, 404 missing or non-owned record, 409 uniqueness/relationship conflict. Unexpected server errors use a generic 500 response without stack traces. Ownership queries include the current user ID, never a client-provided owner ID. Official submission does not accept a `score` field. Guest practice questions/keys are intentionally public and distinct from recorded assessment questions. Recorded keys and explanations are returned only after authenticated submission. `.private.json` authoring banks are excluded from browser imports and denied by the Vite development server. A future high-stakes assessment system would need separate private questions and additional integrity controls.

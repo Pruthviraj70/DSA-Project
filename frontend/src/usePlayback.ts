@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { learnerMessage, actionLabels } from "./learner-messages";
 import { EngineClient } from "./engine-client";
 import type { Input, EngineEvent } from "./protocol";
 export function usePlayback(onComplete?: (event: EngineEvent) => void) {
@@ -48,7 +49,7 @@ export function usePlayback(onComplete?: (event: EngineEvent) => void) {
         const initial = await c.init(input);
         if (client.current === c) store([initial]);
       } catch (error) {
-        if (client.current === c) setError((error as Error).message);
+        if (client.current === c) setError(learnerMessage(error));
       } finally {
         if (client.current === c) {
           busyRef.current = false;
@@ -77,7 +78,7 @@ export function usePlayback(onComplete?: (event: EngineEvent) => void) {
       if (client.current === c) store(response.events);
     } catch (error) {
       if (client.current === c) {
-        setError((error as Error).message);
+        setError(learnerMessage(error));
         setPlaying(false);
       }
     } finally {
@@ -111,7 +112,7 @@ export function usePlayback(onComplete?: (event: EngineEvent) => void) {
       const r = await c.advance(1);
       if (client.current === c) setPrediction(r.events[0] ?? null);
     } catch (e) {
-      if (client.current === c) setError((e as Error).message);
+      if (client.current === c) setError(learnerMessage(e));
     } finally {
       if (client.current === c) {
         busyRef.current = false;
@@ -122,7 +123,7 @@ export function usePlayback(onComplete?: (event: EngineEvent) => void) {
   const answer = (kind: string) => {
     if (!prediction) return;
     setFeedback(
-      `${kind === prediction.kind ? "Correct" : "Keep exploring"}: the next event is ${prediction.kind} at ${prediction.loc}.`,
+      `${kind === prediction.kind ? "Correct" : "Keep exploring"}: the next action is ${actionLabels[prediction.kind] ?? prediction.kind}.`,
     );
     if (prediction.seq === historyRef.current.at(-1)!.seq + 1)
       store([prediction]);

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 const fixtures = JSON.parse(
   readFileSync("../.build/engine-fixtures.json", "utf8"),
 );
-test("all 34 operations match native C traces through actual browser WebAssembly", async ({
+test("all 35 operations match native C traces through actual browser WebAssembly", async ({
   page,
 }) => {
   await page.goto("/");
@@ -31,7 +31,7 @@ test("all 34 operations match native C traces through actual browser WebAssembly
     }
     return results;
   }, fixtures);
-  const source = await (await page.request.get("/engine/source.json")).json();
+  const source = JSON.parse(readFileSync("../.build/wasm/source.json", "utf8"));
   for (let i = 0; i < fixtures.length; i++) {
     expect(results[i], fixtures[i].id).toEqual(fixtures[i].trace);
     for (const event of results[i])
@@ -107,4 +107,55 @@ test("IndexedDB checkpoint updates and acknowledgement preserve newer progress",
     newerRetained: 75,
     acknowledged: false,
   });
+});
+
+test("slide acknowledgements retain newer local updates and completion is monotonic", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const result = await page.evaluate(async () => {
+    const { lessonStorage } = await import(
+      /* @vite-ignore */ "/src/storage.ts"
+    );
+    await lessonStorage.checkpoint("guest", "arrays", "insert", false);
+    const old = (await lessonStorage.slides()).find(
+      (x: any) => x.key === "guest:arrays:insert",
+    )!;
+    await lessonStorage.checkpoint("guest", "arrays", "insert", true);
+    await lessonStorage.acknowledge("slides", old.key, old.stamp);
+    const pending = (await lessonStorage.slides()).find(
+      (x: any) => x.key === old.key,
+    )!;
+    await lessonStorage.checkpoint("guest", "arrays", "insert", false);
+    const final = (await lessonStorage.slides()).find(
+      (x: any) => x.key === old.key,
+    )!;
+    return { pending: pending.pending, completed: final.completed };
+  });
+  expect(result).toEqual({ pending: true, completed: true });
+});
+
+test("a stale remote resume response cannot overwrite pending local navigation", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const result = await page.evaluate(async () => {
+    const { lessonStorage } = await import(
+      /* @vite-ignore */ "/src/storage.ts"
+    );
+    await lessonStorage.checkpoint("42", "arrays", "insert", true, true, true);
+    await lessonStorage.checkpoint(
+      "42",
+      "arrays",
+      "access",
+      false,
+      true,
+      false,
+    );
+    const position = (await lessonStorage.positions()).find(
+      (x: any) => x.key === "42:arrays",
+    );
+    return { slideId: position?.slideId, pending: position?.pending };
+  });
+  expect(result).toEqual({ slideId: "insert", pending: true });
 });

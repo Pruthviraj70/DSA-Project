@@ -1,5 +1,7 @@
 # Release 1 acceptance record
 
+For the subsequent lesson redesign, see [update verification and compatibility evidence](verification-update.md). Original release results below are historical.
+
 Project: DSA Learning Lab. Original repository: DSA-Project. Work began with a read-only inspection of the initial README-only checkout; no AGENTS.md or branch conventions were present. The first repository file change was PROJECT_README_TEMP.md, committed separately before installing dependencies or generating code. Its plan and outcomes are consolidated here and in the final README/documentation.
 
 | Milestone | Status | Evidence |

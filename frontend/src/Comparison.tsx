@@ -1,3 +1,4 @@
+import { actionLabels } from "./learner-messages";
 import { useState, useEffect } from "react";
 import { modules, validate } from "./registry";
 import { usePlayback } from "./usePlayback";
@@ -57,9 +58,9 @@ export function Comparison() {
       <span className="eyebrow">SAME INPUT · DIFFERENT STRATEGIES</span>
       <h2>Sorting comparison</h2>
       <p>
-        Each panel runs its own C/Wasm worker. One round advances each
-        unfinished algorithm by one event. Operation counts measure emitted
-        primitives; playback time depends on the selected presentation pace.
+        One round advances each unfinished algorithm by one action. Compare the
+        same values and count comparisons, reads, writes and swaps separately.
+        Playback pace changes presentation time.
       </p>
       <div className="panel inline">
         <label>
@@ -71,7 +72,7 @@ export function Comparison() {
           />
         </label>
         <button className="primary" onClick={() => void reset()}>
-          Initialize comparison
+          Run comparison
         </button>
         <button
           disabled={!insertion.event}
@@ -92,7 +93,11 @@ export function Comparison() {
           <section className="panel" key={i}>
             <h3>{modules[i + 3].title}</h3>
             <Visualization module={modules[i + 3]} event={p.event} />
-            <p>{p.event?.done ? "Complete" : (p.event?.kind ?? "Waiting")}</p>
+            <p>
+              {p.event?.done
+                ? "Complete"
+                : (actionLabels[p.event?.kind ?? ""] ?? "Waiting")}
+            </p>
             <dl className="counters">
               {Object.entries(p.event?.counters ?? {}).map(([name, value]) => (
                 <div key={name}>

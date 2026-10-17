@@ -1,3 +1,4 @@
+import { actionLabels } from "./learner-messages";
 import type { EngineEvent } from "./protocol";
 import type { Module } from "./registry";
 export function Visualization({
@@ -12,7 +13,7 @@ export function Visualization({
   if (!event)
     return (
       <div className="empty">
-        Initialize an experiment to inspect the C state.
+        Choose values and Run to explore this visualization.
       </div>
     );
   const active = (id: number) => event.a === id || event.b === id;
@@ -44,7 +45,8 @@ export function Visualization({
     return (
       <svg
         role="img"
-        aria-label={`${module.title} state, ${event.kind}`}
+        className="graph-visual"
+        aria-label={`${module.title} state, ${actionLabels[event.kind] ?? "step"}`}
         viewBox="0 0 620 490"
       >
         {arrow}
@@ -152,9 +154,7 @@ export function Visualization({
                 <text className="node-value" textAnchor="middle" y="5">
                   {n.value}
                 </text>
-                <text className="node-id" textAnchor="middle" y="43">
-                  id {n.id}
-                </text>
+                <text className="node-id" textAnchor="middle" y="43"></text>
               </g>
             )
           );
@@ -184,9 +184,7 @@ export function Visualization({
             <text className="node-value" x="37" y="33" textAnchor="middle">
               {n.value}
             </text>
-            <text className="node-id" x="37" y="80" textAnchor="middle">
-              id {n.id}
-            </text>
+            <text className="node-id" x="37" y="80" textAnchor="middle"></text>
             {n.next ? (
               <line
                 x1="78"

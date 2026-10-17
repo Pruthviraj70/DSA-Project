@@ -1,301 +1,274 @@
 import { useState, useEffect, useRef } from "react";
-import { modules, type Module } from "./registry";
-import { Laboratory } from "./Laboratory";
-import { Comparison } from "./Comparison";
+import { modules, registry } from "./registry";
+import {
+  lessons,
+  lessonById,
+  parseLocation,
+  lessonHref,
+  slideForExperiment,
+  type Location,
+} from "./curriculum";
+import { Home, ModuleIcon } from "./Home";
+import { Lesson } from "./Lesson";
 import { Account } from "./Account";
 import { Library, type SavedExperiment } from "./Library";
 import { api, type User } from "./api";
 import { storage } from "./storage";
+import { useLearning } from "./useLearning";
 import type { Input } from "./protocol";
 import "./styles.css";
 export default function App() {
-  const [module, setModule] = useState<Module>(modules[0]),
-    [query, setQuery] = useState(""),
-    [tab, setTab] = useState("lab"),
-    [user, setUser] = useState<User>({ authenticated: false }),
-    [progress, setProgress] = useState<Record<string, number>>({}),
+  const [location, setLocation] = useState<Location>(() =>
+      parseLocation(window.location.hash),
+    ),
+    [user, setUser] = useState<User>(),
     [notice, setNotice] = useState(""),
-    [loaded, setLoaded] = useState<Input>(),
-    [loadedSpeed, setLoadedSpeed] = useState(350),
-    [runKey, setRunKey] = useState(0);
-  const syncChain = useRef(Promise.resolve());
-  const owner = user.authenticated ? String(user.id) : "guest";
-  async function refreshProgress(u: User) {
-    const local = (await storage.checkpoints()).filter(
-      (x) => x.owner === (u.authenticated ? String(u.id) : "guest"),
-    );
-    const next: Record<string, number> = {};
-    local.forEach((x) => {
-      next[x.moduleId] = Math.max(next[x.moduleId] ?? 0, x.completion);
-    });
-    if (u.authenticated) {
-      const remote = await api<{
-        items: { moduleId: string; completion: number }[];
-      }>("/progress?size=100");
-      remote.items.forEach((x) => {
-        next[x.moduleId] = Math.max(next[x.moduleId] ?? 0, x.completion);
-      });
-    }
-    setProgress(next);
-  }
-  async function sync(u = user) {
-    if (!u.authenticated) {
-      await refreshProgress(u);
-      return;
-    }
-    const local = await storage.checkpoints();
-    for (const checkpoint of local.filter(
-      (x) => x.owner === "guest" || x.owner === String(u.id),
-    )) {
-      const confirmed = await api<{ completion: number }>(
-        "/progress/checkpoints",
-        "POST",
-        { moduleId: checkpoint.moduleId, completion: checkpoint.completion },
-      );
-      await storage.acknowledge(checkpoint.key, confirmed.completion);
-    }
-    await refreshProgress(u);
-  }
-  async function changeUser(u: User) {
-    setUser(u);
-    try {
-      await sync(u);
-    } catch (e) {
-      setNotice(
-        `Signed-in state updated; checkpoint sync pending: ${(e as Error).message}`,
-      );
-      await refreshProgress(u).catch(() => {});
-      throw e;
-    }
-  }
+    [loaded, setLoaded] = useState<{
+      owner: string;
+      moduleId: string;
+      slideId: string;
+      input: Input;
+      speed: number;
+    }>();
+  const learning = useLearning(user ?? { authenticated: false });
+  const checkpoint = useRef(learning.checkpoint);
+  checkpoint.current = learning.checkpoint;
+  useEffect(() => {
+    const changed = () => setLocation(parseLocation(window.location.hash));
+    window.addEventListener("hashchange", changed);
+    return () => window.removeEventListener("hashchange", changed);
+  }, []);
   useEffect(() => {
     let active = true;
     api<User>("/auth/me")
-      .then(async (u) => {
-        if (active) {
-          setUser(u);
-          await sync(u);
-        }
+      .then((u) => {
+        if (active) setUser(u);
       })
       .catch(() => {
-        if (active)
-          void refreshProgress({ authenticated: false }).catch((e) =>
-            setNotice(`Local storage unavailable: ${e.message}`),
-          );
+        if (active) setUser({ authenticated: false });
       });
     return () => {
       active = false;
     };
   }, []);
-  function checkpoint(moduleId: string, completion: number) {
-    setProgress((previous) => ({
-      ...previous,
-      [moduleId]: Math.max(previous[moduleId] ?? 0, completion),
-    }));
-    syncChain.current = syncChain.current
-      .catch(() => {})
-      .then(async () => {
-        await storage.checkpoint(owner, moduleId, completion);
-        if (user.authenticated) await sync(user);
-      })
-      .catch((e) => {
-        setNotice(
-          `Checkpoint retained locally; sync pending. ${(e as Error).message}`,
-        );
-      });
-  }
+  const module = lessonById(location.moduleId ?? "");
+  const slide = module?.slides.find((s) => s.id === location.slideId);
+  useEffect(() => {
+    if (!user || !learning.ready || location.page !== "lesson" || !module)
+      return;
+    if (!slide) {
+      const resume = learning.positions[module.id];
+      const target = module.slides.some((s) => s.id === resume)
+        ? resume
+        : module.slides[0].id;
+      window.history.replaceState(null, "", lessonHref(module.id, target));
+      window.dispatchEvent(new HashChangeEvent("hashchange"));
+    }
+  }, [
+    location.page,
+    location.moduleId,
+    location.slideId,
+    learning.ready,
+    user?.id,
+    user?.authenticated,
+  ]);
+  useEffect(() => {
+    if (user && learning.ready && module && slide)
+      checkpoint.current(module.id, slide.id, false);
+  }, [module?.id, slide?.id, learning.ready, user?.id, user?.authenticated]);
   async function save(input: Input, title: string, speed: number) {
-    const x = {
+    const runtime = modules.find((m) => m.engineId === input.module)!;
+    const owner = user?.authenticated ? String(user.id) : "guest";
+    const value = {
       id: crypto.randomUUID(),
       owner,
       title,
-      moduleId: module.id,
+      moduleId: runtime.id,
       input,
       configuration: { speed },
-      engineVersion: "1.0.0",
+      engineVersion: registry.engineVersion,
       createdAt: new Date().toISOString(),
     };
-    await storage.saveExperiment(x);
-    if (user.authenticated) {
+    await storage.saveExperiment(value);
+    if (user?.authenticated) {
       try {
         await api("/experiments", "POST", {
-          moduleId: x.moduleId,
+          moduleId: value.moduleId,
           title,
           input,
-          configuration: x.configuration,
-          engineVersion: x.engineVersion,
+          configuration: value.configuration,
+          engineVersion: value.engineVersion,
         });
       } catch (e) {
         throw Error(
-          `Saved on this device. Account upload pending: ${(e as Error).message}`,
+          `Saved on this device. Upload pending: ${(e as Error).message}`,
         );
       }
     }
   }
-  function select(m: Module) {
-    setModule(m);
-    setLoaded(undefined);
-    setLoadedSpeed(350);
-    setRunKey((k) => k + 1);
-    setTab("lab");
-  }
-  function load(x: SavedExperiment) {
-    const m = modules.find((m) => m.id === x.moduleId);
-    if (!m || x.engineVersion !== "1.0.0") {
-      setNotice("This saved experiment needs an unsupported engine version.");
+  function load(saved: SavedExperiment) {
+    if (!["1.0.0", "1.1.0"].includes(saved.engineVersion)) {
+      setNotice(
+        "This saved experiment needs a newer application. Your saved copy is unchanged.",
+      );
       return;
     }
-    setModule(m);
-    setLoaded(x.input);
-    setLoadedSpeed(x.configuration.speed);
-    setRunKey((k) => k + 1);
-    setTab("lab");
+    const target = slideForExperiment(saved.input);
+    if (!target) {
+      setNotice(
+        "This saved topic is not available in the current lessons. Your saved copy is unchanged.",
+      );
+      return;
+    }
+    setLoaded({
+      owner: learning.owner,
+      ...target,
+      input: saved.input,
+      speed: saved.configuration.speed,
+    });
+    window.location.hash = lessonHref(target.moduleId, target.slideId).slice(1);
   }
-  const shown = modules.filter((m) =>
-    `${m.title} ${m.category} ${m.objectives.join(" ")}`
-      .toLowerCase()
-      .includes(query.toLowerCase()),
-  );
   return (
     <div className="app-shell">
-      <a className="skip-link" href="#main">
-        Skip to workspace
+      <a
+        className="skip-link"
+        href="#main"
+        onClick={(e) => {
+          e.preventDefault();
+          document.getElementById("main")?.focus();
+        }}
+      >
+        Skip to content
       </a>
-      <aside className="sidebar">
-        <a
-          className="brand"
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            select(modules[0]);
-          }}
-        >
-          <span className="brand-icon">[ ]</span>
+      <header className="site-header">
+        <a className="brand" href="#/" aria-label="DSA Learning Lab home">
+          <span className="brand-mark" aria-hidden="true">
+            dsa<span>→</span>
+          </span>
           <span>
-            DSA<span className="brand-sub">LEARNING LAB</span>
+            DSA <strong>Learning Lab</strong>
           </span>
         </a>
-        <p className="sidebar-caption">Understand it. Run it. Explain it.</p>
-        <nav aria-label="Primary navigation">
-          <button
-            className={tab === "lab" ? "nav-active" : ""}
-            onClick={() => setTab("lab")}
+        <nav aria-label="Main navigation">
+          <a
+            href="#/"
+            aria-current={location.page === "home" ? "page" : undefined}
           >
-            ◈ Algorithm lab <span>14</span>
-          </button>
-          <button
-            className={tab === "compare" ? "nav-active" : ""}
-            onClick={() => setTab("compare")}
+            Topics
+          </a>
+          <a
+            href="#/progress"
+            aria-current={location.page === "progress" ? "page" : undefined}
           >
-            ⇄ Compare sorts
-          </button>
-          <button
-            className={tab === "library" ? "nav-active" : ""}
-            onClick={() => setTab("library")}
+            Progress
+          </a>
+          <a
+            href="#/library"
+            aria-current={location.page === "library" ? "page" : undefined}
           >
-            ▤ Saved experiments
-          </button>
-          <button
-            className={tab === "account" ? "nav-active" : ""}
-            onClick={() => setTab("account")}
+            Saved experiments
+          </a>
+          <a
+            className="account-link"
+            href="#/account"
+            aria-current={location.page === "account" ? "page" : undefined}
           >
-            ◎ {user.authenticated ? "Your account" : "Sign in / register"}
-          </button>
-        </nav>
-        <div className="catalog-heading">
-          <h2>EXPLORE MODULES</h2>
-          <span>v1.0</span>
-        </div>
-        <label className="search-label">
-          <span className="sr-only">Search modules</span>
-          <input
-            type="search"
-            placeholder="Search modules…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-        </label>
-        <nav aria-label="Module catalog" className="module-list">
-          {!shown.length && <p>No matching modules.</p>}
-          {shown.map((m, i) => (
-            <button
-              key={m.id}
-              aria-label={`Open ${m.title}`}
-              aria-current={
-                module.id === m.id && tab === "lab" ? "page" : undefined
-              }
-              className={
-                module.id === m.id && tab === "lab" ? "module-active" : ""
-              }
-              onClick={() => select(m)}
-            >
-              <span className="module-number">
-                {String(m.engineId).padStart(2, "0")}
-              </span>
-              <span>
-                {m.title}
-                <small>{m.category}</small>
-              </span>
-              {progress[m.id] > 0 && (
-                <span
-                  className="progress-mark"
-                  aria-label={`${progress[m.id]} percent complete`}
-                >
-                  {progress[m.id]}%
-                </span>
-              )}
-            </button>
-          ))}
-        </nav>
-        <div className="sidebar-footer">
-          <span className="live-dot" /> Runs in your browser
-          <p>C17 → WebAssembly · no code uploads</p>
-        </div>
-      </aside>
-      <div className="main-shell">
-        <header className="topbar">
-          <span>YOUR INTERACTIVE DSA WORKBENCH</span>
-          <button onClick={() => setTab("account")}>
-            <span className="avatar">
-              {user.displayName?.[0]?.toUpperCase() ?? "G"}
+            <span className="avatar" aria-hidden="true">
+              {user?.displayName?.[0]?.toUpperCase() ?? "G"}
             </span>
-            {user.authenticated ? user.displayName : "Guest workspace"}
-          </button>
-        </header>
-        <main id="main" tabIndex={-1}>
-          {notice && (
-            <div className="notice" role="status">
-              {notice}
-              <button
-                aria-label="Dismiss notification"
-                onClick={() => setNotice("")}
-              >
-                ×
-              </button>
+            {user?.authenticated ? user.displayName : "Sign in"}
+          </a>
+        </nav>
+      </header>
+      <main id="main" tabIndex={-1}>
+        {(notice || learning.message) && (
+          <div className="notice" role="status">
+            {notice || learning.message}
+            <button
+              aria-label="Dismiss notification"
+              onClick={() => {
+                setNotice("");
+                learning.setMessage("");
+              }}
+            >
+              ×
+            </button>
+          </div>
+        )}
+        {location.page === "home" ? (
+          <Home completed={learning.completed} positions={learning.positions} />
+        ) : location.page === "account" ? (
+          <Account
+            user={user ?? { authenticated: false }}
+            onUser={async (u) => {
+              setUser(u);
+            }}
+            onSync={learning.sync}
+          />
+        ) : location.page === "library" ? (
+          <Library
+            key={learning.owner}
+            user={user ?? { authenticated: false }}
+            onLoad={load}
+          />
+        ) : location.page === "progress" ? (
+          <section className="progress-page">
+            <span className="eyebrow">KEEP GOING, AT YOUR PACE</span>
+            <h1>Your learning</h1>
+            <p>
+              Complete a page as you read, or use Next to mark it complete. Quiz
+              completion records participation; the result shows understanding.
+              Earlier activity is preserved, while newly authored pages start
+              unread.
+            </p>
+            <div className="progress-grid">
+              {lessons.map((m) => (
+                <article className="panel" key={m.id}>
+                  <ModuleIcon kind={m.icon} />
+                  <h2>{m.title}</h2>
+                  <p>
+                    {learning.completed[m.id]?.length ?? 0} / {m.slides.length}{" "}
+                    pages complete
+                  </p>
+                  <progress
+                    aria-label={`${m.title} page completion`}
+                    max={m.slides.length}
+                    value={learning.completed[m.id]?.length ?? 0}
+                  />
+                  <a href={`#/lesson/${m.id}`}>Continue lesson →</a>
+                </article>
+              ))}
             </div>
-          )}
-          {tab === "lab" ? (
-            <Laboratory
-              key={`${module.id}-${runKey}`}
-              module={module}
-              loaded={loaded}
-              loadedSpeed={loadedSpeed}
-              authenticated={user.authenticated}
-              onCheckpoint={(completion) => checkpoint(module.id, completion)}
-              onSave={save}
-            />
-          ) : tab === "compare" ? (
-            <Comparison />
-          ) : tab === "account" ? (
-            <Account user={user} onUser={changeUser} onSync={() => sync()} />
-          ) : (
-            <Library user={user} onLoad={load} />
-          )}
-        </main>
-        <footer className="page-footer">
-          DSA Learning Lab · Release 1 · Learn by inspecting actual C execution.
-        </footer>
-      </div>
+          </section>
+        ) : module && slide && user && learning.ready ? (
+          <Lesson
+            key={`${module.id}/${slide.id}`}
+            module={module}
+            slide={slide}
+            completed={learning.completed[module.id] ?? []}
+            isComplete={learning.isComplete}
+            onCheckpoint={learning.checkpoint}
+            authenticated={user.authenticated}
+            owner={learning.owner}
+            loaded={
+              loaded?.owner === learning.owner &&
+              loaded.moduleId === module.id &&
+              loaded.slideId === slide.id
+                ? loaded
+                : undefined
+            }
+            onSave={save}
+          />
+        ) : (
+          <p role="status" className="loading">
+            Opening your lesson…
+          </p>
+        )}
+      </main>
+      <footer className="page-footer">
+        <a href="#/">DSA Learning Lab</a>
+        <span>Explore. Predict. Understand.</span>
+      </footer>
     </div>
   );
 }

@@ -184,6 +184,10 @@ static const char *array_step(void) {
         e.n--;
         e.done = 1;
         return emit("delete", "array.delete", e.index, -1, e.key); /* @loc:array.delete */
+    case 5:
+        if (e.i >= e.n) return complete();
+        e.i++;
+        return emit("visit", "array.traverse", e.i - 1, -1, e.data[e.i - 1]); /* @loc:array.traverse */
     default:
         return complete();
     }
@@ -664,13 +668,13 @@ int engine_start(void) {
     if (e.started)
         return fail("Engine already started");
     if (e.module == ARRAY) {
-        if (e.op < 0 || e.op > 4)
+        if (e.op < 0 || e.op > 5)
             return fail("Invalid array operation");
         if ((e.op == 1 || e.op == 2 || e.op == 4) && (e.index < 0 || e.index >= e.n))
             return fail("Index must address an existing element");
         if (e.op == 3 && (e.index < 0 || e.index > e.n || e.n == LIMIT))
             return fail("Insert needs an index in 0..length and spare capacity");
-        e.i = e.op == 3 ? e.n : e.index;
+        e.i = e.op == 5 ? 0 : (e.op == 3 ? e.n : e.index);
         if (e.op == 4)
             e.key = e.data[e.index];
     } else if (e.module == LINEAR || e.module == BINARY) {

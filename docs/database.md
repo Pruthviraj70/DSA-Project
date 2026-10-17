@@ -1,6 +1,6 @@
 # Database design
 
-MySQL 8.4 LTS; InnoDB, foreign keys and checked constraints. Flyway is authoritative; Hibernate validates and never creates production tables. V1 creates the schema and report view; V2 seeds all 14 released modules, their prerequisite edges, immutable version metadata and one concept assessment per module. Seed generation is deterministic from `content/modules.json` (`python3 scripts/seed-content.py`). Do not rewrite a migration after release: add V3+ for future content.
+MySQL 8.4 LTS; InnoDB, foreign keys and checked constraints. Flyway is authoritative; Hibernate validates tables. V1/V2 are retained unchanged. V3 adds stable slides, concepts, aligned question selection and page progress/positions. V4 seeds nine grouped lessons, 87 slides, 71 concepts and 33 new recorded questions with guarded inserts, plus runtime 1.1.0 metadata. All 14 old questions/revisions and their attempt references remain intact. V4 can be rerun without duplicate content or changes to history. After this update ships, add V5+; never rewrite applied migrations. `scripts/build-curriculum-migration.py` reproduces V4 only for this update; the old seed script refuses to overwrite V2.
 
 ```mermaid
 erDiagram
@@ -22,11 +22,24 @@ erDiagram
  lessons ||--o{ lesson_progress : completes
  users ||--o{ saved_experiments : owns
  algorithm_versions ||--o{ saved_experiments : executes
+ lessons ||--o{ lesson_slides : pages
+ lesson_slides ||--o{ slide_concepts : teaches
+ curriculum_concepts ||--o{ slide_concepts : taught
+ question_revisions ||--o{ question_concepts : assesses
+ curriculum_concepts ||--o{ question_concepts : assessed
+ lessons ||--o{ curriculum_questions : selects
+ question_revisions ||--o{ curriculum_questions : active_revision
+ questions ||--o{ curriculum_questions : included
+ users ||--o{ lesson_slide_progress : completes
+ lesson_slides ||--o{ lesson_slide_progress : completion
+ users ||--o{ lesson_positions : resumes
+ lessons ||--o{ lesson_positions : position
+ lesson_slides ||--o{ lesson_positions : current_page
 ```
 
 ## Data dictionary
 
-All IDs are auto-increment BIGINT primary keys unless a composite primary key is listed. Columns are NOT NULL. Database-generated timestamps use microsecond precision. Times returned by the API are instants/UTC. No raw passwords or execution frames are stored.
+IDs are auto-increment BIGINT except stable string concept IDs and listed composite keys. Columns are NOT NULL. Database-generated timestamps use microsecond precision. Times returned by the API are instants/UTC. No raw passwords or execution frames are stored.
 
 | Table | Columns and meaning | Relationships / constraints |
 |---|---|---|
@@ -52,9 +65,23 @@ All IDs are auto-increment BIGINT primary keys unless a composite primary key is
 
 Registration inserts a user and its student role atomically. Official assessment submission requires exactly one answer per current revision for the selected lesson. A transaction inserts the attempt, validates every selected option, computes the score from answer_options, saves immutable textual snapshots, and updates the attempt score. Any invalid option rolls back the entire transaction. Historical attempt details read snapshots; old revisions/options remain referenced, even if new revisions are published. No content-editing REST endpoint exists in this release; content changes use reviewed append-only migrations.
 
-Checkpoints use an atomic MySQL upsert with `GREATEST(existing,submitted)` so replayed/offline submissions cannot lower completion. Exploration is 50%; correct guest practice is 75%; correct official assessment is 100%. Completion is a learning activity indicator, not an authoritative assessment score. Official scores live only in attempts.
+Legacy `lesson_progress` uses `GREATEST` to preserve its old 0..100 values. No migration interprets those percentages as completion of new material. New `lesson_slide_progress` is an independent monotonic boolean union keyed by user and stable slide ID. Opening a page records position, not completion. Next/Mark page complete completes a teaching page; quiz submission completes participation, with the actual score stored separately in attempts. Newly added pages always start unread.
 
-Guest checkpoints live in IndexedDB under the guest owner. Login merges guest and that account's pending checkpoints into the server by maximum completion. A local checkpoint is acknowledged only after a successful response and only if it has not been superseded. Failed synchronization retains the checkpoint. Saved guest experiments are uploaded only by an explicit “Upload copy”; they do not merge automatically. Private remote experiments are fetched with the current session and are not cached in the guest store. Use separate browser profiles on shared devices to isolate local guest data.
+On login, guest completions union into the signed-in account. Guest positions seed only lessons without an account position (`INSERT IGNORE`); existing account positions win. Subsequent account navigation updates its own resume position. Pending local updates are stored immediately even while networking is pending; acknowledgement stamps protect newer changes, and stale server positions cannot replace pending local navigation. Old local checkpoints remain eligible for the legacy API and do not generate new slide completions. Account caches are owner-scoped. Shared-device guest data requires separate browser profiles for isolation.
+
+IndexedDB version 2 adds slides, positions and practice stores without dropping checkpoints or experiments. Runtime 1.0.0 experiments keep original inputs/configuration and load through the compatible 1.1.0 runtime. New saves use 1.1.0; array traversal is not accepted as a 1.0.0 operation. No frame history is stored. Guest experiment uploads remain explicit. Failed authenticated uploads leave the local copy available for a manual Upload copy action; this action can intentionally create another saved record.
+
+| Added table | Columns and constraints |
+|---|---|
+| curriculum_concepts | id VARCHAR(100) PK, title VARCHAR(200) |
+| lesson_slides | id, lesson_id FK, slide_key VARCHAR(64), ordinal, title VARCHAR(160), kind VARCHAR(32); unique (lesson_id,slide_key), (lesson_id,ordinal), (id,lesson_id) |
+| slide_concepts | (slide_id,concept_id) composite PK and FKs |
+| question_concepts | (revision_id,concept_id) composite PK and FKs; revision-specific coverage |
+| curriculum_questions | (lesson_id,question_id) PK; revision_id FK; ordinal unique per lesson; selects the active reviewed bank |
+| lesson_slide_progress | (user_id,slide_id) PK/FKs; completed BOOLEAN; updated_at TIMESTAMP(6) |
+| lesson_positions | (user_id,lesson_id) PK; slide_id; composite FK (slide_id,lesson_id) ensures the page belongs to that lesson; updated_at |
+
+Stable slugs remain independent of page order. The grouped Searching/Sorting lessons are new; prior individual algorithm lessons remain referenced by historical records. Arrays and the existing structure/graph lessons are reused without changing old IDs. Historical attempts read textual snapshots; new quizzes select only their aligned active revisions, excluding old unaligned questions from the new UI. Question edits require a new immutable revision plus concept mappings and an active-bank change in a new migration.
 
 ## Instructor report
 

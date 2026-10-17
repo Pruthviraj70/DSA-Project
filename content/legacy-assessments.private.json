@@ -1,0 +1,156 @@
+{
+  "arrays": {
+    "revision": 1,
+    "prompt": "What is the worst-case time to insert at the beginning of an array?",
+    "options": [
+      "O(1)",
+      "O(n)",
+      "O(log n)"
+    ],
+    "correct": 1,
+    "explanation": "Every existing element may need to shift one slot."
+  },
+  "linear-search": {
+    "revision": 1,
+    "prompt": "Which duplicate does this linear search return?",
+    "options": [
+      "The first match",
+      "The last match",
+      "All matches"
+    ],
+    "correct": 0,
+    "explanation": "The scan stops immediately at the first equal value."
+  },
+  "binary-search": {
+    "revision": 1,
+    "prompt": "What prerequisite does binary search need?",
+    "options": [
+      "Distinct values",
+      "Sorted ascending input",
+      "Positive values"
+    ],
+    "correct": 1,
+    "explanation": "Only ordering justifies discarding half of the remaining interval."
+  },
+  "insertion-sort": {
+    "revision": 1,
+    "prompt": "Why does this insertion sort preserve equal-value order?",
+    "options": [
+      "It shifts only strictly larger values",
+      "It chooses random pivots",
+      "It uses a queue"
+    ],
+    "correct": 0,
+    "explanation": "The strict greater-than comparison leaves existing equal values before the key."
+  },
+  "merge-sort": {
+    "revision": 1,
+    "prompt": "How much auxiliary space does this merge sort use?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)"
+    ],
+    "correct": 2,
+    "explanation": "A temporary buffer holds values from each merged run."
+  },
+  "quick-sort": {
+    "revision": 1,
+    "prompt": "Which input can cause quadratic behavior with a final-element pivot?",
+    "options": [
+      "Already sorted input",
+      "Only empty input",
+      "No input"
+    ],
+    "correct": 0,
+    "explanation": "A final-element pivot on ordered data can repeatedly produce a highly unbalanced partition."
+  },
+  "linked-list": {
+    "revision": 1,
+    "prompt": "Which link changes when inserting after an existing node?",
+    "options": [
+      "The predecessor\u2019s next link",
+      "Every node value",
+      "No links"
+    ],
+    "correct": 0,
+    "explanation": "The new node points to the old successor and the predecessor points to the new node."
+  },
+  "stack": {
+    "revision": 1,
+    "prompt": "Which value is popped first?",
+    "options": [
+      "The oldest value",
+      "The most recently pushed value",
+      "The smallest value"
+    ],
+    "correct": 1,
+    "explanation": "Stacks follow last-in-first-out order."
+  },
+  "queue": {
+    "revision": 1,
+    "prompt": "Which value leaves a FIFO queue first?",
+    "options": [
+      "The newest value",
+      "The oldest value",
+      "The largest value"
+    ],
+    "correct": 1,
+    "explanation": "First-in-first-out removes the earliest enqueued value."
+  },
+  "bst": {
+    "revision": 1,
+    "prompt": "Which traversal lists BST values in ascending order?",
+    "options": [
+      "Preorder",
+      "Inorder",
+      "Postorder"
+    ],
+    "correct": 1,
+    "explanation": "Inorder visits the smaller subtree, the node, then the larger subtree."
+  },
+  "graph": {
+    "revision": 1,
+    "prompt": "What does an undirected edge mean?",
+    "options": [
+      "Travel is possible in both directions",
+      "Only the smaller ID can be the source",
+      "Its weight must be zero"
+    ],
+    "correct": 0,
+    "explanation": "The C adjacency matrix stores both directions."
+  },
+  "bfs": {
+    "revision": 1,
+    "prompt": "Which structure manages the BFS frontier?",
+    "options": [
+      "Stack",
+      "Queue",
+      "BST"
+    ],
+    "correct": 1,
+    "explanation": "A FIFO queue visits earlier layers before later ones."
+  },
+  "dfs": {
+    "revision": 1,
+    "prompt": "When does DFS backtrack?",
+    "options": [
+      "When the current vertex has no unvisited outgoing neighbors",
+      "After every edge regardless of state",
+      "Only when every graph vertex is reachable"
+    ],
+    "correct": 0,
+    "explanation": "DFS returns to the parent after exhausting the current vertex\u2019s unvisited neighbors."
+  },
+  "dijkstra": {
+    "revision": 1,
+    "prompt": "Why reject negative weights?",
+    "options": [
+      "They invalidate the settled-distance argument",
+      "They cannot be stored as integers",
+      "They require an undirected graph"
+    ],
+    "correct": 0,
+    "explanation": "A later path through a negative edge could improve an already settled vertex."
+  }
+}

@@ -1,11 +1,11 @@
 {
   "registryVersion": 1,
-  "engineVersion": "1.0.0",
+  "engineVersion": "1.1.0",
   "modules": [
     {
       "id": "arrays",
       "engineId": 1,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Arrays",
       "category": "Foundations",
       "prerequisites": [],
@@ -21,7 +21,8 @@
         "Access",
         "Update",
         "Insert",
-        "Delete"
+        "Delete",
+        "Traverse"
       ],
       "defaultInput": {
         "module": 1,
@@ -38,17 +39,6 @@
         "edges": []
       },
       "example": "Insert 9 at index 1: [3,1,4] \u2192 [3,9,1,4].",
-      "question": {
-        "revision": 1,
-        "prompt": "What is the worst-case time to insert at the beginning of an array?",
-        "options": [
-          "O(1)",
-          "O(n)",
-          "O(log n)"
-        ],
-        "correct": 1,
-        "explanation": "Every existing element may need to shift one slot."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 32,
@@ -62,7 +52,7 @@
     {
       "id": "linear-search",
       "engineId": 2,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Linear search",
       "category": "Searching",
       "prerequisites": [
@@ -94,17 +84,6 @@
         "edges": []
       },
       "example": "Searching [7,2,7,9] for 7 returns index 0.",
-      "question": {
-        "revision": 1,
-        "prompt": "Which duplicate does this linear search return?",
-        "options": [
-          "The first match",
-          "The last match",
-          "All matches"
-        ],
-        "correct": 0,
-        "explanation": "The scan stops immediately at the first equal value."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 32,
@@ -118,7 +97,7 @@
     {
       "id": "binary-search",
       "engineId": 3,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Binary search",
       "category": "Searching",
       "prerequisites": [
@@ -151,17 +130,6 @@
         "edges": []
       },
       "example": "For target 7, compare 5, then 7; return index 3.",
-      "question": {
-        "revision": 1,
-        "prompt": "What prerequisite does binary search need?",
-        "options": [
-          "Distinct values",
-          "Sorted ascending input",
-          "Positive values"
-        ],
-        "correct": 1,
-        "explanation": "Only ordering justifies discarding half of the remaining interval."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 32,
@@ -175,7 +143,7 @@
     {
       "id": "insertion-sort",
       "engineId": 4,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Insertion sort",
       "category": "Sorting",
       "prerequisites": [
@@ -208,17 +176,6 @@
         "edges": []
       },
       "example": "[3,1,2] \u2192 insert 1 \u2192 [1,3,2] \u2192 insert 2 \u2192 [1,2,3].",
-      "question": {
-        "revision": 1,
-        "prompt": "Why does this insertion sort preserve equal-value order?",
-        "options": [
-          "It shifts only strictly larger values",
-          "It chooses random pivots",
-          "It uses a queue"
-        ],
-        "correct": 0,
-        "explanation": "The strict greater-than comparison leaves existing equal values before the key."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 32,
@@ -232,7 +189,7 @@
     {
       "id": "merge-sort",
       "engineId": 5,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Merge sort",
       "category": "Sorting",
       "prerequisites": [
@@ -265,17 +222,6 @@
         "edges": []
       },
       "example": "[4,1,3,2] \u2192 [1,4] + [2,3] \u2192 [1,2,3,4].",
-      "question": {
-        "revision": 1,
-        "prompt": "How much auxiliary space does this merge sort use?",
-        "options": [
-          "O(1)",
-          "O(log n)",
-          "O(n)"
-        ],
-        "correct": 2,
-        "explanation": "A temporary buffer holds values from each merged run."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 32,
@@ -289,7 +235,7 @@
     {
       "id": "quick-sort",
       "engineId": 6,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Quicksort",
       "category": "Sorting",
       "prerequisites": [
@@ -322,17 +268,6 @@
         "edges": []
       },
       "example": "With [3,1,2], pivot 2 partitions to [1,2,3].",
-      "question": {
-        "revision": 1,
-        "prompt": "Which input can cause quadratic behavior with a final-element pivot?",
-        "options": [
-          "Already sorted input",
-          "Only empty input",
-          "No input"
-        ],
-        "correct": 0,
-        "explanation": "A final-element pivot on ordered data can repeatedly produce a highly unbalanced partition."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 32,
@@ -346,7 +281,7 @@
     {
       "id": "linked-list",
       "engineId": 7,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Singly linked list",
       "category": "Structures",
       "prerequisites": [
@@ -380,17 +315,6 @@
         "edges": []
       },
       "example": "Insert 15 at index 1: 10 \u2192 15 \u2192 20 \u2192 30.",
-      "question": {
-        "revision": 1,
-        "prompt": "Which link changes when inserting after an existing node?",
-        "options": [
-          "The predecessor\u2019s next link",
-          "Every node value",
-          "No links"
-        ],
-        "correct": 0,
-        "explanation": "The new node points to the old successor and the predecessor points to the new node."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 32,
@@ -404,7 +328,7 @@
     {
       "id": "stack",
       "engineId": 8,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Stack",
       "category": "Structures",
       "prerequisites": [
@@ -437,17 +361,6 @@
         "edges": []
       },
       "example": "Push 8 onto [2,4,6]; pop returns 8.",
-      "question": {
-        "revision": 1,
-        "prompt": "Which value is popped first?",
-        "options": [
-          "The oldest value",
-          "The most recently pushed value",
-          "The smallest value"
-        ],
-        "correct": 1,
-        "explanation": "Stacks follow last-in-first-out order."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 32,
@@ -461,7 +374,7 @@
     {
       "id": "queue",
       "engineId": 9,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Queue",
       "category": "Structures",
       "prerequisites": [
@@ -494,17 +407,6 @@
         "edges": []
       },
       "example": "Enqueue 8 to [2,4,6]; dequeue returns 2.",
-      "question": {
-        "revision": 1,
-        "prompt": "Which value leaves a FIFO queue first?",
-        "options": [
-          "The newest value",
-          "The oldest value",
-          "The largest value"
-        ],
-        "correct": 1,
-        "explanation": "First-in-first-out removes the earliest enqueued value."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 32,
@@ -518,7 +420,7 @@
     {
       "id": "bst",
       "engineId": 10,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Binary search tree",
       "category": "Trees",
       "prerequisites": [
@@ -561,17 +463,6 @@
         "edges": []
       },
       "example": "Deleting root 8 transplants successor 10; inorder stays sorted.",
-      "question": {
-        "revision": 1,
-        "prompt": "Which traversal lists BST values in ascending order?",
-        "options": [
-          "Preorder",
-          "Inorder",
-          "Postorder"
-        ],
-        "correct": 1,
-        "explanation": "Inorder visits the smaller subtree, the node, then the larger subtree."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 32,
@@ -585,7 +476,7 @@
     {
       "id": "graph",
       "engineId": 11,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Graph editor",
       "category": "Graphs",
       "prerequisites": [
@@ -637,17 +528,6 @@
         ]
       },
       "example": "An undirected edge 1\u20142 is traversable from either endpoint.",
-      "question": {
-        "revision": 1,
-        "prompt": "What does an undirected edge mean?",
-        "options": [
-          "Travel is possible in both directions",
-          "Only the smaller ID can be the source",
-          "Its weight must be zero"
-        ],
-        "correct": 0,
-        "explanation": "The C adjacency matrix stores both directions."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 16,
@@ -661,7 +541,7 @@
     {
       "id": "bfs",
       "engineId": 12,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Breadth-first search",
       "category": "Graphs",
       "prerequisites": [
@@ -710,17 +590,6 @@
         ]
       },
       "example": "For edges 1\u20132, 1\u20133, 2\u20134, BFS from 1 visits 1,2,3,4.",
-      "question": {
-        "revision": 1,
-        "prompt": "Which structure manages the BFS frontier?",
-        "options": [
-          "Stack",
-          "Queue",
-          "BST"
-        ],
-        "correct": 1,
-        "explanation": "A FIFO queue visits earlier layers before later ones."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 16,
@@ -734,7 +603,7 @@
     {
       "id": "dfs",
       "engineId": 13,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Depth-first search",
       "category": "Graphs",
       "prerequisites": [
@@ -783,17 +652,6 @@
         ]
       },
       "example": "For edges 1\u20132, 1\u20133, 2\u20134, DFS from 1 visits 1,2,4,3.",
-      "question": {
-        "revision": 1,
-        "prompt": "When does DFS backtrack?",
-        "options": [
-          "When the current vertex has no unvisited outgoing neighbors",
-          "After every edge regardless of state",
-          "Only when every graph vertex is reachable"
-        ],
-        "correct": 0,
-        "explanation": "DFS returns to the parent after exhausting the current vertex\u2019s unvisited neighbors."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 16,
@@ -807,7 +665,7 @@
     {
       "id": "dijkstra",
       "engineId": 14,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "title": "Dijkstra shortest paths",
       "category": "Graphs",
       "prerequisites": [
@@ -855,17 +713,6 @@
         ]
       },
       "example": "With 1\u21922 weight 2, 2\u21923 weight 1, 1\u21923 weight 7, distances are 0,2,3.",
-      "question": {
-        "revision": 1,
-        "prompt": "Why reject negative weights?",
-        "options": [
-          "They invalidate the settled-distance argument",
-          "They cannot be stored as integers",
-          "They require an undirected graph"
-        ],
-        "correct": 0,
-        "explanation": "A later path through a negative edge could improve an already settled vertex."
-      },
       "inputSchema": {
         "type": "integer-array",
         "maxItems": 16,

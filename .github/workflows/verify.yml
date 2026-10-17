@@ -36,6 +36,14 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
+      - name: Curriculum coverage and executable examples
+        run: |
+          python3 scripts/validate-content.py
+          python3 scripts/test-content.py
+          python3 scripts/build-examples.py
+          python3 scripts/build-curriculum-migration.py
+          git diff --exit-code -- content/examples.json backend/src/main/resources/db/migration/V4__aligned_curriculum.sql
+          python3 scripts/test-examples.py
       - name: Native correctness, sanitizers and replay fixtures
         run: |
           scripts/test-native.sh
@@ -48,6 +56,7 @@ jobs:
           npm --prefix frontend run format:check
           npm --prefix frontend test
           npm --prefix frontend run build
+          python3 scripts/check-public-assets.py
           cd frontend && npx playwright install --with-deps chromium
       - name: Backend and actual MySQL transaction/security tests
         working-directory: backend

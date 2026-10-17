@@ -49,8 +49,7 @@ export function Library({
       <span className="eyebrow">PICK UP WHERE YOU LEFT OFF</span>
       <h2>Saved experiments</h2>
       <p>
-        Experiments store inputs, playback configuration, and engine version.
-        They do not store animation frames.
+        Keep the values and playback pace for experiments you want to revisit.
       </p>
       <h3>On this device</h3>
       {!local.length && (
@@ -63,7 +62,7 @@ export function Library({
           <div>
             <h3>{x.title}</h3>
             <p>
-              {x.moduleId} · {x.engineVersion} ·{" "}
+              {x.title.split(" experiment")[0]} ·{" "}
               {new Date(x.createdAt).toLocaleDateString()}
             </p>
           </div>
@@ -109,9 +108,7 @@ export function Library({
             <article className="panel saved-row" key={x.id}>
               <div>
                 <h3>{x.title}</h3>
-                <p>
-                  {x.moduleId} · {x.engineVersion}
-                </p>
+                <p>Saved learning experiment</p>
               </div>
               <button onClick={() => onLoad(x)}>Load</button>
               <button

@@ -18,10 +18,17 @@ export interface LocalExperiment {
 let database: Promise<IDBDatabase> | undefined;
 function db() {
   return (database ??= new Promise<IDBDatabase>((resolve, reject) => {
-    const request = indexedDB.open("dsa-learning-lab", 1);
+    const request = indexedDB.open("dsa-learning-lab", 2);
     request.onupgradeneeded = () => {
-      request.result.createObjectStore("checkpoints", { keyPath: "key" });
-      request.result.createObjectStore("experiments", { keyPath: "id" });
+      for (const [name, keyPath] of [
+        ["checkpoints", "key"],
+        ["experiments", "id"],
+        ["slides", "key"],
+        ["positions", "key"],
+        ["practice", "key"],
+      ])
+        if (!request.result.objectStoreNames.contains(name))
+          request.result.createObjectStore(name, { keyPath });
     };
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
@@ -89,4 +96,133 @@ export const storage = {
     transact("experiments", "readwrite", (s) => s.put(x)),
   removeExperiment: (id: string) =>
     transact("experiments", "readwrite", (s) => s.delete(id)),
+};
+
+export interface SlideCheckpoint {
+  key: string;
+  owner: string;
+  moduleId: string;
+  slideId: string;
+  completed: boolean;
+  pending: boolean;
+  stamp: string;
+}
+export interface LessonPosition {
+  key: string;
+  owner: string;
+  moduleId: string;
+  slideId: string;
+  pending: boolean;
+  stamp: string;
+}
+export const lessonStorage = {
+  slides: () =>
+    transact<SlideCheckpoint[]>("slides", "readonly", (s) => s.getAll()),
+  positions: () =>
+    transact<LessonPosition[]>("positions", "readonly", (s) => s.getAll()),
+  async checkpoint(
+    owner: string,
+    moduleId: string,
+    slideId: string,
+    completed: boolean,
+    position = true,
+    pending = true,
+  ) {
+    const database = await db();
+    const stamp = crypto.randomUUID();
+    return new Promise<void>((resolve, reject) => {
+      const transaction = database.transaction(
+        ["slides", "positions"],
+        "readwrite",
+      );
+      const store = transaction.objectStore("slides");
+      const key = `${owner}:${moduleId}:${slideId}`;
+      const request = store.get(key);
+      request.onsuccess = () =>
+        store.put({
+          key,
+          owner,
+          moduleId,
+          slideId,
+          completed: completed || !!request.result?.completed,
+          pending: pending || !!request.result?.pending,
+          stamp,
+        });
+      if (position) {
+        const positions = transaction.objectStore("positions");
+        const positionKey = `${owner}:${moduleId}`;
+        const previous = positions.get(positionKey);
+        previous.onsuccess = () => {
+          // A response from an earlier sync must never replace a newer local navigation.
+          if (!pending && previous.result?.pending) return;
+          positions.put({
+            key: positionKey,
+            owner,
+            moduleId,
+            slideId,
+            pending,
+            stamp,
+          });
+        };
+      }
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error);
+      transaction.onabort = () =>
+        reject(transaction.error ?? Error("Could not save your place"));
+    });
+  },
+  async acknowledge(
+    storeName: "slides" | "positions",
+    key: string,
+    stamp: string,
+  ) {
+    const database = await db();
+    return new Promise<void>((resolve, reject) => {
+      const tx = database.transaction(storeName, "readwrite");
+      const store = tx.objectStore(storeName);
+      const request = store.get(key);
+      request.onsuccess = () => {
+        if (request.result?.stamp === stamp)
+          store.put({ ...request.result, pending: false });
+      };
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  },
+  async moveGuestToAccount(owner: string) {
+    const existing = new Map(
+      (await this.slides())
+        .filter((x) => x.owner === owner)
+        .map((x) => [`${x.moduleId}:${x.slideId}`, x]),
+    );
+    for (const row of (await this.slides()).filter(
+      (x) => x.owner === "guest",
+    )) {
+      const old = existing.get(`${row.moduleId}:${row.slideId}`);
+      if (!old || (row.completed && !old.completed))
+        await this.checkpoint(
+          owner,
+          row.moduleId,
+          row.slideId,
+          row.completed,
+          false,
+          true,
+        );
+    }
+  },
+  loadPractice: (owner: string, moduleId: string) =>
+    transact<{ answers: Record<string, string>; result: unknown } | undefined>(
+      "practice",
+      "readonly",
+      (s) => s.get(`${owner}:${moduleId}`),
+    ),
+  savePractice: (
+    owner: string,
+    moduleId: string,
+    answers: unknown,
+    result: unknown,
+  ) =>
+    transact("practice", "readwrite", (s) =>
+      s.put({ key: `${owner}:${moduleId}`, answers, result }),
+    ),
 };

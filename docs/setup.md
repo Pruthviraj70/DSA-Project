@@ -81,6 +81,9 @@ On Windows Command Prompt, the corresponding SDK commands are `emsdk.bat install
 ## Checks
 
 ```sh
+python3 scripts/validate-content.py
+python3 scripts/test-content.py
+python3 scripts/test-examples.py               # gcc, g++, JDK 21, Python 3, Node
 scripts/test-native.sh                         # actual C17 + ASan/UBSan
 python3 scripts/generate-engine-fixtures.py    # native protocol/replay oracle
 scripts/build-wasm.sh
@@ -92,9 +95,9 @@ cd frontend && npx playwright install --with-deps chromium && cd ..
 INTEGRATED=1 npm --prefix frontend run test:e2e # backend + dev MySQL must be running
 ```
 
-Default browser runs skip only the explicitly gated authenticated integration flow when `INTEGRATED` is unset. Release acceptance uses `INTEGRATED=1`, with no skips. If the Playwright browser CDN is blocked but a compatible Chromium is already installed, set `CHROMIUM_PATH=/path/to/chromium`. The tests load actual Wasm and compare every event for 34 operations to native traces, check bounds/cancellation/reset, and exercise the UI. No mock JS engine substitutes for C.
+Default browser runs skip only the explicitly gated authenticated integration flow when `INTEGRATED` is unset. Release acceptance uses `INTEGRATED=1`, with no skips. If the Playwright browser CDN is blocked but a compatible Chromium is already installed, set `CHROMIUM_PATH=/path/to/chromium`. The tests load actual Wasm and compare every event for 35 operations to native traces, check bounds/cancellation/reset, and exercise the UI. No mock JS engine substitutes for C.
 
-`BASE_URL=http://127.0.0.1:8088 INTEGRATED=1 npm --prefix frontend run test:e2e -- e2e/learning.spec.ts e2e/slice.spec.ts e2e/authenticated.spec.ts` exercises the production Nginx/Compose bundle. The two engine harness tests run against Vite because they import the development client class; the production UI tests still execute actual Wasm workers.
+`BASE_URL=http://127.0.0.1:8088 INTEGRATED=1 npm --prefix frontend run test:e2e -- e2e/learning.spec.ts e2e/slice.spec.ts e2e/authenticated.spec.ts` exercises the production Nginx/Compose bundle. The development harness tests run against Vite because they import the development client class; the production UI tests still execute actual Wasm workers.
 
 ## Restricted cloud/proxy networks
 
@@ -103,3 +106,10 @@ Required destinations include GitHub (checkout/SDK), npm registry, Maven Central
 For a read-only home directory, use writable task paths for `npm --cache`, `MAVEN_USER_HOME`, `-Dmaven.repo.local`, `DOCKER_CONFIG`, `BUILDX_CONFIG`, and `PLAYWRIGHT_BROWSERS_PATH`. Avoid changing HOME. Java/Maven may need an explicit trusted proxy because they do not automatically consume HTTPS_PROXY. Configure Maven's supported settings.xml `<proxies>` and JVM proxy host/port for the wrapper bootstrap. Preserve TLS verification and use the organization's trusted CA store.
 
 `compose.build-proxy.yaml` optionally mounts local Maven settings, wrapper JVM options, a Java truststore and a PEM CA bundle as **BuildKit secrets**, and passes Docker's predefined proxy build arguments for npm. Set `MAVEN_SETTINGS_FILE`, `MAVEN_OPTS_FILE`, `JAVA_TRUSTSTORE_FILE`, `NETWORK_CA_FILE` to local paths, then build with `docker compose -f compose.yaml -f compose.build-proxy.yaml build`. The Maven options file can specify `-Dhttps.proxyHost=... -Dhttps.proxyPort=... -Djavax.net.ssl.trustStore=/run/secrets/java_truststore`. Never commit that file. If a platform proxy hostname exists only in the host's hosts file, provide the same trusted mapping using Compose `build.extra_hosts` in a local ignored override. Do not bypass the proxy or disable TLS to make a build pass.
+
+
+## Updating an existing installation
+
+Back up MySQL before upgrading. Keep the existing `.env` and named MySQL volume; do not use `docker compose down -v`. Rebuild/restart with `docker compose up --build -d`; Flyway applies V3/V4 automatically without resetting data. Accounts, roles, historical attempts, percentage activity and saved experiments are retained. Newly authored pages begin unread. IndexedDB upgrades automatically without clearing guest data. A browser refresh loads the new UI; saved 1.0.0 experiments remain usable. See database.md for grouping and merge rules.
+
+For host development, stop a running JAR before replacing it, or run an immutable copy outside `backend/target`: Maven repackaging can invalidate classes lazily loaded by a process reading a replaced JAR. Rebuild Wasm after C changes. Example-language tests require `g++` as well as the C compiler and an actual JDK with `javac`; set `JAVA_HOME` to that JDK. Container-based MySQL tests preserve the development volume by creating separate disposable databases.
