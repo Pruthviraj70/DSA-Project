@@ -28,7 +28,7 @@ A versioned module registry binds schemas, lifecycle, C implementations, event a
 - [x] E: Complete engine lifecycle, bounded execution and all released modules; native correctness, replay and cleanup tests.
 - [x] F: Complete learning interface, predictions, comparison and assessments.
 - [x] G: Complete authentication, normalized migrations, persistence, ownership and grading.
-- [ ] H: Integrated browser/MySQL verification, CI, cross-platform documentation and reviewable Git delivery.
+- [x] H: Integrated browser/MySQL verification, CI, cross-platform documentation and reviewable Git delivery.
 
 Tests will be recorded as executed/pass/fail/blocked, never inferred. Completion requires every listed module to run through the C engine and documented setup to reproduce the application. Final documentation must exist before removing this temporary record.
 
@@ -37,3 +37,5 @@ Vertical slice evidence: native array tests (5 cases) pass with AddressSanitizer
 Engine milestone: 1,555 native cases pass with ASan/UBSan. All 34 operations across 14 modules have matching native and actual Chromium/Wasm protocol traces; sort write/swap replay is independently checked. Worker batch cap, cancellation and deterministic reset pass browser checks. Full UI build and 4 registry/validation unit tests pass. Seven of eight first UI browser flows pass; mobile overflow is being corrected. Backend/MySQL checks remain in progress.
 
 Learning/persistence milestones: React production build, 4 frontend unit checks, and all 9 integrated Chromium flows pass, including guest IndexedDB retention, predictions, backwards/reset controls, comparison, graph edits, responsive keyboard controls, registration/login/logout, guest merge, official grading and account experiment persistence. Backend: 9 actual-MySQL Testcontainers tests pass without skips. Expanded native suite: 2,168 cases pass with sanitizers, including randomized directed/undirected shortest-path/reachability oracles and event-budget enforcement. Production Compose builds are being verified using optional BuildKit proxy/trust secrets (the cloud proxy hostname needs its host mapping inside build containers).
+
+Final evidence: 2,168 sanitizer cases, 34 native/Wasm operation traces, 5 frontend unit checks, 9 real-MySQL backend checks, 11 integrated development browser tests and 8 production Compose browser tests pass with no skips. Source asset permissions and removed-value event semantics were corrected and retested. Final README and documentation now consolidate this plan, architecture, milestones and outcomes; this temporary record can be removed. Git publication is the remaining external delivery action.
