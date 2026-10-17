@@ -12,7 +12,7 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "preview": "vite preview --host 0.0.0.0",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"e2e/*.ts\" \"*.ts\""
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"e2e/*.ts\" \"*.ts\" \"public/theme.js\" \"index.html\""
   },
   "dependencies": {
     "prismjs": "1.30.0",

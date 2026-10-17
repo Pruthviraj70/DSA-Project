@@ -20,6 +20,8 @@ export function Lesson({
   completed,
   isComplete,
   onCheckpoint,
+  onFoundationCompletion,
+  completionPending,
   authenticated,
   owner,
   loaded,
@@ -30,6 +32,8 @@ export function Lesson({
   completed: string[];
   isComplete: (id: string) => boolean;
   onCheckpoint: (moduleId: string, slideId: string, complete: boolean) => void;
+  completionPending: boolean;
+  onFoundationCompletion: (completed: boolean) => Promise<void>;
   authenticated: boolean;
   owner: string;
   loaded?: { input: Input; speed: number };
@@ -114,6 +118,31 @@ export function Lesson({
           </span>
         </div>
       </div>
+      {module.id === "foundations" && (
+        <section
+          className="module-completion-controls"
+          aria-label="Foundations completion"
+        >
+          <p>
+            {isComplete("foundations")
+              ? "Foundations completed."
+              : "Foundations is in progress."}{" "}
+            Marking incomplete starts a new pass through the pages. Your quiz
+            history is kept.{" "}
+            {completionPending
+              ? "Your completion change is saved locally and waiting to synchronize."
+              : ""}
+          </p>
+          <button
+            disabled={completionPending}
+            onClick={() =>
+              void onFoundationCompletion(!isComplete("foundations"))
+            }
+          >
+            {isComplete("foundations") ? "Mark incomplete" : "Mark completed"}
+          </button>
+        </section>
+      )}
       {unmet.length > 0 && (
         <aside className="prerequisites" aria-label="Recommended prerequisites">
           <strong>

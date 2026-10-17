@@ -1,6 +1,6 @@
 # Database design
 
-MySQL 8.4 LTS; InnoDB, foreign keys and checked constraints. Flyway is authoritative; Hibernate validates tables. V1/V2 are retained unchanged. V3 adds stable slides, concepts, aligned question selection and page progress/positions. V4 seeds nine grouped lessons, 87 slides, 71 concepts and 33 new recorded questions with guarded inserts, plus runtime 1.1.0 metadata. All 14 old questions/revisions and their attempt references remain intact. V4 can be rerun without duplicate content or changes to history. After this update ships, add V5+; never rewrite applied migrations. `scripts/build-curriculum-migration.py` reproduces V4 only for this update; the old seed script refuses to overwrite V2.
+MySQL 8.4 LTS; InnoDB, foreign keys and checked constraints. Flyway is authoritative; Hibernate validates tables. V1/V2 are retained unchanged. V3 adds stable slides, concepts, aligned question selection and page progress/positions. V4 seeds nine grouped lessons, 87 slides, 71 concepts and 33 new recorded questions with guarded inserts, plus runtime 1.1.0 metadata. All 14 old questions/revisions and their attempt references remain intact. V4 can be rerun without duplicate content or changes to history. V5 adds module completion/reset history (see below). Future updates add V6+; never rewrite applied migrations. `scripts/build-curriculum-migration.py` reproduces V4 only for this update; the old seed script refuses to overwrite V2.
 
 ```mermaid
 erDiagram
@@ -22,6 +22,12 @@ erDiagram
  lessons ||--o{ lesson_progress : completes
  users ||--o{ saved_experiments : owns
  algorithm_versions ||--o{ saved_experiments : executes
+ users ||--o{ lesson_module_progress : module_status
+ lessons ||--o{ lesson_module_progress : completion_generation
+ users ||--o{ lesson_module_actions : explicit_actions
+ lessons ||--o{ lesson_module_actions : action_history
+ users ||--o{ lesson_slide_progress_history : prior_passes
+ lesson_slides ||--o{ lesson_slide_progress_history : archived_completion
  lessons ||--o{ lesson_slides : pages
  lesson_slides ||--o{ slide_concepts : teaches
  curriculum_concepts ||--o{ slide_concepts : taught
@@ -86,3 +92,10 @@ Stable slugs remain independent of page order. The grouped Searching/Sorting les
 ## Instructor report
 
 `difficult_questions` groups answers by module, stable question key and revision, showing answer count, missed count and miss percentage. `GET /api/reports/difficult-topics` is instructor-only and paginated. Counts are descriptive and can be sparse; they do not establish causation or educational efficacy. See [SQL examples](sql-examples.sql) for a topic-level aggregation. Provision an instructor deliberately with an administrative SQL transaction; registration always grants STUDENT only.
+
+
+## Explicit Foundations completion and resets (V5)
+
+`lesson_module_progress` has `(user_id,lesson_id)` PK/FKs, `manual_completed`, current `generation` and update time. `lesson_module_actions` has `(user_id,action_id)` PK, lesson FK, resulting generation, completed flag and creation time; it makes explicit actions idempotent. `lesson_slide_progress.generation` defaults to zero for all existing rows. `lesson_slide_progress_history` preserves `(user_id,slide_id,generation,completed,updated_at)` with a composite PK before a reset permits current rows to be reused. No existing content, users, experiments or attempts are rewritten.
+
+Normal completion still means every current page completed, while manual completion satisfies the same module/prerequisite predicate independently of pages. Explicit incomplete starts a new generation in a transaction and preserves quiz history. GET progress counts only the current generation; stale-generation checkpoints are ignored. Within a generation completion remains monotonic. Per-account guest-import receipts prevent previously merged activity from undoing an explicit reset; new guest updates still union according to the existing merge rule. IndexedDB version 3 retains previous stores and adds modules/merges. See learning-preferences.md.

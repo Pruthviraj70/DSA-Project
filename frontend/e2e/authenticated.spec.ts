@@ -18,6 +18,9 @@ test("login merges explicit guest slides, records server grading and restores ac
   await page
     .getByLabel("Password", { exact: true })
     .fill("integration-passphrase-42");
+  await page
+    .getByLabel("Confirm password", { exact: true })
+    .fill("integration-passphrase-42");
   await page.getByRole("button", { name: "Register and sign in" }).click();
   await expect(
     page.getByRole("heading", { name: "Welcome, Lesson Learner" }),
@@ -71,6 +74,9 @@ test("login merges explicit guest slides, records server grading and restores ac
   await expect(
     page.getByRole("region", { name: "Quiz results" }),
   ).toContainText("Recorded result:");
+  await expect(page.locator(".selected-incorrect")).toHaveCount(2);
+  for (const wrong of await page.locator(".selected-incorrect input").all())
+    await expect(wrong).toBeChecked();
   await expect(
     page.getByRole("link", { name: /Review:/ }).first(),
   ).toBeVisible();

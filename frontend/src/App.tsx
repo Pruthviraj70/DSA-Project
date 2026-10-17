@@ -8,6 +8,7 @@ import {
   slideForExperiment,
   type Location,
 } from "./curriculum";
+import { ThemeToggle } from "./ThemeToggle";
 import { Home, ModuleIcon } from "./Home";
 import { Lesson } from "./Lesson";
 import { Account } from "./Account";
@@ -178,6 +179,7 @@ export default function App() {
             </span>
             {user?.authenticated ? user.displayName : "Sign in"}
           </a>
+          <ThemeToggle />
         </nav>
       </header>
       <main id="main" tabIndex={-1}>
@@ -196,7 +198,14 @@ export default function App() {
           </div>
         )}
         {location.page === "home" ? (
-          <Home completed={learning.completed} positions={learning.positions} />
+          <Home
+            completed={learning.completed}
+            positions={learning.positions}
+            ready={!!user && learning.ready}
+            completionPending={!!learning.moduleProgress.foundations?.pending}
+            foundationComplete={learning.isComplete("foundations")}
+            onComplete={() => void learning.setFoundationCompletion(true)}
+          />
         ) : location.page === "account" ? (
           <Account
             user={user ?? { authenticated: false }}
@@ -230,6 +239,14 @@ export default function App() {
                     {learning.completed[m.id]?.length ?? 0} / {m.slides.length}{" "}
                     pages complete
                   </p>
+                  {learning.isComplete(m.id) && (
+                    <p className="completion-label">
+                      Module completed
+                      {learning.moduleProgress[m.id]?.manualCompleted
+                        ? " manually"
+                        : ""}
+                    </p>
+                  )}
                   <progress
                     aria-label={`${m.title} page completion`}
                     max={m.slides.length}
@@ -248,6 +265,8 @@ export default function App() {
             completed={learning.completed[module.id] ?? []}
             isComplete={learning.isComplete}
             onCheckpoint={learning.checkpoint}
+            onFoundationCompletion={learning.setFoundationCompletion}
+            completionPending={!!learning.moduleProgress.foundations?.pending}
             authenticated={user.authenticated}
             owner={learning.owner}
             loaded={

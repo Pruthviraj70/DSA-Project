@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { registrationErrors } from "./registration";
 import { api, type User } from "./api";
 export function Account({
   user,
@@ -12,11 +13,18 @@ export function Account({
   const [register, setRegister] = useState(false),
     [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
+    [confirmation, setConfirmation] = useState(""),
+    [touched, setTouched] = useState({ password: false, confirmation: false }),
     [name, setName] = useState(""),
     [busy, setBusy] = useState(false),
     [message, setMessage] = useState("");
+  const errors = registrationErrors(password, confirmation);
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (register) {
+      setTouched({ password: true, confirmation: true });
+      if (errors.password || errors.confirmation) return;
+    }
     setBusy(true);
     setMessage("");
     try {
@@ -26,6 +34,8 @@ export function Account({
         { email, password, ...(register ? { displayName: name } : {}) },
       );
       setPassword("");
+      setConfirmation("");
+      setTouched({ password: false, confirmation: false });
       await onUser(u);
       setMessage("Signed in. Your saved place will synchronize automatically.");
     } catch (e) {
@@ -79,14 +89,21 @@ export function Account({
             <button
               type="button"
               aria-pressed={!register}
-              onClick={() => setRegister(false)}
+              onClick={() => {
+                setRegister(false);
+                setConfirmation("");
+                setTouched({ password: false, confirmation: false });
+              }}
             >
               Sign in
             </button>
             <button
               type="button"
               aria-pressed={register}
-              onClick={() => setRegister(true)}
+              onClick={() => {
+                setRegister(true);
+                setTouched({ password: false, confirmation: false });
+              }}
             >
               Create account
             </button>
@@ -120,16 +137,62 @@ export function Account({
               type="password"
               value={password}
               required
-              minLength={register ? 12 : 1}
+              minLength={register ? 5 : 1}
+              onInvalid={() => {
+                if (register) setTouched((t) => ({ ...t, password: true }));
+              }}
+              onBlur={() => setTouched((t) => ({ ...t, password: true }))}
+              aria-invalid={register && touched.password && !!errors.password}
+              aria-describedby={
+                register && touched.password && errors.password
+                  ? "password-error"
+                  : undefined
+              }
               maxLength={72}
               autoComplete={register ? "new-password" : "current-password"}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                e.currentTarget.setCustomValidity("");
+                setPassword(e.target.value);
+              }}
             />
           </label>
-          {register && (
-            <p className="muted">
-              Use 12–72 characters, at most 72 UTF-8 bytes.
+          {register && touched.password && errors.password && (
+            <p id="password-error" className="error" role="alert">
+              {errors.password}
             </p>
+          )}
+          {register && (
+            <>
+              <label>
+                Confirm password
+                <input
+                  type="password"
+                  name="password-confirmation"
+                  required
+                  maxLength={72}
+                  autoComplete="new-password"
+                  value={confirmation}
+                  aria-invalid={touched.confirmation && !!errors.confirmation}
+                  aria-describedby={
+                    touched.confirmation && errors.confirmation
+                      ? "confirmation-error"
+                      : undefined
+                  }
+                  onInvalid={() =>
+                    setTouched((t) => ({ ...t, confirmation: true }))
+                  }
+                  onBlur={() =>
+                    setTouched((t) => ({ ...t, confirmation: true }))
+                  }
+                  onChange={(e) => setConfirmation(e.target.value)}
+                />
+              </label>
+              {touched.confirmation && errors.confirmation && (
+                <p id="confirmation-error" className="error" role="alert">
+                  {errors.confirmation}
+                </p>
+              )}
+            </>
           )}
           <button className="primary" disabled={busy}>
             {busy

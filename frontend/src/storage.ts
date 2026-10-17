@@ -18,7 +18,7 @@ export interface LocalExperiment {
 let database: Promise<IDBDatabase> | undefined;
 function db() {
   return (database ??= new Promise<IDBDatabase>((resolve, reject) => {
-    const request = indexedDB.open("dsa-learning-lab", 2);
+    const request = indexedDB.open("dsa-learning-lab", 3);
     request.onupgradeneeded = () => {
       for (const [name, keyPath] of [
         ["checkpoints", "key"],
@@ -26,11 +26,22 @@ function db() {
         ["slides", "key"],
         ["positions", "key"],
         ["practice", "key"],
+        ["modules", "key"],
+        ["merges", "key"],
       ])
         if (!request.result.objectStoreNames.contains(name))
           request.result.createObjectStore(name, { keyPath });
     };
-    request.onsuccess = () => resolve(request.result);
+    request.onblocked = () =>
+      reject(
+        Error(
+          "Close other Learning Lab tabs and refresh to update local progress.",
+        ),
+      );
+    request.onsuccess = () => {
+      request.result.onversionchange = () => request.result.close();
+      resolve(request.result);
+    };
     request.onerror = () => reject(request.error);
   }));
 }
@@ -98,12 +109,23 @@ export const storage = {
     transact("experiments", "readwrite", (s) => s.delete(id)),
 };
 
+export interface ModuleProgress {
+  key: string;
+  owner: string;
+  moduleId: string;
+  generation: number;
+  manualCompleted: boolean;
+  stamp: string;
+  pending: boolean;
+  action?: { completed: boolean; generation: number; actionId: string };
+}
 export interface SlideCheckpoint {
   key: string;
   owner: string;
   moduleId: string;
   slideId: string;
   completed: boolean;
+  generation?: number;
   pending: boolean;
   stamp: string;
 }
@@ -116,6 +138,39 @@ export interface LessonPosition {
   stamp: string;
 }
 export const lessonStorage = {
+  modules: () =>
+    transact<ModuleProgress[]>("modules", "readonly", (s) => s.getAll()),
+  async putModule(row: ModuleProgress, remote = false) {
+    const database = await db();
+    return new Promise<void>((resolve, reject) => {
+      const tx = database.transaction("modules", "readwrite"),
+        store = tx.objectStore("modules"),
+        r = store.get(row.key);
+      r.onsuccess = () => {
+        if (!remote || !r.result?.pending) store.put(row);
+      };
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  },
+  async acknowledgeModule(
+    row: ModuleProgress,
+    result: { generation: number; manualCompleted: boolean },
+  ) {
+    const database = await db();
+    return new Promise<void>((resolve, reject) => {
+      const tx = database.transaction("modules", "readwrite"),
+        store = tx.objectStore("modules"),
+        r = store.get(row.key);
+      r.onsuccess = () => {
+        if (r.result?.stamp === row.stamp)
+          store.put({ ...row, ...result, pending: false, action: undefined });
+      };
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  },
+
   slides: () =>
     transact<SlideCheckpoint[]>("slides", "readonly", (s) => s.getAll()),
   positions: () =>
@@ -127,6 +182,7 @@ export const lessonStorage = {
     completed: boolean,
     position = true,
     pending = true,
+    generation = 0,
   ) {
     const database = await db();
     const stamp = crypto.randomUUID();
@@ -136,7 +192,9 @@ export const lessonStorage = {
         "readwrite",
       );
       const store = transaction.objectStore("slides");
-      const key = `${owner}:${moduleId}:${slideId}`;
+      const key = generation
+        ? `${owner}:${moduleId}:${slideId}:${generation}`
+        : `${owner}:${moduleId}:${slideId}`;
       const request = store.get(key);
       request.onsuccess = () =>
         store.put({
@@ -145,6 +203,7 @@ export const lessonStorage = {
           moduleId,
           slideId,
           completed: completed || !!request.result?.completed,
+          generation,
           pending: pending || !!request.result?.pending,
           stamp,
         });
@@ -190,32 +249,82 @@ export const lessonStorage = {
     });
   },
   async moveGuestToAccount(owner: string) {
-    const existing = new Map(
-      (await this.slides())
-        .filter((x) => x.owner === owner)
-        .map((x) => [`${x.moduleId}:${x.slideId}`, x]),
+    const states = await this.modules();
+    const guestState = states.find(
+      (x) => x.owner === "guest" && x.moduleId === "foundations",
     );
+    const accountState = states.find(
+      (x) => x.owner === owner && x.moduleId === "foundations",
+    );
+    // Import each guest update once per account. A reset does not resurrect acknowledged guest activity.
+    const imports = await transact<{ key: string; stamp: string }[]>(
+      "merges",
+      "readonly",
+      (s) => s.getAll(),
+    );
+    const seen = new Map(imports.map((x) => [x.key, x.stamp]));
     for (const row of (await this.slides()).filter(
       (x) => x.owner === "guest",
     )) {
-      const old = existing.get(`${row.moduleId}:${row.slideId}`);
-      if (!old || (row.completed && !old.completed))
-        await this.checkpoint(
-          owner,
-          row.moduleId,
-          row.slideId,
-          row.completed,
-          false,
-          true,
-        );
+      if (
+        (row.generation ?? 0) !==
+        (row.moduleId === "foundations" ? (guestState?.generation ?? 0) : 0)
+      )
+        continue;
+      const key = `${owner}:${row.key}`;
+      if (seen.get(key) === row.stamp) continue;
+      await this.checkpoint(
+        owner,
+        row.moduleId,
+        row.slideId,
+        row.completed,
+        false,
+        true,
+        row.moduleId === "foundations" ? (accountState?.generation ?? 0) : 0,
+      );
+      await transact("merges", "readwrite", (s) =>
+        s.put({ key, stamp: row.stamp }),
+      );
+    }
+    if (
+      guestState?.manualCompleted &&
+      seen.get(`${owner}:manual-foundations`) !== guestState.stamp
+    ) {
+      const generation = accountState?.generation ?? 0;
+      const stamp = crypto.randomUUID();
+      await this.putModule({
+        key: `${owner}:foundations`,
+        owner,
+        moduleId: "foundations",
+        generation,
+        manualCompleted: true,
+        pending: true,
+        stamp,
+        action: { completed: true, generation, actionId: stamp },
+      });
+      await transact("merges", "readwrite", (s) =>
+        s.put({ key: `${owner}:manual-foundations`, stamp: guestState.stamp }),
+      );
     }
   },
   loadPractice: (owner: string, moduleId: string) =>
-    transact<{ answers: Record<string, string>; result: unknown } | undefined>(
-      "practice",
-      "readonly",
-      (s) => s.get(`${owner}:${moduleId}`),
-    ),
+    transact<
+      | { answers: Record<string, string>; result: unknown; retrying?: boolean }
+      | undefined
+    >("practice", "readonly", (s) => s.get(`${owner}:${moduleId}`)),
+  async beginPracticeRetry(owner: string, moduleId: string) {
+    const database = await db();
+    return new Promise<void>((resolve, reject) => {
+      const tx = database.transaction("practice", "readwrite"),
+        store = tx.objectStore("practice"),
+        key = `${owner}:${moduleId}`,
+        request = store.get(key);
+      request.onsuccess = () =>
+        store.put({ ...request.result, key, retrying: true });
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  },
   savePractice: (
     owner: string,
     moduleId: string,

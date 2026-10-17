@@ -63,6 +63,12 @@ Foundations is a recorded recommended prerequisite. Exploration is open; unmet p
 
 Inputs are bounded at **32** sequence values / **16** graph vertices. Graph IDs are unique integers 1..31; self-loops are allowed; setting a parallel edge replaces its weight. Undirected edges are symmetric. Conceptual links/IDs are distinct from browser memory addresses. Every released module uses the C engine; advanced topics appear only in the [curriculum roadmap](docs/roadmap.md).
 
+## Learning preferences
+
+The home Foundations introduction can be marked completed or hidden by finishing all its pages. A permanent Foundations link remains; its module page can mark it incomplete and start a new progress pass while retaining quiz history. Guests save locally and accounts synchronize the choice. Registration requires matching password fields and a minimum of five characters, with the existing maximum safeguards. Graded quizzes retain options and identify only selected wrong answers with a subtle red tint and an Incorrect label.
+
+Use the header light/dark toggle on any screen. It follows the system by default, remembers explicit choices, and offers Auto to follow the system again. See [completion, registration, feedback and themes](docs/learning-preferences.md) for behavior, compatibility and checks.
+
 ## Learning workflow
 
 Choose a tile and move through one coherent lesson. Operation slides pair explanations and complete example functions with the relevant visualization and controls. The first array page includes values, indices, illustrative contiguous addresses, element size and the address formula. Foundations adds interactive operation counts, growth comparisons and a call-stack illustration.
@@ -104,7 +110,7 @@ python3 scripts/check-public-assets.py
 INTEGRATED=1 npm --prefix frontend run test:e2e
 ```
 
-See [update verification](docs/verification-update.md) and the [original verification record](docs/verification.md) for executed results and limitations, [release checklist](docs/release-status.md) for milestone evidence, and [setup](docs/setup.md) for test prerequisites. GitHub Actions runs the same relevant checks, including actual MySQL and actual browser Wasm execution. No performance superiority or educational benefit is claimed without measurement.
+See [preferences verification](docs/verification-preferences.md), [redesign verification](docs/verification-update.md) and the [original verification record](docs/verification.md) for executed results and limitations, [release checklist](docs/release-status.md) for milestone evidence, and [setup](docs/setup.md) for test prerequisites. GitHub Actions runs the same relevant checks, including actual MySQL and actual browser Wasm execution. No performance superiority or educational benefit is claimed without measurement.
 
 ## Documentation
 

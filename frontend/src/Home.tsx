@@ -76,9 +76,17 @@ export function ModuleIcon({ kind }: { kind: string }) {
 export function Home({
   completed,
   positions,
+  ready,
+  foundationComplete,
+  onComplete,
+  completionPending,
 }: {
   completed: Record<string, string[]>;
   positions: Record<string, string>;
+  completionPending: boolean;
+  ready: boolean;
+  foundationComplete: boolean;
+  onComplete: () => void;
 }) {
   const [query, setQuery] = useState("");
   const shown = lessons.filter((m) =>
@@ -123,6 +131,9 @@ export function Home({
         <p>
           Explore a structure. Trace an algorithm. Explain what happens next.
         </p>
+        <a className="foundations-link" href="#/lesson/foundations">
+          Foundations →
+        </a>
         <label className="catalog-search">
           Find your next topic
           <input
@@ -134,27 +145,36 @@ export function Home({
           />
         </label>
       </section>
-      <section
-        className="foundation-section"
-        aria-labelledby="foundations-title"
-      >
-        <div>
-          <span className="eyebrow">START HERE</span>
-          <h2 id="foundations-title">Foundations</h2>
-          <p>
-            Learn the language of data structures: values, correctness,
-            operation counts, complexity and call stacks. No advanced
-            mathematics required.
-          </p>
-          <a className="text-link" href="#/lesson/foundations">
-            {positions.foundations
-              ? "Continue Foundations"
-              : "Begin with the basics"}{" "}
-            →
-          </a>
-        </div>
-        {tile(foundation.id)}
-      </section>
+      {ready && !foundationComplete && (
+        <section
+          className="foundation-section"
+          aria-labelledby="foundations-title"
+        >
+          <div>
+            <span className="eyebrow">START HERE</span>
+            <h2 id="foundations-title">Foundations</h2>
+            <p>
+              Learn the language of data structures: values, correctness,
+              operation counts, complexity and call stacks. No advanced
+              mathematics required.
+            </p>
+            <a className="text-link" href="#/lesson/foundations">
+              {positions.foundations
+                ? "Continue Foundations"
+                : "Begin with the basics"}{" "}
+              →
+            </a>
+            <button
+              className="foundation-complete"
+              disabled={completionPending}
+              onClick={onComplete}
+            >
+              Mark completed
+            </button>
+          </div>
+          {tile(foundation.id)}
+        </section>
+      )}
       <div className="catalog-columns">
         {["Data Structures", "Algorithms"].map((category) => (
           <section key={category} aria-label={category}>

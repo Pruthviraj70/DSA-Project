@@ -93,7 +93,11 @@ export function Assessment({
           .loadPractice(owner, module.id)
           .then((saved) => {
             const r = saved?.result as Result | undefined;
-            if (active && r?.practiceRevision === practiceRevision) {
+            if (
+              active &&
+              !saved?.retrying &&
+              r?.practiceRevision === practiceRevision
+            ) {
               setAnswers(saved!.answers);
               setResult(r);
             }
@@ -153,28 +157,46 @@ export function Assessment({
         new attempt; earlier results stay unchanged.
       </p>
       {!questions.length && !error && <p role="status">Loading questions…</p>}
-      {!result &&
-        questions.map((q, i) => (
+      {questions.map((q, i) => {
+        const feedback = result?.feedback.find((f) =>
+          q.revisionId
+            ? f.revisionId === q.revisionId
+            : f.questionKey === q.key,
+        );
+        return (
           <fieldset key={q.key}>
             <legend>
               {i + 1}. {q.prompt}
             </legend>
             {q.options.map((o) => (
-              <label key={o.key} className="answer-option">
+              <label
+                key={o.key}
+                className={`answer-option ${feedback && answers[q.key] === o.key ? (feedback.correct ? "selected-correct" : "selected-incorrect") : ""}`}
+              >
                 <input
                   type="radio"
                   name={`quiz-${q.key}`}
                   value={o.key}
                   checked={answers[q.key] === o.key}
+                  disabled={!!result || busy}
                   onChange={() =>
                     setAnswers((old) => ({ ...old, [q.key]: o.key }))
                   }
                 />
-                {o.text}
+                <span>{o.text}</span>
+                {feedback && answers[q.key] === o.key && (
+                  <strong className="answer-indicator">
+                    {feedback.correct ? "Correct" : "Incorrect"}
+                  </strong>
+                )}
               </label>
             ))}
+            {result && answers[q.key] === undefined && (
+              <p className="unanswered">Unanswered</p>
+            )}
           </fieldset>
-        ))}
+        );
+      })}
       {!result && (
         <button
           className="primary"
@@ -219,7 +241,24 @@ export function Assessment({
               </div>
             </article>
           ))}
-          <button onClick={() => setRetry((x) => x + 1)}>Retry quiz</button>
+          <button
+            onClick={async () => {
+              if (!authenticated) {
+                try {
+                  await lessonStorage.beginPracticeRetry(owner, module.id);
+                } catch (error) {
+                  setError((error as Error).message);
+                  return;
+                }
+              }
+              setResult(undefined);
+              setAnswers({});
+              setQuestions([]);
+              setRetry((x) => x + 1);
+            }}
+          >
+            Retry quiz
+          </button>
           <p>
             Your previous submission is kept; a retry starts with unanswered
             questions.

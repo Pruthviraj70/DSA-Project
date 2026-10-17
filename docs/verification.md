@@ -1,5 +1,7 @@
 # Verification record
 
+For completion/theme/registration updates, see [preferences verification](verification-preferences.md).
+
 For the subsequent lesson redesign, see [update verification and compatibility evidence](verification-update.md). Original release results below are historical.
 
 Release validation machine: Linux amd64; Java 21.0.12.1 full JDK, Maven wrapper 3.9.11/3.3.4, Node 24.19.0, Emscripten 4.0.18 Docker compiler, GCC C17 and installed Chromium through Playwright 1.64.1. Exact frontend versions/integrities are in package-lock.json; Boot 3.5.16 controls backend transitive versions.

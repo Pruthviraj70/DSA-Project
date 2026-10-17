@@ -84,7 +84,7 @@ class ReleaseIntegrationTest {
         47, jdbc.queryForObject("SELECT COUNT(*) FROM difficult_questions", Integer.class));
     assertTrue(jdbc.queryForObject("SELECT COUNT(*) FROM topic_prerequisites", Integer.class) > 10);
     assertEquals(
-        4,
+        5,
         jdbc.queryForObject(
             "SELECT COUNT(*) FROM flyway_schema_history WHERE success=1", Integer.class));
   }
@@ -148,7 +148,7 @@ class ReleaseIntegrationTest {
             post("/api/auth/register")
                 .with(csrf())
                 .contentType("application/json")
-                .content(json(Map.of("email", "bad", "password", "short", "displayName", "x"))))
+                .content(json(Map.of("email", "bad", "password", "tiny", "displayName", "x"))))
         .andExpect(status().isBadRequest());
     mvc.perform(get("/api/experiments")).andExpect(status().isUnauthorized());
     var a = register();
@@ -454,5 +454,169 @@ class ReleaseIntegrationTest {
                 .session((MockHttpSession) result.getRequest().getSession(false)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items.length()").value(5));
+  }
+
+  @Test
+  void fiveCharacterPasswordsHaveNoCompositionRequirements() throws Exception {
+    for (String password : List.of("abcde", "12345", "ABCDE", "!!!!!")) {
+      String email = "password-" + UUID.randomUUID() + "@example.test";
+      mvc.perform(
+              post("/api/auth/register")
+                  .with(csrf())
+                  .contentType("application/json")
+                  .content(
+                      json(Map.of("email", email, "displayName", "Learner", "password", password))))
+          .andExpect(status().isOk());
+      assertTrue(
+          encoder.matches(password, users.findByEmail(email).orElseThrow().getPasswordHash()));
+    }
+    mvc.perform(
+            post("/api/auth/register")
+                .with(csrf())
+                .contentType("application/json")
+                .content(
+                    json(
+                        Map.of(
+                            "email",
+                            "short@example.test",
+                            "displayName",
+                            "Learner",
+                            "password",
+                            "four"))))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.message").value("Password must be at least 5 characters."));
+    mvc.perform(
+            post("/api/auth/register")
+                .with(csrf())
+                .contentType("application/json")
+                .content(
+                    json(
+                        Map.of(
+                            "email",
+                            "long@example.test",
+                            "displayName",
+                            "Learner",
+                            "password",
+                            "é".repeat(37)))))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void foundationsManualCompletionResetAndStaleCheckpointsPreserveHistory() throws Exception {
+    var a = register();
+    var b = register();
+    String action = UUID.randomUUID().toString();
+    int attemptsBefore = jdbc.queryForObject("SELECT COUNT(*) FROM attempts", Integer.class);
+    mvc.perform(
+            post("/api/learning/modules/foundations/completion")
+                .session(a.session())
+                .with(csrf())
+                .contentType("application/json")
+                .content(json(Map.of("completed", true, "generation", 0, "actionId", action))))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.manualCompleted").value(true));
+    mvc.perform(get("/api/learning/modules").session(b.session()))
+        .andExpect(jsonPath("$.items.length()").value(0));
+    mvc.perform(get("/api/learning/progress").session(a.session()))
+        .andExpect(jsonPath("$.total").value(0));
+    assertEquals(
+        attemptsBefore, jdbc.queryForObject("SELECT COUNT(*) FROM attempts", Integer.class));
+    mvc.perform(
+            post("/api/learning/checkpoints")
+                .session(a.session())
+                .with(csrf())
+                .contentType("application/json")
+                .content(
+                    json(
+                        Map.of(
+                            "moduleId",
+                            "foundations",
+                            "slideId",
+                            "ideas",
+                            "completed",
+                            true,
+                            "generation",
+                            0))))
+        .andExpect(status().isOk());
+    String reset =
+        json(Map.of("completed", false, "generation", 0, "actionId", UUID.randomUUID().toString()));
+    for (int i = 0; i < 2; i++)
+      mvc.perform(
+              post("/api/learning/modules/foundations/completion")
+                  .session(a.session())
+                  .with(csrf())
+                  .contentType("application/json")
+                  .content(reset))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.generation").value(1));
+    assertEquals(
+        1,
+        jdbc.queryForObject(
+            "SELECT COUNT(*) FROM lesson_slide_progress_history WHERE user_id=?",
+            Integer.class,
+            a.id()));
+    mvc.perform(get("/api/learning/progress").session(a.session()))
+        .andExpect(jsonPath("$.total").value(0));
+    mvc.perform(
+            post("/api/learning/checkpoints")
+                .session(a.session())
+                .with(csrf())
+                .contentType("application/json")
+                .content(
+                    json(
+                        Map.of(
+                            "moduleId",
+                            "foundations",
+                            "slideId",
+                            "ideas",
+                            "completed",
+                            true,
+                            "generation",
+                            0))))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.ignored").value(true));
+    mvc.perform(
+            post("/api/learning/modules/foundations/completion")
+                .session(a.session())
+                .with(csrf())
+                .contentType("application/json")
+                .content(
+                    json(
+                        Map.of(
+                            "completed",
+                            true,
+                            "generation",
+                            0,
+                            "actionId",
+                            UUID.randomUUID().toString()))))
+        .andExpect(status().isConflict());
+    mvc.perform(
+            post("/api/learning/checkpoints")
+                .session(a.session())
+                .with(csrf())
+                .contentType("application/json")
+                .content(
+                    json(
+                        Map.of(
+                            "moduleId",
+                            "foundations",
+                            "slideId",
+                            "ideas",
+                            "completed",
+                            true,
+                            "generation",
+                            1))))
+        .andExpect(status().isOk());
+    mvc.perform(get("/api/learning/progress").session(a.session()))
+        .andExpect(jsonPath("$.total").value(1))
+        .andExpect(jsonPath("$.items[0].generation").value(1));
+    assertEquals(
+        attemptsBefore, jdbc.queryForObject("SELECT COUNT(*) FROM attempts", Integer.class));
+    mvc.perform(
+            post("/api/learning/modules/foundations/completion")
+                .session(a.session())
+                .contentType("application/json")
+                .content(reset))
+        .andExpect(status().isForbidden());
   }
 }

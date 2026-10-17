@@ -122,7 +122,7 @@ export function CountsVisual() {
             width={Math.min(18, 240 / n)}
             height={Math.min(13, 170 / n)}
             rx="2"
-            fill="#087f75"
+            fill="var(--viz-node)"
           />
         ))}
       </svg>

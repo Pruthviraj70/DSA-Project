@@ -41,7 +41,10 @@ public class AuthController {
 
   record Register(
       @NotBlank @Email @Size(max = 254) String email,
-      @NotBlank @Size(min = 12, max = 72) String password,
+      @NotBlank
+          @Size(min = 5, message = "Password must be at least 5 characters.")
+          @Size(max = 72, message = "Password must be at most 72 characters.")
+          String password,
       @NotBlank @Size(max = 80) String displayName) {}
 
   @GetMapping("/csrf")

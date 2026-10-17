@@ -17,7 +17,8 @@ export function Visualization({
       </div>
     );
   const active = (id: number) => event.a === id || event.b === id;
-  const color = (id: number) => (active(id) ? "#b94e2b" : "#087f75");
+  const color = (id: number) =>
+    active(id) ? "var(--viz-active)" : "var(--viz-node)";
   const arrow = (
     <defs>
       <marker
@@ -29,7 +30,7 @@ export function Visualization({
         markerHeight="7"
         orient="auto-start-reverse"
       >
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#607883" />
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--viz-edge)" />
       </marker>
     </defs>
   );

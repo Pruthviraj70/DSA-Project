@@ -23,6 +23,13 @@ public class Errors {
     jakarta.validation.ConstraintViolationException.class
   })
   ResponseEntity<?> invalid(Exception e) {
+    if (e instanceof MethodArgumentNotValidException invalid) {
+      var field = invalid.getBindingResult().getFieldError("password");
+      if (field != null
+          && "Password must be at least 5 characters.".equals(field.getDefaultMessage()))
+        return ResponseEntity.badRequest()
+            .body(Map.of("code", "validation", "message", field.getDefaultMessage()));
+    }
     return ResponseEntity.badRequest()
         .body(
             Map.of(
