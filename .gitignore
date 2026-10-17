@@ -13,3 +13,5 @@ frontend/public/engine/*
 !frontend/public/engine/.gitkeep
 *.log
 .DS_Store
+
+*.tsbuildinfo

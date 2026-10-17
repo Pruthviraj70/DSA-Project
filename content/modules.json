@@ -1,0 +1,880 @@
+{
+  "registryVersion": 1,
+  "engineVersion": "1.0.0",
+  "modules": [
+    {
+      "id": "arrays",
+      "engineId": 1,
+      "version": "1.0.0",
+      "title": "Arrays",
+      "category": "Foundations",
+      "prerequisites": [],
+      "objectives": [
+        "Map indices to contiguous elements",
+        "Explain shifting during insertion and deletion"
+      ],
+      "complexity": "Index access/update O(1); insertion/deletion O(n); storage O(n).",
+      "invariant": "Valid indices lie in [0,n); insert permits index n. Shifts preserve the order of other elements.",
+      "explanation": "An array keeps values in indexed slots. Access reads a slot; update replaces it. Inserting opens a slot by shifting right, while deletion closes a gap by shifting left.",
+      "operations": [
+        "Create",
+        "Access",
+        "Update",
+        "Insert",
+        "Delete"
+      ],
+      "defaultInput": {
+        "module": 1,
+        "op": 3,
+        "values": [
+          3,
+          1,
+          4
+        ],
+        "arg": 9,
+        "index": 1,
+        "directed": false,
+        "weight": 1,
+        "edges": []
+      },
+      "example": "Insert 9 at index 1: [3,1,4] \u2192 [3,9,1,4].",
+      "question": {
+        "revision": 1,
+        "prompt": "What is the worst-case time to insert at the beginning of an array?",
+        "options": [
+          "O(1)",
+          "O(n)",
+          "O(log n)"
+        ],
+        "correct": 1,
+        "explanation": "Every existing element may need to shift one slot."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 32,
+        "minimum": -100000,
+        "maximum": 100000,
+        "uniqueItems": false
+      },
+      "adapter": "array",
+      "source": "engine/src/engine.c"
+    },
+    {
+      "id": "linear-search",
+      "engineId": 2,
+      "version": "1.0.0",
+      "title": "Linear search",
+      "category": "Searching",
+      "prerequisites": [
+        "arrays"
+      ],
+      "objectives": [
+        "Trace a sequential scan",
+        "Handle missing and duplicate values"
+      ],
+      "complexity": "O(n) time, O(1) extra space.",
+      "invariant": "All indices before the cursor have been checked; the first match is returned.",
+      "explanation": "Linear search checks each element in order. It works on unsorted inputs and stops at the first equal value.",
+      "operations": [
+        "Search"
+      ],
+      "defaultInput": {
+        "module": 2,
+        "op": 0,
+        "values": [
+          7,
+          2,
+          7,
+          9
+        ],
+        "arg": 7,
+        "index": 0,
+        "directed": false,
+        "weight": 1,
+        "edges": []
+      },
+      "example": "Searching [7,2,7,9] for 7 returns index 0.",
+      "question": {
+        "revision": 1,
+        "prompt": "Which duplicate does this linear search return?",
+        "options": [
+          "The first match",
+          "The last match",
+          "All matches"
+        ],
+        "correct": 0,
+        "explanation": "The scan stops immediately at the first equal value."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 32,
+        "minimum": -100000,
+        "maximum": 100000,
+        "uniqueItems": false
+      },
+      "adapter": "array",
+      "source": "engine/src/engine.c"
+    },
+    {
+      "id": "binary-search",
+      "engineId": 3,
+      "version": "1.0.0",
+      "title": "Binary search",
+      "category": "Searching",
+      "prerequisites": [
+        "arrays"
+      ],
+      "objectives": [
+        "Maintain a shrinking search interval",
+        "Validate sorted input"
+      ],
+      "complexity": "O(log n) time, O(1) extra space.",
+      "invariant": "If a target is present, it remains in the inclusive [lo,hi] interval.",
+      "explanation": "Binary search compares the midpoint of an ascending array, discarding the half that cannot contain the target. Any matching duplicate may be returned. Unsorted inputs are rejected.",
+      "operations": [
+        "Search"
+      ],
+      "defaultInput": {
+        "module": 3,
+        "op": 0,
+        "values": [
+          1,
+          3,
+          5,
+          7,
+          9
+        ],
+        "arg": 7,
+        "index": 0,
+        "directed": false,
+        "weight": 1,
+        "edges": []
+      },
+      "example": "For target 7, compare 5, then 7; return index 3.",
+      "question": {
+        "revision": 1,
+        "prompt": "What prerequisite does binary search need?",
+        "options": [
+          "Distinct values",
+          "Sorted ascending input",
+          "Positive values"
+        ],
+        "correct": 1,
+        "explanation": "Only ordering justifies discarding half of the remaining interval."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 32,
+        "minimum": -100000,
+        "maximum": 100000,
+        "uniqueItems": false
+      },
+      "adapter": "array",
+      "source": "engine/src/engine.c"
+    },
+    {
+      "id": "insertion-sort",
+      "engineId": 4,
+      "version": "1.0.0",
+      "title": "Insertion sort",
+      "category": "Sorting",
+      "prerequisites": [
+        "arrays"
+      ],
+      "objectives": [
+        "Maintain a sorted prefix",
+        "Understand stable insertion"
+      ],
+      "complexity": "O(n\u00b2) worst/average time, O(n) best time, O(1) extra space.",
+      "invariant": "Before iteration i, the prefix [0,i) is sorted. Equal elements are not shifted past one another.",
+      "explanation": "Take a key from the unsorted suffix, shift larger prefix values right, then place the key. It is stable and adapts to nearly sorted inputs.",
+      "operations": [
+        "Sort"
+      ],
+      "defaultInput": {
+        "module": 4,
+        "op": 0,
+        "values": [
+          5,
+          2,
+          4,
+          2,
+          1
+        ],
+        "arg": 0,
+        "index": 0,
+        "directed": false,
+        "weight": 1,
+        "edges": []
+      },
+      "example": "[3,1,2] \u2192 insert 1 \u2192 [1,3,2] \u2192 insert 2 \u2192 [1,2,3].",
+      "question": {
+        "revision": 1,
+        "prompt": "Why does this insertion sort preserve equal-value order?",
+        "options": [
+          "It shifts only strictly larger values",
+          "It chooses random pivots",
+          "It uses a queue"
+        ],
+        "correct": 0,
+        "explanation": "The strict greater-than comparison leaves existing equal values before the key."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 32,
+        "minimum": -100000,
+        "maximum": 100000,
+        "uniqueItems": false
+      },
+      "adapter": "bars",
+      "source": "engine/src/engine.c"
+    },
+    {
+      "id": "merge-sort",
+      "engineId": 5,
+      "version": "1.0.0",
+      "title": "Merge sort",
+      "category": "Sorting",
+      "prerequisites": [
+        "arrays"
+      ],
+      "objectives": [
+        "Merge sorted runs",
+        "Explain time/space tradeoffs"
+      ],
+      "complexity": "O(n log n) time, O(n) auxiliary space.",
+      "invariant": "Each pass merges adjacent sorted runs of width w into sorted runs of width 2w.",
+      "explanation": "Bottom-up merge sort merges runs of increasing width. Ties choose from the left run, preserving stability. Buffer reads and array writes are separate events.",
+      "operations": [
+        "Sort"
+      ],
+      "defaultInput": {
+        "module": 5,
+        "op": 0,
+        "values": [
+          5,
+          2,
+          4,
+          2,
+          1
+        ],
+        "arg": 0,
+        "index": 0,
+        "directed": false,
+        "weight": 1,
+        "edges": []
+      },
+      "example": "[4,1,3,2] \u2192 [1,4] + [2,3] \u2192 [1,2,3,4].",
+      "question": {
+        "revision": 1,
+        "prompt": "How much auxiliary space does this merge sort use?",
+        "options": [
+          "O(1)",
+          "O(log n)",
+          "O(n)"
+        ],
+        "correct": 2,
+        "explanation": "A temporary buffer holds values from each merged run."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 32,
+        "minimum": -100000,
+        "maximum": 100000,
+        "uniqueItems": false
+      },
+      "adapter": "bars",
+      "source": "engine/src/engine.c"
+    },
+    {
+      "id": "quick-sort",
+      "engineId": 6,
+      "version": "1.0.0",
+      "title": "Quicksort",
+      "category": "Sorting",
+      "prerequisites": [
+        "arrays"
+      ],
+      "objectives": [
+        "Track partition boundaries",
+        "Recognize pivot-dependent performance"
+      ],
+      "complexity": "O(n log n) average, O(n\u00b2) worst time; O(n) bounded explicit range stack.",
+      "invariant": "Within a partition, values before the boundary are \u2264 pivot; later scanned values are > pivot.",
+      "explanation": "An iterative Lomuto partition uses the final value as pivot and an explicit range stack. Equal values go left. This version is not stable; sorted or equal inputs can be quadratic.",
+      "operations": [
+        "Sort"
+      ],
+      "defaultInput": {
+        "module": 6,
+        "op": 0,
+        "values": [
+          5,
+          2,
+          4,
+          2,
+          1
+        ],
+        "arg": 0,
+        "index": 0,
+        "directed": false,
+        "weight": 1,
+        "edges": []
+      },
+      "example": "With [3,1,2], pivot 2 partitions to [1,2,3].",
+      "question": {
+        "revision": 1,
+        "prompt": "Which input can cause quadratic behavior with a final-element pivot?",
+        "options": [
+          "Already sorted input",
+          "Only empty input",
+          "No input"
+        ],
+        "correct": 0,
+        "explanation": "A final-element pivot on ordered data can repeatedly produce a highly unbalanced partition."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 32,
+        "minimum": -100000,
+        "maximum": 100000,
+        "uniqueItems": false
+      },
+      "adapter": "bars",
+      "source": "engine/src/engine.c"
+    },
+    {
+      "id": "linked-list",
+      "engineId": 7,
+      "version": "1.0.0",
+      "title": "Singly linked list",
+      "category": "Structures",
+      "prerequisites": [
+        "arrays"
+      ],
+      "objectives": [
+        "Follow conceptual next links",
+        "Relink nodes without shifting values"
+      ],
+      "complexity": "O(n) indexed insert/delete/search/traverse; O(1) relinking after the predecessor is located. O(n) space.",
+      "invariant": "The head reaches each active node once; the last next ID is 0 (null). Node IDs remain stable during an operation.",
+      "explanation": "A singly linked list stores nodes joined by next links. Insert/delete use an index; search returns the first matching node ID. IDs represent conceptual identity, never browser addresses.",
+      "operations": [
+        "Insert",
+        "Delete",
+        "Search",
+        "Traverse"
+      ],
+      "defaultInput": {
+        "module": 7,
+        "op": 0,
+        "values": [
+          10,
+          20,
+          30
+        ],
+        "arg": 15,
+        "index": 1,
+        "directed": false,
+        "weight": 1,
+        "edges": []
+      },
+      "example": "Insert 15 at index 1: 10 \u2192 15 \u2192 20 \u2192 30.",
+      "question": {
+        "revision": 1,
+        "prompt": "Which link changes when inserting after an existing node?",
+        "options": [
+          "The predecessor\u2019s next link",
+          "Every node value",
+          "No links"
+        ],
+        "correct": 0,
+        "explanation": "The new node points to the old successor and the predecessor points to the new node."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 32,
+        "minimum": -100000,
+        "maximum": 100000,
+        "uniqueItems": false
+      },
+      "adapter": "list",
+      "source": "engine/src/engine.c"
+    },
+    {
+      "id": "stack",
+      "engineId": 8,
+      "version": "1.0.0",
+      "title": "Stack",
+      "category": "Structures",
+      "prerequisites": [
+        "arrays"
+      ],
+      "objectives": [
+        "Apply last-in-first-out order",
+        "Handle underflow and capacity"
+      ],
+      "complexity": "Push/pop/peek O(1); O(n) storage.",
+      "invariant": "The top is the last occupied element; only the top is removed.",
+      "explanation": "A stack adds and removes values at one end. This release uses an array-backed stack, rejects underflow and caps capacity at 32.",
+      "operations": [
+        "Push",
+        "Pop",
+        "Peek"
+      ],
+      "defaultInput": {
+        "module": 8,
+        "op": 0,
+        "values": [
+          2,
+          4,
+          6
+        ],
+        "arg": 8,
+        "index": 0,
+        "directed": false,
+        "weight": 1,
+        "edges": []
+      },
+      "example": "Push 8 onto [2,4,6]; pop returns 8.",
+      "question": {
+        "revision": 1,
+        "prompt": "Which value is popped first?",
+        "options": [
+          "The oldest value",
+          "The most recently pushed value",
+          "The smallest value"
+        ],
+        "correct": 1,
+        "explanation": "Stacks follow last-in-first-out order."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 32,
+        "minimum": -100000,
+        "maximum": 100000,
+        "uniqueItems": false
+      },
+      "adapter": "array",
+      "source": "engine/src/engine.c"
+    },
+    {
+      "id": "queue",
+      "engineId": 9,
+      "version": "1.0.0",
+      "title": "Queue",
+      "category": "Structures",
+      "prerequisites": [
+        "arrays"
+      ],
+      "objectives": [
+        "Apply first-in-first-out order",
+        "Distinguish ADT behavior from implementation cost"
+      ],
+      "complexity": "Enqueue/inspect O(1); dequeue O(n) in this compact shifting implementation; O(n) storage.",
+      "invariant": "The front is index 0; dequeue preserves the relative order of the remaining values.",
+      "explanation": "A queue appends at the back and removes from the front. This teaching implementation shifts on dequeue; a circular-buffer extension can make dequeue constant time.",
+      "operations": [
+        "Enqueue",
+        "Dequeue",
+        "Inspect"
+      ],
+      "defaultInput": {
+        "module": 9,
+        "op": 0,
+        "values": [
+          2,
+          4,
+          6
+        ],
+        "arg": 8,
+        "index": 0,
+        "directed": false,
+        "weight": 1,
+        "edges": []
+      },
+      "example": "Enqueue 8 to [2,4,6]; dequeue returns 2.",
+      "question": {
+        "revision": 1,
+        "prompt": "Which value leaves a FIFO queue first?",
+        "options": [
+          "The newest value",
+          "The oldest value",
+          "The largest value"
+        ],
+        "correct": 1,
+        "explanation": "First-in-first-out removes the earliest enqueued value."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 32,
+        "minimum": -100000,
+        "maximum": 100000,
+        "uniqueItems": false
+      },
+      "adapter": "array",
+      "source": "engine/src/engine.c"
+    },
+    {
+      "id": "bst",
+      "engineId": 10,
+      "version": "1.0.0",
+      "title": "Binary search tree",
+      "category": "Trees",
+      "prerequisites": [
+        "linked-list"
+      ],
+      "objectives": [
+        "Maintain the search-order invariant",
+        "Delete leaf, one-child and two-child nodes",
+        "Compare traversal orders"
+      ],
+      "complexity": "Search/insert/delete O(h); traversals O(n). h may be n in an unbalanced tree; O(n) storage.",
+      "invariant": "All left descendants are strictly smaller and all right descendants strictly larger. Duplicate inserts are ignored.",
+      "explanation": "BSTs follow comparisons down the tree. Two-child deletion transplants the inorder successor, preserving node IDs. Traversals visit left/node/right (inorder), node/left/right (preorder), or left/right/node (postorder).",
+      "operations": [
+        "Insert",
+        "Search",
+        "Delete",
+        "Inorder",
+        "Preorder",
+        "Postorder"
+      ],
+      "defaultInput": {
+        "module": 10,
+        "op": 0,
+        "values": [
+          8,
+          3,
+          10,
+          1,
+          6,
+          14,
+          4,
+          7,
+          13
+        ],
+        "arg": 5,
+        "index": 0,
+        "directed": false,
+        "weight": 1,
+        "edges": []
+      },
+      "example": "Deleting root 8 transplants successor 10; inorder stays sorted.",
+      "question": {
+        "revision": 1,
+        "prompt": "Which traversal lists BST values in ascending order?",
+        "options": [
+          "Preorder",
+          "Inorder",
+          "Postorder"
+        ],
+        "correct": 1,
+        "explanation": "Inorder visits the smaller subtree, the node, then the larger subtree."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 32,
+        "minimum": -100000,
+        "maximum": 100000,
+        "uniqueItems": false
+      },
+      "adapter": "tree",
+      "source": "engine/src/engine.c"
+    },
+    {
+      "id": "graph",
+      "engineId": 11,
+      "version": "1.0.0",
+      "title": "Graph editor",
+      "category": "Graphs",
+      "prerequisites": [
+        "arrays"
+      ],
+      "objectives": [
+        "Model directed and undirected edges",
+        "Keep stable node and edge IDs"
+      ],
+      "complexity": "Adjacency-matrix edge lookup O(1); node removal O(V\u00b2); space O(V\u00b2).",
+      "invariant": "Node IDs are unique; undirected edges are symmetric. Parallel edges replace their previous weight; self-loops are allowed.",
+      "explanation": "Build a graph with at most 16 vertices. Node IDs range from 1 to 31. Edges use integer weights, including zero; direction is explicit. Graph edits are executed by the C engine.",
+      "operations": [
+        "Inspect",
+        "Add node",
+        "Remove node",
+        "Add / update edge",
+        "Remove edge"
+      ],
+      "defaultInput": {
+        "module": 11,
+        "op": 0,
+        "values": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "arg": 1,
+        "index": 0,
+        "directed": false,
+        "weight": 1,
+        "edges": [
+          {
+            "to": 1,
+            "weight": 2,
+            "from": 0
+          },
+          {
+            "to": 2,
+            "weight": 7,
+            "from": 0
+          },
+          {
+            "to": 2,
+            "weight": 1,
+            "from": 1
+          }
+        ]
+      },
+      "example": "An undirected edge 1\u20142 is traversable from either endpoint.",
+      "question": {
+        "revision": 1,
+        "prompt": "What does an undirected edge mean?",
+        "options": [
+          "Travel is possible in both directions",
+          "Only the smaller ID can be the source",
+          "Its weight must be zero"
+        ],
+        "correct": 0,
+        "explanation": "The C adjacency matrix stores both directions."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 16,
+        "minimum": 1,
+        "maximum": 31,
+        "uniqueItems": true
+      },
+      "adapter": "graph",
+      "source": "engine/src/engine.c"
+    },
+    {
+      "id": "bfs",
+      "engineId": 12,
+      "version": "1.0.0",
+      "title": "Breadth-first search",
+      "category": "Graphs",
+      "prerequisites": [
+        "graph",
+        "queue"
+      ],
+      "objectives": [
+        "Explore reachable vertices by layers",
+        "Track the FIFO frontier"
+      ],
+      "complexity": "O(V\u00b2) with this adjacency matrix; O(V) frontier/visited space.",
+      "invariant": "Vertices are marked on enqueue, so each reachable vertex enters the queue once.",
+      "explanation": "BFS visits the source, then its neighbors, then the next layer. It follows outgoing edges in directed graphs and ignores weights. Unreachable vertices are not visited.",
+      "operations": [
+        "Traverse"
+      ],
+      "defaultInput": {
+        "module": 12,
+        "op": 0,
+        "values": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "arg": 1,
+        "index": 0,
+        "directed": false,
+        "weight": 1,
+        "edges": [
+          {
+            "to": 1,
+            "weight": 2,
+            "from": 0
+          },
+          {
+            "to": 2,
+            "weight": 7,
+            "from": 0
+          },
+          {
+            "to": 2,
+            "weight": 1,
+            "from": 1
+          }
+        ]
+      },
+      "example": "For edges 1\u20132, 1\u20133, 2\u20134, BFS from 1 visits 1,2,3,4.",
+      "question": {
+        "revision": 1,
+        "prompt": "Which structure manages the BFS frontier?",
+        "options": [
+          "Stack",
+          "Queue",
+          "BST"
+        ],
+        "correct": 1,
+        "explanation": "A FIFO queue visits earlier layers before later ones."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 16,
+        "minimum": 1,
+        "maximum": 31,
+        "uniqueItems": true
+      },
+      "adapter": "graph",
+      "source": "engine/src/engine.c"
+    },
+    {
+      "id": "dfs",
+      "engineId": 13,
+      "version": "1.0.0",
+      "title": "Depth-first search",
+      "category": "Graphs",
+      "prerequisites": [
+        "graph",
+        "stack"
+      ],
+      "objectives": [
+        "Follow a branch before backtracking",
+        "Inspect a stack of active vertices"
+      ],
+      "complexity": "O(V\u00b2) with this adjacency matrix; O(V) explicit stack space.",
+      "invariant": "Each active stack path follows graph edges; marked vertices are never entered twice.",
+      "explanation": "DFS uses an explicit stack and a per-vertex neighbor cursor. It descends to the first unvisited outgoing neighbor in input order, then backtracks. Weights are ignored.",
+      "operations": [
+        "Traverse"
+      ],
+      "defaultInput": {
+        "module": 13,
+        "op": 0,
+        "values": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "arg": 1,
+        "index": 0,
+        "directed": false,
+        "weight": 1,
+        "edges": [
+          {
+            "to": 1,
+            "weight": 2,
+            "from": 0
+          },
+          {
+            "to": 2,
+            "weight": 7,
+            "from": 0
+          },
+          {
+            "to": 2,
+            "weight": 1,
+            "from": 1
+          }
+        ]
+      },
+      "example": "For edges 1\u20132, 1\u20133, 2\u20134, DFS from 1 visits 1,2,4,3.",
+      "question": {
+        "revision": 1,
+        "prompt": "When does DFS backtrack?",
+        "options": [
+          "When the current vertex has no unvisited outgoing neighbors",
+          "After every edge regardless of state",
+          "Only when every graph vertex is reachable"
+        ],
+        "correct": 0,
+        "explanation": "DFS returns to the parent after exhausting the current vertex\u2019s unvisited neighbors."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 16,
+        "minimum": 1,
+        "maximum": 31,
+        "uniqueItems": true
+      },
+      "adapter": "graph",
+      "source": "engine/src/engine.c"
+    },
+    {
+      "id": "dijkstra",
+      "engineId": 14,
+      "version": "1.0.0",
+      "title": "Dijkstra shortest paths",
+      "category": "Graphs",
+      "prerequisites": [
+        "graph"
+      ],
+      "objectives": [
+        "Relax weighted edges",
+        "Explain why negative weights are rejected"
+      ],
+      "complexity": "O(V\u00b2) time using linear minimum selection; O(V) distance/visited space.",
+      "invariant": "The selected unsettled vertex has minimum tentative distance. With nonnegative edges its distance is final.",
+      "explanation": "Dijkstra computes shortest distances from a source using nonnegative integer weights. Zero-weight edges are supported. Unreachable vertices retain infinity. All negative edges are rejected, including unreachable ones.",
+      "operations": [
+        "Shortest paths"
+      ],
+      "defaultInput": {
+        "module": 14,
+        "op": 0,
+        "values": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "arg": 1,
+        "index": 0,
+        "directed": false,
+        "weight": 1,
+        "edges": [
+          {
+            "to": 1,
+            "weight": 2,
+            "from": 0
+          },
+          {
+            "to": 2,
+            "weight": 7,
+            "from": 0
+          },
+          {
+            "to": 2,
+            "weight": 1,
+            "from": 1
+          }
+        ]
+      },
+      "example": "With 1\u21922 weight 2, 2\u21923 weight 1, 1\u21923 weight 7, distances are 0,2,3.",
+      "question": {
+        "revision": 1,
+        "prompt": "Why reject negative weights?",
+        "options": [
+          "They invalidate the settled-distance argument",
+          "They cannot be stored as integers",
+          "They require an undirected graph"
+        ],
+        "correct": 0,
+        "explanation": "A later path through a negative edge could improve an already settled vertex."
+      },
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 16,
+        "minimum": 1,
+        "maximum": 31,
+        "uniqueItems": true
+      },
+      "adapter": "graph",
+      "source": "engine/src/engine.c"
+    }
+  ]
+}

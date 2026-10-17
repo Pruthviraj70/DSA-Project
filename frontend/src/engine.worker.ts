@@ -18,6 +18,7 @@ scope.onmessage = ({data}:{data:Request}) => {
     const x=data.input;
     if(!call('engine_config',[x.module,x.op,x.values.length,x.arg,x.index,+x.directed]))throw Error(error());
     for(const [i,v] of x.values.entries())if(!call('engine_value',[i,v]))throw Error(error());
+    if(!call('engine_graph_weight',[x.weight??1]))throw Error(error());
     for(const edge of x.edges)if(!call('engine_edge',[edge.from,edge.to,edge.weight]))throw Error(error());
     if(!call('engine_start'))throw Error(error());
     reply.events.push(JSON.parse(engine!.UTF8ToString(call('engine_state'))) as EngineEvent);

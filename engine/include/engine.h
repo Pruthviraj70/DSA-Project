@@ -8,6 +8,7 @@ enum Module { ARRAY=1, LINEAR, BINARY, INSERTION, MERGE, QUICK, LIST, STACK, QUE
 /* Operations are module-local: see registry and engine_config. */
 int engine_config(int module,int operation,int count,int argument,int index,int directed);
 int engine_value(int index,int value);
+int engine_graph_weight(int weight);
 int engine_edge(int from,int to,int weight);
 int engine_start(void);
 const char *engine_error(void);

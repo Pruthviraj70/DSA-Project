@@ -25,7 +25,7 @@ A versioned module registry binds schemas, lifecycle, C implementations, event a
 - [x] B: Record architecture decisions, scope checklist and execution contracts.
 - [x] C: Establish reproducible builds and input → C → Wasm worker → events → SVG slice.
 - [x] D: Validate the vertical slice before expanding.
-- [ ] E: Complete engine lifecycle, bounded execution and all released modules; native correctness, replay and cleanup tests.
+- [x] E: Complete engine lifecycle, bounded execution and all released modules; native correctness, replay and cleanup tests.
 - [ ] F: Complete learning interface, predictions, comparison and assessments.
 - [ ] G: Complete authentication, normalized migrations, persistence, ownership and grading.
 - [ ] H: Integrated browser/MySQL verification, CI, cross-platform documentation and reviewable Git delivery.
@@ -33,3 +33,5 @@ A versioned module registry binds schemas, lifecycle, C implementations, event a
 Tests will be recorded as executed/pass/fail/blocked, never inferred. Completion requires every listed module to run through the C engine and documented setup to reproduce the application. Final documentation must exist before removing this temporary record.
 
 Vertical slice evidence: native array tests (5 cases) pass with AddressSanitizer/UBSan; production frontend and Emscripten 4.0.18 builds pass; Chromium executes the real Wasm worker and confirms insertion output (1 Playwright test). Vite public-module loading was corrected to use an absolute runtime URL. Playwright CDN is blocked; installed Chromium is supported via CHROMIUM_PATH.
+
+Engine milestone: 1,555 native cases pass with ASan/UBSan. All 34 operations across 14 modules have matching native and actual Chromium/Wasm protocol traces; sort write/swap replay is independently checked. Worker batch cap, cancellation and deterministic reset pass browser checks. Full UI build and 4 registry/validation unit tests pass. Seven of eight first UI browser flows pass; mobile overflow is being corrected. Backend/MySQL checks remain in progress.
