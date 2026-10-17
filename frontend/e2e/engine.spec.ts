@@ -14,7 +14,11 @@ test('all 34 operations match native C traces through actual browser WebAssembly
   }finally{c.close();}}
   return results;
  },fixtures);
- for(let i=0;i<fixtures.length;i++)expect(results[i],fixtures[i].id).toEqual(fixtures[i].trace);
+ const source=await (await page.request.get('/engine/source.json')).json();
+ for(let i=0;i<fixtures.length;i++){
+  expect(results[i],fixtures[i].id).toEqual(fixtures[i].trace);
+  for(const event of results[i])expect(source.locations[event.loc],`source location ${event.loc}`).toBeGreaterThan(0);
+ }
 });
 test('worker reset is deterministic, batches are bounded and cancellation rejects pending work',async({page})=>{
  await page.goto('/');
