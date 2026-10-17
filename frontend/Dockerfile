@@ -8,4 +8,5 @@ RUN --mount=type=cache,target=/root/.npm --mount=type=secret,id=network_ca if [ 
 FROM nginx:1.28.0-alpine
 COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=frontend /app/frontend/dist /usr/share/nginx/html
+RUN chmod -R a+rX /usr/share/nginx/html
 EXPOSE 80

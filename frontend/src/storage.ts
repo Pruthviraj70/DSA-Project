@@ -205,7 +205,10 @@ export const lessonStorage = {
           completed: completed || !!request.result?.completed,
           generation,
           pending: pending || !!request.result?.pending,
-          stamp,
+          stamp:
+            owner === "guest" && !completed && request.result
+              ? (request.result.stamp ?? stamp)
+              : stamp,
         });
       if (position) {
         const positions = transaction.objectStore("positions");

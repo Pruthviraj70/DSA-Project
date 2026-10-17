@@ -388,6 +388,7 @@ for (const theme of ["light", "dark"] as const)
       ]) {
         await page.goto(`/#/${route}`);
         await expect(page.locator("main h1,main h2").first()).toBeVisible();
+        await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
         expect(
           await page.evaluate(
             () => document.documentElement.scrollWidth <= innerWidth + 1,

@@ -159,3 +159,39 @@ test("a stale remote resume response cannot overwrite pending local navigation",
   });
   expect(result).toEqual({ slideId: "insert", pending: true });
 });
+
+test("revisiting old guest pages cannot undo an acknowledged account reset", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const result = await page.evaluate(async () => {
+    const { lessonStorage } = await import(
+      /* @vite-ignore */ "/src/storage.ts"
+    );
+    await lessonStorage.checkpoint("guest", "foundations", "ideas", true);
+    await lessonStorage.moveGuestToAccount("receipt-test");
+    await lessonStorage.putModule({
+      key: "receipt-test:foundations",
+      owner: "receipt-test",
+      moduleId: "foundations",
+      generation: 1,
+      manualCompleted: false,
+      pending: false,
+      stamp: crypto.randomUUID(),
+    });
+    await lessonStorage.checkpoint("guest", "foundations", "ideas", false);
+    await lessonStorage.moveGuestToAccount("receipt-test");
+    const afterVisit = (await lessonStorage.slides()).filter(
+      (x: any) =>
+        x.owner === "receipt-test" && x.generation === 1 && x.completed,
+    ).length;
+    await lessonStorage.checkpoint("guest", "foundations", "ideas", true);
+    await lessonStorage.moveGuestToAccount("receipt-test");
+    const afterExplicitCompletion = (await lessonStorage.slides()).filter(
+      (x: any) =>
+        x.owner === "receipt-test" && x.generation === 1 && x.completed,
+    ).length;
+    return { afterVisit, afterExplicitCompletion };
+  });
+  expect(result).toEqual({ afterVisit: 0, afterExplicitCompletion: 1 });
+});
