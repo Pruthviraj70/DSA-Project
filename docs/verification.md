@@ -33,4 +33,18 @@ Final checks also passed formatting, shell syntax, documentation link resolution
 
 ## Delivery
 
-Feature branch and meaningful local commits exist. GitHub API read returned `Forbidden`; push/draft-PR publication attempt is the remaining delivery step. No merge, force-push or deployment is performed.
+`feature/dsa-learning-lab` was successfully pushed to `Pruthviraj70/DSA-Project` through the existing HTTPS Git proxy. The remote branch was verified with `git ls-remote`. The working tree is clean after delivery commits. The mandatory temporary README was the first repository change, updated through completion, then removed only after final README/docs existed.
+
+Draft pull-request creation was attempted with the prepared body and failed with the exact response:
+
+```text
+Post "https://api.github.com/graphql": Forbidden
+```
+
+No pull request was created by this task. No merge, force-push or deployment occurred. Use the GitHub PR form supplied by the successful push, choose **Create draft pull request**, and use `docs/pull-request.md`, or run the following from a GitHub-authorized network/session:
+
+```sh
+gh pr create --draft --repo Pruthviraj70/DSA-Project --base main --head feature/dsa-learning-lab --title "Release DSA Learning Lab with C/Wasm learning modules and MySQL progress" --body-file docs/pull-request.md
+```
+
+PR form: https://github.com/Pruthviraj70/DSA-Project/pull/new/feature/dsa-learning-lab . Remote GitHub Actions results have not been observed because GitHub API access is forbidden here; local validation is recorded separately above. No new token was requested or copied.

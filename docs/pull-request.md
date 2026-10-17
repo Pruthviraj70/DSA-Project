@@ -6,7 +6,7 @@ Validation:
 
 - 2,168 native C cases under ASan/UBSan, including randomized sorts and graph oracles.
 - All 34 operations match native and actual browser Wasm event traces; sorting replay, bounded batches, cancellation and reset are checked.
-- 5 frontend unit checks; integrated guest/account browser flows and production Nginx/Compose flows.
+- 5 frontend unit checks; 11 integrated guest/account browser checks and 8 production Nginx/Compose checks, with zero skips.
 - 9 actual-MySQL backend tests covering migrations, security, ownership, grading and rollback.
 - Containerized Emscripten, frontend and Java builds; pinned dependencies/wrapper; CI workflows and cross-platform setup documentation.
 
