@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+backend/target/
+.m2/
+.tools/
+.build/
+.env
+.env.local
+frontend/public/engine/*
+!frontend/public/engine/.gitkeep
+*.log
+.DS_Store
