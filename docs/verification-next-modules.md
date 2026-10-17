@@ -14,11 +14,11 @@ The five modules are implemented through real C-owned state, lazily loaded Wasm 
 | Browser native/Wasm parity | All 79 traces matched; largest fixture has 356 events, largest serialized fixture snapshot 14,116 bytes (these are fixture measurements, not global input maxima) |
 | Examples | All 270 displayed examples compile; original representative behavior and all 80 new per-language example executions passed in C/C++/Java/Python/JavaScript |
 | Curriculum/content | 14 modules, 120 concepts, 91 aligned questions; all 12 positive/negative validation checks passed; references, language coverage, new operation bindings, prerequisite closure and quiz ordering validated |
-| Frontend | 14 units passed; Prettier, TypeScript/Vite production build and private-asset isolation passed |
+| Frontend | 15 units passed; Prettier, TypeScript/Vite production build and private-asset isolation passed |
 | Maven / actual MySQL 8.4.6 | 15 passed without failures/errors/skips, including five-module server grading, private experiments, V2→V6 preservation and V4/V6 seed repeatability |
 | Container builds/startup | Backend and frontend images built; API reports 20 runtime families; theme and both Wasm families serve successfully |
 | Legacy IndexedDB migration regression | Five focused production runs passed after deterministic fixture setup; earlier experiments, activity and actual array playback retained |
-| Full integrated development browser suite | 45 passed, zero skips |
+| Full integrated development browser suite | 46 passed, zero skips |
 | Full production-container browser suite | 39 passed, zero skips |
 | Visual review | 20 module-state captures plus eight FAQ/quiz captures at 1440px/390px in both themes; representative views from each new module inspected, including stack order, table reachability, output prefix and selected-only quiz feedback |
 | Existing cloud development data | Backup taken before V6; checksums of users, attempts, answer snapshots, saved experiments, percentage progress, page progress and module progress identical before/after migration; original MySQL volume retained |
@@ -35,6 +35,8 @@ Full browser acceptance includes all 147 lesson pages, all legacy guest/account 
 - The full-page catalog audit matched both an H1 and example H4 sharing a valid title. It now targets the main H1 and retains every infrastructure/sidebar assertion.
 - A legacy storage test seeded v1 asynchronously alongside app startup, occasionally blocking the app's v3 upgrade with its own still-open connection. The test now commits/closes the earlier installation on an intercepted same-origin bootstrap page before loading the app. No migration assertions, timeouts or product persistence rules were weakened.
 - Docker's VFS storage driver exhausted the 32 GiB cloud disk while copying the SDK into multiple compiler layers. The compiler stage now mounts read-only engine/scripts inputs and builds in one SDK layer. Unused build cache and unused images labelled for this project were reclaimed; no volume was removed. A test-file append interrupted by disk exhaustion was repaired and formatting/build checks passed afterward.
+
+- A final boundary audit reproduced an oversized index/new-value input (4294967297) wrapping to 1 at the C ABI. Frontend range checks now reject it, and the worker validates bounded safe integers before conversion. Regression coverage includes the actual hash form, direct-worker fractional/oversized inputs, and a frontend unit that failed before the fix. The final full browser suites were rerun with this guard.
 
 ## Reproduce
 
@@ -63,7 +65,7 @@ BASE_URL=http://127.0.0.1:8088 INTEGRATED=1 npm --prefix frontend run test:e2e -
   e2e/preferences.spec.ts e2e/next-modules.spec.ts
 ```
 
-Cloud-only adaptations: supported Maven proxy/trust settings, a writable npm cache, serialized large builds, and `CHROMIUM_PATH=/usr/bin/chromium`. Playwright's browser CDN is unavailable, so the installed Chromium is used rather than claiming an exact GitHub runner image. Final local logs include `/tmp/next-native-final2.log`, `/tmp/next-examples-verified.log`, `/tmp/next-example-behavior.log`, `/tmp/next-backend-release-final.log`, `/tmp/next-development-complete.log` and `/tmp/next-production-complete.log`. Screenshots are `/tmp/next-visual-{theme}-{width}-{topic}.png`, with FAQ/quiz counterparts.
+Cloud-only adaptations: supported Maven proxy/trust settings, a writable npm cache, serialized large builds, and `CHROMIUM_PATH=/usr/bin/chromium`. Playwright's browser CDN is unavailable, so the installed Chromium is used rather than claiming an exact GitHub runner image. Final local logs include `/tmp/next-native-final2.log`, `/tmp/next-examples-verified.log`, `/tmp/next-example-behavior.log`, `/tmp/next-backend-release-final.log`, `/tmp/next-input-development-final.log` and `/tmp/next-input-production-final.log`. Screenshots are `/tmp/next-visual-{theme}-{width}-{topic}.png`, with FAQ/quiz counterparts.
 
 ## Limits and delivery
 

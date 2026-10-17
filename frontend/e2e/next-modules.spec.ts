@@ -138,6 +138,13 @@ test("new catalog tiles, lazy loading, validation, examples and quizzes", async 
     })
     .click();
   await expect(page.getByLabel("Lesson pages")).toHaveValue("basics");
+  await page.goto("/#/lesson/hash-tables/probe-update");
+  await expect(
+    page.getByRole("button", { name: "Step forward", exact: true }),
+  ).toBeEnabled();
+  await page.getByLabel("New value", { exact: true }).fill("4294967297");
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.getByRole("alert")).toContainText("range");
 });
 
 for (const theme of ["light", "dark"] as const)

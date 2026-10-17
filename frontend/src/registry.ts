@@ -14,9 +14,10 @@ export function validate(input: Input): string | undefined {
   if (
     !Number.isInteger(input.arg) ||
     Math.abs(input.arg) > 100000 ||
-    !Number.isInteger(input.index)
+    !Number.isInteger(input.index) ||
+    Math.abs(input.index) > 100000
   )
-    return "Argument and index must be integers in range.";
+    return "Use integer parameters in range -100000 to 100000.";
   if (
     input.module === 3 &&
     input.values.some((v, i) => i > 0 && v < input.values[i - 1])

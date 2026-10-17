@@ -36,6 +36,25 @@ scope.onmessage = ({ data }: { data: Request }) => {
       const error = () => engine!.UTF8ToString(call("engine_error"));
       if (data.type === "init") {
         const x = data.input;
+        if (x.values.length > 32 || x.edges.length > 256)
+          throw Error("Use at most 32 values and 256 edges.");
+        const integers = [
+          x.module,
+          x.op,
+          x.arg,
+          x.index,
+          x.weight ?? 1,
+          ...x.values,
+          ...x.edges.flatMap((edge) => [edge.from, edge.to, edge.weight]),
+        ];
+        if (
+          integers.some(
+            (value) => !Number.isSafeInteger(value) || Math.abs(value) > 100000,
+          )
+        )
+          throw Error(
+            "Parameters and values must be integers between -100000 and 100000.",
+          );
         if (
           !call("engine_config", [
             x.module,

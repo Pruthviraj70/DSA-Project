@@ -195,3 +195,44 @@ test("revisiting old guest pages cannot undo an acknowledged account reset", asy
   });
   expect(result).toEqual({ afterVisit: 0, afterExplicitCompletion: 1 });
 });
+
+test("worker rejects unsupported numeric inputs before conversion", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const messages = await page.evaluate(async () => {
+    const { EngineClient } = await import(
+      /* @vite-ignore */ "/src/engine-client.ts"
+    );
+    const messages = [];
+    for (const bad of [
+      { index: 4294967297 },
+      { index: 1.5 },
+      { values: [0, 1.5] },
+    ]) {
+      const client = new EngineClient();
+      try {
+        await client.init({
+          module: 16,
+          op: 2,
+          values: [0, 10],
+          arg: 0,
+          index: 2,
+          directed: false,
+          weight: 1,
+          edges: [],
+          ...bad,
+        });
+        messages.push("incorrectly accepted");
+      } catch (error) {
+        messages.push((error as Error).message);
+      } finally {
+        client.close();
+      }
+    }
+    return messages;
+  });
+  expect(messages).toHaveLength(3);
+  for (const message of messages)
+    expect(message).toContain("integers between -100000 and 100000");
+});

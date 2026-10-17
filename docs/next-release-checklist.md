@@ -26,6 +26,8 @@ Content/engine milestone: all 32 new operations have teaching-page bindings. Twe
 
 Final verification record: docs/verification-next-modules.md. Legacy migration fixture now seeds and closes before app startup; no product persistence assertion was removed. Rich visual layout regressions and all existing preferences flows are retained.
 
-Release verification complete: 45 integrated development browser checks and 39 production checks passed without skips; the legacy upgrade fixture also passed five focused production runs. Final observed results and resolved failures are in verification-next-modules.md. The verified code is published on feature/dsa-next-modules.
+Release verification complete: 46 integrated development browser checks and 39 production checks passed without skips; the legacy upgrade fixture also passed five focused production runs. Final observed results and resolved failures are in verification-next-modules.md. The verified code is published on feature/dsa-next-modules.
 
 Publication: normal push succeeded at verified code commit 946889706c6decd9c07d19e8ea9972ccca65cc05. Draft-PR creation returned `Post https://api.github.com/graphql: Forbidden`. The implementation is complete; PR creation/remote CI review requires GitHub API/UI access. Comparison: https://github.com/Pruthviraj70/DSA-Project/compare/main...feature/dsa-next-modules?expand=1 . Complete PR body: pull-request-next-modules.md.
+
+Post-publication boundary audit: reproduced and fixed oversized-index wrapping at the numeric ABI; form and worker guards plus unit/direct-worker/browser regression checks are included. Final verification results are recorded in verification-next-modules.md.

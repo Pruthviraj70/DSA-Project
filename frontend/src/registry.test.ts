@@ -127,3 +127,8 @@ describe("new operation prerequisites", () => {
     expect(validate(input(18, 3, [], 11))).toContain("0..10");
   });
 });
+
+it("rejects values that would wrap when crossing the integer input boundary", () => {
+  const hash = initialInput(modules.find((m) => m.engineId === 16)!);
+  expect(validate({ ...hash, op: 2, index: 4294967297 })).toContain("range");
+});

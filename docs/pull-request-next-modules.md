@@ -11,10 +11,12 @@ Validation performed locally in Codex Cloud:
 - 2,170 legacy + 12,968 new native C cases passed with ASan/UBSan.
 - Both Emscripten builds passed; all 79 native/Wasm traces matched, with mutation/frame replay, reset, bounded batches and cancellation checks.
 - All 270 displayed examples compile; 80 new example executions passed across five toolchains.
-- 12 content-validation tests, 14 frontend units and 15 actual-MySQL backend tests passed.
-- All 45 integrated development and 39 production browser checks passed without skips; the legacy IndexedDB migration test also passed five focused production runs.
+- 12 content-validation tests, 15 frontend units and 15 actual-MySQL backend tests passed.
+- All 46 integrated development and 39 production browser checks passed without skips; the legacy IndexedDB migration test also passed five focused production runs.
 - Formatting, types, production/private-asset checks, both Docker builds/startup and 28 desktop/mobile/light/dark visual captures completed; representative views from every new module were inspected.
 
 Input limits are intentional: integer hashes, at most 32 sequence values/16 initial key-value pairs, factorial 0..12, Fibonacci 0..10. Recursive C computation uses resumable explicit frames; ordinary recursive educational examples have equivalent contracts. Wide diagrams scroll inside their panels. Dijkstra still uses its documented matrix/scan implementation. Native Windows/macOS and remote GitHub Actions results were not observed; the cloud used installed Chromium because the Playwright CDN is unavailable. GitHub API requests currently return Forbidden, so local checks are not described as remote CI success.
 
 See docs/next-modules.md, docs/event-protocol.md and docs/verification-next-modules.md for contracts, reproduction commands, resolved failures and limitations.
+
+Numeric input guards also reject out-of-range and fractional values before JavaScript-to-C conversion, preventing silent integer wrapping.
