@@ -7,7 +7,7 @@ export function initialInput(module: Module): Input {
   return structuredClone(module.defaultInput);
 }
 export function validate(input: Input): string | undefined {
-  const limit = input.module >= 11 ? 16 : 32;
+  const limit = input.module >= 11 && input.module <= 14 ? 16 : 32;
   if (input.values.length > limit) return `Use at most ${limit} values.`;
   if (input.values.some((v) => !Number.isInteger(v) || Math.abs(v) > 100000))
     return "Use integers between -100000 and 100000.";
@@ -24,6 +24,7 @@ export function validate(input: Input): string | undefined {
     return "Binary search requires sorted ascending input.";
   if (
     input.module >= 11 &&
+    input.module <= 14 &&
     (input.values.some((v) => v < 1 || v > 31) ||
       new Set(input.values).size !== input.values.length)
   )

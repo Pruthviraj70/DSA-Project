@@ -722,6 +722,60 @@
       },
       "adapter": "graph",
       "source": "engine/src/engine.c"
+    },
+    {
+      "id": "heaps",
+      "engineId": 17,
+      "version": "1.2.0",
+      "title": "Heaps and Priority Queues",
+      "category": "Data Structures",
+      "prerequisites": [
+        "arrays"
+      ],
+      "objectives": [
+        "Maintain heap ordering",
+        "Relate array indices to a complete tree"
+      ],
+      "complexity": "Build O(n); insert/extract O(log n); peek O(1); heap sort O(n log n). Each run first constructs a heap.",
+      "invariant": "Every parent has priority at least as high as its children; the active prefix is complete.",
+      "explanation": "A heap keeps the highest-priority value at its root without sorting the entire array.",
+      "operations": [
+        "Build min-heap",
+        "Build max-heap",
+        "Insert min",
+        "Extract min",
+        "Peek min",
+        "Insert max",
+        "Extract max",
+        "Peek max",
+        "Heap sort"
+      ],
+      "defaultInput": {
+        "module": 17,
+        "op": 0,
+        "values": [
+          8,
+          3,
+          7,
+          1,
+          5
+        ],
+        "arg": 2,
+        "index": 0,
+        "directed": false,
+        "weight": 1,
+        "edges": []
+      },
+      "example": "Build [8,3,7,1,5] into a min-heap with root 1.",
+      "inputSchema": {
+        "type": "integer-array",
+        "maxItems": 32,
+        "minimum": -100000,
+        "maximum": 100000,
+        "uniqueItems": false
+      },
+      "adapter": "heap",
+      "source": "engine/src/next.c"
     }
   ]
 }

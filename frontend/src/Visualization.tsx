@@ -1,3 +1,4 @@
+import { NextVisualization } from "./NextVisualization";
 import { actionLabels } from "./learner-messages";
 import type { EngineEvent } from "./protocol";
 import type { Module } from "./registry";
@@ -16,6 +17,8 @@ export function Visualization({
         Choose values and Run to explore this visualization.
       </div>
     );
+  if (module.engineId >= 15 && event.extended)
+    return <NextVisualization event={event} module={module.engineId} />;
   const active = (id: number) => event.a === id || event.b === id;
   const color = (id: number) =>
     active(id) ? "var(--viz-active)" : "var(--viz-node)";

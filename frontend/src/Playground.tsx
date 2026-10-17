@@ -61,7 +61,8 @@ export function Playground({
     [2, 3, 12, 13, 14].includes(m) ||
     (m === 7 && [0, 2].includes(input.op)) ||
     ([8, 9].includes(m) && input.op === 0) ||
-    (m === 10 && input.op < 3);
+    (m === 10 && input.op < 3) ||
+    (m === 17 && [2, 5].includes(input.op));
   return (
     <section className="playground" aria-label="Visualization">
       <div className="section-heading">
@@ -94,7 +95,7 @@ export function Playground({
         className="input-controls"
       >
         <label>
-          {m >= 11 ? "Vertex labels" : "Input values"}
+          {m >= 11 && m <= 14 ? "Vertex labels" : "Input values"}
           <input
             aria-label="Input values"
             value={raw}
@@ -115,7 +116,7 @@ export function Playground({
           )}
           {needsValue && (
             <label>
-              {m >= 12 ? "Start vertex" : "Value / target"}
+              {m >= 12 && m <= 14 ? "Start vertex" : "Value / target"}
               <input
                 aria-label="Value or target"
                 type="number"
@@ -140,12 +141,12 @@ export function Playground({
         </button>
         <button
           onClick={() => {
-            const values = m >= 11 ? [1, 2, 3, 4] : [2, 2, 2, 2];
+            const values = m >= 11 && m <= 14 ? [1, 2, 3, 4] : [2, 2, 2, 2];
             setRaw(values.join(", "));
             setInput({ ...input, values, edges: [] });
           }}
         >
-          {m >= 11 ? "Disconnected graph" : "Duplicate values"}
+          {m >= 11 && m <= 14 ? "Disconnected graph" : "Duplicate values"}
         </button>
         <button
           onClick={() => {
@@ -156,7 +157,7 @@ export function Playground({
           Lesson example
         </button>
       </div>
-      {m >= 11 && (
+      {m >= 11 && m <= 14 && (
         <details>
           <summary>Edit vertices and edges</summary>
           <GraphEditor
@@ -232,7 +233,7 @@ export function Playground({
           ? ` — match at index ${event.found}`
           : ""}
       </p>
-      {m >= 12 && event?.frontier.length ? (
+      {m >= 12 && m <= 14 && event?.frontier.length ? (
         <p>Frontier: {event.frontier.join(" → ")}</p>
       ) : null}
       {m === 3 && event && (
@@ -309,7 +310,7 @@ export function Playground({
             setInput({
               ...input,
               values,
-              ...(m >= 11
+              ...(m >= 11 && m <= 14
                 ? {
                     edges: event.edges.map((e) => ({
                       from: values.indexOf(e.from),

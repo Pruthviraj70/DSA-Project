@@ -284,6 +284,10 @@
     {
       "id": "arrays.create",
       "title": "Create an initial sequence"
+    },
+    {
+      "id": "heaps.order",
+      "title": "Complete tree and heap ordering"
     }
   ],
   "modules": [
@@ -1765,6 +1769,53 @@
         {
           "id": "quiz",
           "title": "Check your understanding",
+          "kind": "quiz",
+          "teaches": [],
+          "paragraphs": []
+        }
+      ]
+    },
+    {
+      "id": "heaps",
+      "title": "Heaps and Priority Queues",
+      "category": "Data Structures",
+      "icon": "tree",
+      "description": "Organize priorities with a complete tree.",
+      "prerequisites": [
+        "arrays"
+      ],
+      "slides": [
+        {
+          "id": "basics",
+          "title": "A complete tree of priorities",
+          "kind": "explain",
+          "teaches": [
+            "heaps.order"
+          ],
+          "paragraphs": [
+            "A min-heap places the smallest value at the root. Every parent is no greater than its children, but siblings need not be sorted. A complete binary tree fills each level from left to right. In zero-based storage the children of i are 2i+1 and 2i+2. The parent of a non-root node is floor((i-1)/2). Bottom-up construction repairs parents from the last internal node to the root."
+          ],
+          "runtime": {
+            "moduleId": "heaps",
+            "op": 0
+          }
+        },
+        {
+          "id": "faq",
+          "title": "Questions about heap ordering",
+          "kind": "faq",
+          "teaches": [],
+          "paragraphs": [],
+          "faqs": [
+            {
+              "question": "Is a heap array sorted?",
+              "answer": "No. Parent-child ordering says nothing about the relative order of siblings."
+            }
+          ]
+        },
+        {
+          "id": "quiz",
+          "title": "Check your heap understanding",
           "kind": "quiz",
           "teaches": [],
           "paragraphs": []

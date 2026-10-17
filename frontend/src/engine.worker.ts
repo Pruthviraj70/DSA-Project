@@ -3,12 +3,24 @@ import type { Request, Reply, Wasm, EngineEvent } from "./protocol";
 const scope = self as unknown as DedicatedWorkerGlobalScope;
 let engine: Wasm | undefined;
 let queue = Promise.resolve();
+let family = "";
 scope.onmessage = ({ data }: { data: Request }) => {
   queue = queue.then(async () => {
     const reply: Reply = { id: data.id, events: [], done: false };
     try {
+      const wanted =
+        data.type === "init"
+          ? data.input.module >= 15
+            ? "next"
+            : "engine"
+          : family;
+      if (engine && wanted !== family) {
+        engine.ccall("engine_free", "number", [], []);
+        engine = undefined;
+      }
       if (!engine) {
-        const url = new URL("/engine/engine.js", scope.location.origin).href;
+        family = wanted;
+        const url = new URL(`/engine/${family}.js`, scope.location.origin).href;
         const { default: create } = await import(/* @vite-ignore */ url);
         engine = (await create({
           locateFile: (name: string) => `/engine/${name}`,

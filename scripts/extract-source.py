@@ -1,7 +1,7 @@
 """Ship the exact executed C source and stable annotation line numbers."""
 import json, pathlib, re, sys
 root = pathlib.Path(__file__).resolve().parent.parent
-source = (root / 'engine/src/engine.c').read_text()
+source = (root / 'engine/src/engine.c').read_text() + '\n' + (root / 'engine/src/next.c').read_text()
 locations = {}
 for number, line in enumerate(source.splitlines(), 1):
     for loc in re.findall(r'@loc:([\w.-]+)', line):

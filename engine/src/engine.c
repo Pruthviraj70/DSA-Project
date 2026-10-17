@@ -4,10 +4,17 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifndef DSA_LEGACY
+#include "next_state.h"
+#endif
+
 typedef struct {
     int id, value, next, left, right, active;
 } Node;
 typedef struct {
+#ifndef DSA_LEGACY
+    NextState next;
+#endif
     int edge_weight;
     int module, op, n, arg, index, directed, data[LIMIT], initial[LIMIT], edges[VERTICES][VERTICES], weight[VERTICES][VERTICES];
     int started, done, seq, a, b, value, found, i, j, k, phase;
@@ -45,9 +52,15 @@ int engine_config(int module, int operation, int count, int argument, int index,
     e.directed = directed;
     e.found = -1;
     e.a = e.b = -1;
-    if (module < ARRAY || module > DIJKSTRA)
+    if (module < ARRAY || module >
+#ifdef DSA_LEGACY
+        DIJKSTRA
+#else
+        WINDOW
+#endif
+    )
         return fail("Unknown module");
-    if (count < 0 || count > LIMIT || ((module >= GRAPH) && count > VERTICES))
+    if (count < 0 || count > LIMIT || ((module >= GRAPH && module <= DIJKSTRA) && count > VERTICES))
         return fail("Input exceeds module limit");
     if (argument < -100000 || argument > 100000)
         return fail("Argument must be between -100000 and 100000");
@@ -70,7 +83,7 @@ int engine_graph_weight(int weight) {
     return 1;
 }
 int engine_edge(int from, int to, int weight) {
-    if (e.started || e.module < GRAPH || from < 0 || to < 0 || from >= e.n || to >= e.n)
+    if (e.started || (e.module < GRAPH || e.module > DIJKSTRA) || from < 0 || to < 0 || from >= e.n || to >= e.n)
         return fail("Invalid graph endpoint");
     if (weight < -100000 || weight > 100000)
         return fail("Edge weight out of range");
@@ -93,6 +106,9 @@ static void append(const char *fmt, ...) {
     }
     used += (size_t)n;
 }
+#ifndef DSA_LEGACY
+static void next_snapshot(void);
+#endif
 static const char *snapshot(void) {
     used = 0;
     append("{\"protocol\":1,\"seq\":%d,\"kind\":\"%s\",\"loc\":\"%s\",\"a\":%d,\"b\":%d,\"value\":%d,\"done\":%s,\"found\":%d,\"data\":[", e.seq, e.kind ? e.kind : "ready", e.loc ? e.loc : "engine.ready", e.a, e.b, e.value, e.done ? "true" : "false", e.found);
@@ -108,12 +124,12 @@ static const char *snapshot(void) {
     }
     append("],\"root\":%d,\"head\":%d,\"edges\":[", e.root, e.head);
     comma = 0;
-    for (int i = 0; i < e.n && e.module >= GRAPH; i++)
+    for (int i = 0; i < e.n && e.module >= GRAPH && e.module <= DIJKSTRA; i++)
         for (int j = 0; j < e.n; j++)
             if (e.edges[i][j] && (e.directed || i <= j))
                 append("%s{\"id\":%d,\"from\":%d,\"to\":%d,\"weight\":%d}", comma++ ? "," : "", (e.directed || e.data[i] <= e.data[j] ? e.data[i] * 32 + e.data[j] : e.data[j] * 32 + e.data[i]), e.data[i], e.data[j], e.weight[i][j]);
     append("],\"dist\":[");
-    for (int i = 0; i < e.n && e.module >= GRAPH; i++) {
+    for (int i = 0; i < e.n && e.module >= GRAPH && e.module <= DIJKSTRA; i++) {
         if (e.dist[i] == INT_MAX)
             append("%snull", i ? "," : "");
         else
@@ -123,6 +139,9 @@ static const char *snapshot(void) {
     for (int i = 0; i < e.front_n; i++)
         append("%s%d", i ? "," : "", e.data[e.frontier[i]]);
     append("],\"variables\":{\"i\":%d,\"j\":%d,\"key\":%d,\"lo\":%d,\"hi\":%d,\"mid\":%d,\"width\":%d,\"left\":%d,\"right\":%d,\"partition\":%d,\"current\":%d,\"neighbor\":%d},\"counters\":{\"compare\":%d,\"read\":%d,\"write\":%d,\"swap\":%d,\"visit\":%d,\"mutation\":%d}}", e.i, e.j, e.key, e.lo, e.hi, e.mid, e.width, e.left, e.right, e.partition, e.current, e.neighbor, e.compares, e.reads, e.writes, e.swaps, e.visits, e.mutations);
+#ifndef DSA_LEGACY
+    if (e.module >= HASH_CHAIN) { used--; next_snapshot(); append("}"); }
+#endif
     return json;
 }
 const char *engine_state(void) {
@@ -662,11 +681,19 @@ static const char *dijkstra_step(void) {
         e.phase = 0;
     }
 }
+#ifndef DSA_LEGACY
+#include "next.c"
+#endif
 int engine_start(void) {
     if (e.error[0])
         return 0;
     if (e.started)
         return fail("Engine already started");
+#ifndef DSA_LEGACY
+    if (e.module >= HASH_CHAIN) {
+        if (!next_start()) return 0;
+    } else
+#endif
     if (e.module == ARRAY) {
         if (e.op < 0 || e.op > 5)
             return fail("Invalid array operation");
@@ -781,6 +808,9 @@ const char *engine_next(void) {
         fail("Event budget exhausted");
         return NULL;
     }
+#ifndef DSA_LEGACY
+    if (e.module >= HASH_CHAIN) return next_step();
+#endif
     switch (e.module) {
     case ARRAY:
         return array_step();

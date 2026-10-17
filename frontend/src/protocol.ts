@@ -47,6 +47,38 @@ export interface EngineEvent {
   frontier: number[];
   variables: Record<string, number>;
   counters: Record<string, number>;
+  extended?: {
+    left: number;
+    right: number;
+    logical: number;
+    extent: number;
+    sum: number;
+    result: number;
+    best: number;
+    capacity: number;
+    size: number;
+    bucket: number;
+    probe: number;
+    rehashing: boolean;
+    slots: { id: number; state: number; entry: number }[];
+    entries: { id: number; key: number; value: number; next: number }[];
+    frames: {
+      id: number;
+      parent: number;
+      argument: number;
+      lo: number;
+      hi: number;
+      phase: number;
+      saved: number;
+    }[];
+    calls: {
+      id: number;
+      parent: number;
+      argument: number;
+      returned: boolean;
+      result: number;
+    }[];
+  };
 }
 export type Request =
   | { id: number; type: "init"; input: Input }

@@ -17,7 +17,7 @@ enum Module { ARRAY = 1,
               GRAPH,
               BFS,
               DFS,
-              DIJKSTRA };
+              DIJKSTRA, HASH_CHAIN, HASH_PROBE, HEAP, RECURSION, TWO_POINTERS, WINDOW };
 /* Operations are module-local: see registry and engine_config. */
 int engine_config(int module, int operation, int count, int argument, int index, int directed);
 int engine_value(int index, int value);
