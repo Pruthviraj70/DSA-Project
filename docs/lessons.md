@@ -37,6 +37,8 @@ For this update V4 is reproducible with `python3 scripts/build-curriculum-migrat
 
 ## Progress and verification
 
+Completion acknowledgments wait for the local IndexedDB transaction to commit. **Saving page…** disables duplicate completion/Next actions; Next advances only after its checkpoint commits. A failed write leaves the page incomplete and allows retry. **✓ Page complete** means an immediate reload can restore that completion from this device; authenticated server synchronization still runs separately with pending checkpoints retried under the existing merge policy. Playback, backward stepping and reset never clear learning progress.
+
 Opening pages saves resume positions. Next or explicit completion marks that teaching page complete; a submitted quiz marks its participation page complete. A page selector jump does not complete skipped pages. Back, refresh and deep links retain stable URLs. IndexedDB version 2 adds stores while preserving old ones. Login unions guest slide completions and seeds missing account positions; existing account positions take precedence. Legacy percentage activity never completes new pages. See database.md for transactions, owner isolation, stale-response protection and 1.0.0 experiment compatibility.
 
 Run content checks, example checks, native/Wasm parity, frontend units, backend/MySQL and integrated browser tests. Browser acceptance covers the tile catalog, all lesson pages/labels, logo routes, navigation/restoration, preferences/copy, practice/recorded quizzes/review, migration preservation and playback. Inspect new slides at desktop/mobile widths, check focus/reduced-motion behavior, and verify that animation emits no HTTP requests. Never label planned curriculum topics as functional.

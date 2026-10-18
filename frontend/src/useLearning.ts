@@ -247,35 +247,48 @@ export function useLearning(user: User) {
     };
   }, [owner]);
   function checkpoint(moduleId: string, slideId: string, complete = false) {
-    if (complete)
-      setCompleted((old) => ({
-        ...old,
-        [moduleId]: Array.from(new Set([...(old[moduleId] ?? []), slideId])),
-      }));
-    setPositions((old) => ({ ...old, [moduleId]: slideId }));
     const who = owner;
-    // Persist immediately, even while an earlier network synchronization is still pending.
-    const saved = lessonStorage.checkpoint(
-      who,
-      moduleId,
-      slideId,
-      complete,
-      true,
-      true,
-      moduleRef.current[moduleId]?.generation ?? 0,
-    );
-    void saved.catch(() => {}); // The queued handler below reports failures.
+    const generation = moduleRef.current[moduleId]?.generation ?? 0;
+    // Start local persistence immediately; network synchronization can be slow.
+    // Completion is acknowledged only after the IndexedDB transaction commits.
+    const saved = lessonStorage
+      .checkpoint(who, moduleId, slideId, complete, true, true, generation)
+      .then(() => {
+        if (
+          activeOwner.current !== who ||
+          (moduleRef.current[moduleId]?.generation ?? 0) !== generation
+        )
+          return false;
+        if (complete)
+          setCompleted((old) => ({
+            ...old,
+            [moduleId]: Array.from(
+              new Set([...(old[moduleId] ?? []), slideId]),
+            ),
+          }));
+        setPositions((old) => ({ ...old, [moduleId]: slideId }));
+        return true;
+      })
+      .catch((error) => {
+        if (activeOwner.current === who)
+          setMessage(
+            `Progress could not be saved on this device. ${(error as Error).message}`,
+          );
+        return false;
+      });
     chain.current = chain.current
       .catch(() => {})
       .then(() => saved)
-      .then(async () => {
-        if (user.authenticated && activeOwner.current === who) await sync();
+      .then(async (committed) => {
+        if (committed && user.authenticated && activeOwner.current === who)
+          await sync();
       })
       .catch((e) =>
         setMessage(
           `Progress could not synchronize yet. Try Sync checkpoints from your account. ${(e as Error).message}`,
         ),
       );
+    return saved;
   }
   async function setFoundationCompletion(complete: boolean) {
     const who = owner,

@@ -1,4 +1,4 @@
-import { useEffect, useRef, lazy, Suspense } from "react";
+import { useEffect, useRef, useState, lazy, Suspense } from "react";
 import {
   type LessonModule,
   type Slide,
@@ -31,7 +31,11 @@ export function Lesson({
   slide: Slide;
   completed: string[];
   isComplete: (id: string) => boolean;
-  onCheckpoint: (moduleId: string, slideId: string, complete: boolean) => void;
+  onCheckpoint: (
+    moduleId: string,
+    slideId: string,
+    complete: boolean,
+  ) => Promise<boolean>;
   completionPending: boolean;
   onFoundationCompletion: (completed: boolean) => Promise<void>;
   authenticated: boolean;
@@ -42,9 +46,25 @@ export function Lesson({
   const index = module.slides.findIndex((s) => s.id === slide.id);
   const heading = useRef<HTMLHeadingElement>(null);
   const unmet = prerequisites(module.id).filter((m) => !isComplete(m.id));
-  function go(next: number) {
-    if (next < 0 || next >= module.slides.length) return;
-    if (next > index) onCheckpoint(module.id, slide.id, true);
+  const [savingPage, setSavingPage] = useState(false);
+  const saving = useRef(false);
+  async function completePage() {
+    if (saving.current) return false;
+    saving.current = true;
+    setSavingPage(true);
+    try {
+      return await onCheckpoint(module.id, slide.id, true);
+    } finally {
+      saving.current = false;
+      setSavingPage(false);
+    }
+  }
+  async function go(next: number) {
+    if (saving.current || next < 0 || next >= module.slides.length) return;
+    const route = window.location.hash;
+    if (next > index && !(await completePage())) return;
+    // A slow save must not navigate away from a page the learner opened meanwhile.
+    if (window.location.hash !== route) return;
     window.location.hash = lessonHref(module.id, module.slides[next].id).slice(
       1,
     );
@@ -238,22 +258,29 @@ export function Lesson({
           ← Previous
         </button>
         <div>
-          <span>
-            {completed.includes(slide.id)
-              ? "✓ Page complete"
-              : "Reading in progress"}
+          <span role="status" aria-label="Page progress">
+            {savingPage
+              ? "Saving page…"
+              : completed.includes(slide.id)
+                ? "✓ Page complete"
+                : "Reading in progress"}
           </span>
           {!completed.includes(slide.id) && slide.kind !== "quiz" && (
             <button
               className="text-button"
-              onClick={() => onCheckpoint(module.id, slide.id, true)}
+              disabled={savingPage}
+              onClick={() => void completePage()}
             >
               Mark page complete
             </button>
           )}
         </div>
         {index < module.slides.length - 1 ? (
-          <button className="primary" onClick={() => go(index + 1)}>
+          <button
+            className="primary"
+            disabled={savingPage}
+            onClick={() => void go(index + 1)}
+          >
             Next →
           </button>
         ) : (

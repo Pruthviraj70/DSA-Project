@@ -76,10 +76,14 @@ for (const module of [
     await page
       .getByRole("button", { name: "Mark page complete", exact: true })
       .click();
-    await page.reload();
     await expect(
-      page.getByText("✓ Page complete", { exact: true }),
-    ).toBeVisible();
+      page.getByRole("status", { name: "Page progress" }),
+    ).toHaveText("✓ Page complete");
+    await page.reload();
+    await expect(page.getByLabel("Lesson pages")).toHaveValue(module.slide);
+    await expect(
+      page.getByRole("status", { name: "Page progress" }),
+    ).toHaveText("✓ Page complete");
   });
 
 test("new catalog tiles, lazy loading, validation, examples and quizzes", async ({
@@ -401,4 +405,263 @@ test("recursive stack order and valid-prefix marking stay explicit", async ({
     .locator('[data-result-prefix="false"] rect')
     .all())
     await expect(rect).toHaveAttribute("stroke-dasharray", "4 3");
+});
+
+// Hold the real transaction open, rather than relying on machine speed to expose
+// the interval between a click, a successful put and a durable commit.
+for (const action of ["Mark page complete", "Next →"]) {
+  test(`${action} waits for the slide transaction and retains only explicit progress`, async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      const gate = { hold: true, started: false, abort: false, armed: false };
+      (window as any).slideWrite = gate;
+      const put = IDBObjectStore.prototype.put;
+      IDBObjectStore.prototype.put = function (value, ...args) {
+        const request = put.call(this, value, ...args);
+        if (
+          gate.armed &&
+          this.name === "slides" &&
+          value.moduleId === "recursion" &&
+          value.slideId === "branching" &&
+          value.completed
+        ) {
+          gate.started = true;
+          gate.armed = false;
+          const store = this;
+          function keepOpen() {
+            if (gate.hold)
+              store.get("__slide_transaction_gate__").onsuccess = keepOpen;
+            else if (gate.abort) store.transaction.abort();
+          }
+          keepOpen();
+        }
+        return request;
+      };
+    });
+    await page.goto("/#/lesson/recursion/branching");
+    const mark = page.getByRole("button", {
+      name: "Mark page complete",
+      exact: true,
+    });
+    const next = page.getByRole("button", { name: "Next →", exact: true });
+    await expect(mark).toBeEnabled();
+    await page.evaluate(() => {
+      (window as any).slideWrite.armed = true;
+    });
+    await page.getByRole("button", { name: action, exact: true }).click();
+    await page.waitForFunction(() => (window as any).slideWrite.started);
+    await expect(
+      page.getByText("✓ Page complete", { exact: true }),
+    ).toHaveCount(0);
+    await expect(mark).toBeDisabled();
+    await expect(next).toBeDisabled();
+    await expect(page.getByLabel("Lesson pages")).toHaveValue("branching");
+    // Aborted storage must not acknowledge completion or move to another page.
+    await page.evaluate(() => {
+      Object.assign((window as any).slideWrite, { hold: false, abort: true });
+    });
+    await expect(
+      page.getByRole("status").filter({ hasText: "Progress could not" }),
+    ).toBeVisible();
+    await expect(mark).toBeEnabled();
+    await expect(
+      page.getByText("✓ Page complete", { exact: true }),
+    ).toHaveCount(0);
+    await expect(page.getByLabel("Lesson pages")).toHaveValue("branching");
+    // Retry, release the gate, and immediately reload after the durable signal.
+    await page.evaluate(() => {
+      Object.assign((window as any).slideWrite, {
+        hold: true,
+        abort: false,
+        started: false,
+        armed: true,
+      });
+    });
+    await page.getByRole("button", { name: action, exact: true }).click();
+    await page.waitForFunction(() => (window as any).slideWrite.started);
+    await expect(mark).toBeDisabled();
+    await page.evaluate(() => {
+      (window as any).slideWrite.hold = false;
+    });
+    if (action === "Next →") {
+      await expect(page.getByLabel("Lesson pages")).not.toHaveValue(
+        "branching",
+      );
+      await page.goBack();
+    }
+    await expect(
+      page.getByText("✓ Page complete", { exact: true }),
+    ).toBeVisible();
+    await page.reload();
+    await expect(page.getByLabel("Lesson pages")).toHaveValue("branching");
+    await expect(
+      page.getByText("✓ Page complete", { exact: true }),
+    ).toBeVisible();
+    await expectExplicitPageOnly(page, "recursion", "branching");
+    await page
+      .getByRole("button", { name: "Step forward", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Step backward", exact: true })
+      .click();
+    await page.getByRole("button", { name: "Reset", exact: true }).click();
+    await page.reload();
+    await expect(
+      page.getByText("✓ Page complete", { exact: true }),
+    ).toBeVisible();
+    await expectExplicitPageOnly(page, "recursion", "branching");
+  });
+}
+
+async function expectExplicitPageOnly(
+  page: import("@playwright/test").Page,
+  moduleId: string,
+  slideId: string,
+) {
+  const saved = await page.evaluate(async () => {
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open("dsa-learning-lab", 3);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    try {
+      const names = ["slides", "practice", "checkpoints", "modules"];
+      return Object.fromEntries(
+        await Promise.all(
+          names.map(async (name) => [
+            name,
+            await new Promise<any[]>((resolve, reject) => {
+              const request = db.transaction(name).objectStore(name).getAll();
+              request.onsuccess = () => resolve(request.result);
+              request.onerror = () => reject(request.error);
+            }),
+          ]),
+        ),
+      );
+    } finally {
+      db.close();
+    }
+  });
+  expect(saved.slides.filter((row: any) => row.completed)).toEqual([
+    expect.objectContaining({
+      owner: "guest",
+      moduleId,
+      slideId,
+      completed: true,
+    }),
+  ]);
+  expect(saved.practice).toEqual([]);
+  expect(saved.checkpoints).toEqual([]);
+  expect(saved.modules).toEqual([]);
+}
+
+test("account page completion survives offline synchronization and delayed fresh restoration", async ({
+  page,
+  browser,
+}) => {
+  test.skip(process.env.INTEGRATED !== "1", "Requires Spring Boot and MySQL");
+  await page.goto("/#/account");
+  await page
+    .getByRole("button", { name: "Create account", exact: true })
+    .click();
+  await page.getByLabel("Display name").fill("Page Learner");
+  await page
+    .getByLabel("Email", { exact: true })
+    .fill(
+      `pages-${Date.now()}-${Math.random().toString(16).slice(2)}@example.test`,
+    );
+  await page.getByLabel("Password", { exact: true }).fill("page-passphrase");
+  await page
+    .getByLabel("Confirm password", { exact: true })
+    .fill("page-passphrase");
+  await page.getByRole("button", { name: "Register and sign in" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Welcome, Page Learner" }),
+  ).toBeVisible();
+  await page.goto("/#/lesson/recursion/branching");
+  const checkpointRoute = "**/api/learning/checkpoints";
+  await page.route(checkpointRoute, (route) =>
+    route.fulfill({
+      status: 503,
+      contentType: "application/json",
+      body: JSON.stringify({
+        message: "Synchronization temporarily unavailable",
+      }),
+    }),
+  );
+  await page
+    .getByRole("button", { name: "Mark page complete", exact: true })
+    .click();
+  await expect(page.getByRole("status", { name: "Page progress" })).toHaveText(
+    "✓ Page complete",
+  );
+  await page.reload();
+  await expect(page.getByLabel("Lesson pages")).toHaveValue("branching");
+  await expect(page.getByRole("status", { name: "Page progress" })).toHaveText(
+    "✓ Page complete",
+  );
+  await page.unroute(checkpointRoute);
+  await page.getByRole("link", { name: "Page Learner", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Sync checkpoints", exact: true })
+    .click();
+  await expect
+    .poll(async () => {
+      const progress = await (
+        await page.request.get("/api/learning/progress")
+      ).json();
+      return progress.items
+        .filter((row: any) => row.completed)
+        .map((row: any) => `${row.moduleId}/${row.slideId}`);
+    })
+    .toEqual(["recursion/branching"]);
+  expect((await (await page.request.get("/api/attempts")).json()).total).toBe(
+    0,
+  );
+  // Only cookies transfer: a fresh IndexedDB must hydrate from the actual server.
+  const fresh = await browser.newContext({
+    storageState: await page.context().storageState(),
+  });
+  try {
+    const restored = await fresh.newPage();
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let started!: () => void;
+    const waiting = new Promise<void>((resolve) => {
+      started = resolve;
+    });
+    await restored.route("**/api/learning/progress?*", async (route) => {
+      started();
+      await gate;
+      await route.continue();
+    });
+    await restored.goto("/#/lesson/recursion/branching");
+    await waiting;
+    try {
+      await expect(
+        restored.getByRole("status").filter({ hasText: "Opening your lesson" }),
+      ).toBeVisible();
+      await expect(
+        restored.getByRole("button", {
+          name: "Mark page complete",
+          exact: true,
+        }),
+      ).toHaveCount(0);
+    } finally {
+      release();
+    }
+    await expect(restored.getByLabel("Lesson pages")).toHaveValue("branching");
+    await expect(
+      restored.getByRole("status", { name: "Page progress" }),
+    ).toHaveText("✓ Page complete");
+    await restored.reload();
+    await expect(
+      restored.getByRole("status", { name: "Page progress" }),
+    ).toHaveText("✓ Page complete");
+  } finally {
+    await fresh.close();
+  }
 });

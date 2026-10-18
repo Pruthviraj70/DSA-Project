@@ -116,7 +116,7 @@ python3 scripts/check-public-assets.py
 INTEGRATED=1 npm --prefix frontend run test:e2e
 ```
 
-See [preferences verification](docs/verification-preferences.md), [redesign verification](docs/verification-update.md) and the [original verification record](docs/verification.md) for executed results and limitations, [release checklist](docs/release-status.md) for milestone evidence, and [setup](docs/setup.md) for test prerequisites. GitHub Actions runs the same relevant checks, including actual MySQL and actual browser Wasm execution. No performance superiority or educational benefit is claimed without measurement.
+See [slide persistence investigation](docs/verification-slide-persistence.md), [preferences verification](docs/verification-preferences.md), [redesign verification](docs/verification-update.md) and the [original verification record](docs/verification.md) for executed results and limitations, [release checklist](docs/release-status.md) for milestone evidence, and [setup](docs/setup.md) for test prerequisites. GitHub Actions runs the same relevant checks, including actual MySQL and actual browser Wasm execution. No performance superiority or educational benefit is claimed without measurement.
 
 ## Documentation
 
